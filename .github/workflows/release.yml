@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      id-token: write  # required for npm and JSR OIDC trusted publishing
+      id-token: write # required for npm and JSR OIDC trusted publishing
     steps:
       - uses: actions/checkout@v4
         with:

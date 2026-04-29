@@ -27,22 +27,22 @@ accessed through `vp` — do not invoke vitest, oxlint, oxfmt, tsdown, or yarn d
 Each feature is represented by up to three artifacts: a `remd-*` package (Remark/Rehype),
 an `mdit-*` package (Markdown-It), and a VSCode extension. Not every feature has all three.
 
-| Feature | `@saeris/remd-*` | `@saeris/mdit-*` | Extension | Source |
-|---|---|---|---|---|
-| del | `remd-del` | `mdit-del` | `markdown-del` ¹ | Own — migrate |
-| inline-svg | `remd-inline-svg` | `mdit-inline-svg` | `markdown-inline-svg` | Own — migrate |
-| ins | `remd-ins` | `mdit-ins` | `markdown-ins` | Fork |
-| mark | `remd-mark` | `mdit-mark` | `markdown-mark` | Fork |
-| kbd | `remd-kbd` | `mdit-kbd` | `markdown-kbd` | Fork |
-| abbr | `remd-abbr` | `mdit-abbr` | `markdown-abbr` | Fork |
-| sub | `remd-sub` | `mdit-sub` | `markdown-subscript` | Fork |
-| sup | `remd-sup` | `mdit-sup` | `markdown-superscript` ¹ | Fork |
-| definition-list | `remd-definition-list` | `mdit-definition-list` | `markdown-definition-list` | Fork |
-| github-alerts | `remd-github-alerts` | `mdit-github-alerts` | `markdown-github-alerts` | Fork |
-| attrs | `remd-attrs` | `mdit-attrs` | `markdown-attributes` | Fork |
-| ruby | `remd-ruby` | `mdit-ruby` | `markdown-denden-furigana` | Fork |
-| unwrap-images | `remd-unwrap-images` | `mdit-unwrap-images` | `markdown-unwrap-images` | Fork |
-| header-sections | `remd-header-sections` | `mdit-header-sections` | — | Fork (npm-only) |
+| Feature         | `@saeris/remd-*`       | `@saeris/mdit-*`       | Extension                  | Source          |
+| --------------- | ---------------------- | ---------------------- | -------------------------- | --------------- |
+| del             | `remd-del`             | `mdit-del`             | `markdown-del` ¹           | Own — migrate   |
+| inline-svg      | `remd-inline-svg`      | `mdit-inline-svg`      | `markdown-inline-svg`      | Own — migrate   |
+| ins             | `remd-ins`             | `mdit-ins`             | `markdown-ins`             | Fork            |
+| mark            | `remd-mark`            | `mdit-mark`            | `markdown-mark`            | Fork            |
+| kbd             | `remd-kbd`             | `mdit-kbd`             | `markdown-kbd`             | Fork            |
+| abbr            | `remd-abbr`            | `mdit-abbr`            | `markdown-abbr`            | Fork            |
+| sub             | `remd-sub`             | `mdit-sub`             | `markdown-subscript`       | Fork            |
+| sup             | `remd-sup`             | `mdit-sup`             | `markdown-superscript` ¹   | Fork            |
+| definition-list | `remd-definition-list` | `mdit-definition-list` | `markdown-definition-list` | Fork            |
+| github-alerts   | `remd-github-alerts`   | `mdit-github-alerts`   | `markdown-github-alerts`   | Fork            |
+| attrs           | `remd-attrs`           | `mdit-attrs`           | `markdown-attributes`      | Fork            |
+| ruby            | `remd-ruby`            | `mdit-ruby`            | `markdown-denden-furigana` | Fork            |
+| unwrap-images   | `remd-unwrap-images`   | `mdit-unwrap-images`   | `markdown-unwrap-images`   | Fork            |
+| header-sections | `remd-header-sections` | `mdit-header-sections` | —                          | Fork (npm-only) |
 
 **Pack:** `markdown-preview-extended-syntax` — metadata-only, migrated from standalone repo.
 
@@ -50,31 +50,31 @@ an `mdit-*` package (Markdown-It), and a VSCode extension. Not every feature has
 
 ### Fork sources
 
-| Package | Upstream source |
-|---|---|
-| `remd-ins` | remark-ins |
-| `remd-mark` | remark-flexible-markers |
-| `remd-kbd` | remark-kbd |
-| `remd-abbr` | remark-abbr |
+| Package                 | Upstream source                           |
+| ----------------------- | ----------------------------------------- |
+| `remd-ins`              | remark-ins                                |
+| `remd-mark`             | remark-flexible-markers                   |
+| `remd-kbd`              | remark-kbd                                |
+| `remd-abbr`             | remark-abbr                               |
 | `remd-sub` / `remd-sup` | remark-supersub (split into two packages) |
-| `remd-definition-list` | remark-definition-list |
-| `remd-github-alerts` | remark-alerts |
-| `remd-attrs` | remark-attributes |
-| `remd-ruby` | remark-denden-ruby |
-| `remd-unwrap-images` | rehype-unwrap-images |
-| `mdit-ins` | markdown-it-ins |
-| `mdit-mark` | markdown-it-mark |
-| `mdit-kbd` | markdown-it-kbd |
-| `mdit-abbr` | @mdit/plugin-abbr |
-| `mdit-sub` | @mdit/plugin-sub |
-| `mdit-sup` | @mdit/plugin-sup |
-| `mdit-definition-list` | @mdit/plugin-dl |
-| `mdit-github-alerts` | markdown-it-github-alerts |
-| `mdit-attrs` | @mdit/plugin-attrs |
-| `mdit-ruby` | markdown-it-ruby |
-| `mdit-unwrap-images` | markdown-it-block-image |
-| `remd-header-sections` | remark-sectionize |
-| `mdit-header-sections` | markdown-it-header-sections |
+| `remd-definition-list`  | remark-definition-list                    |
+| `remd-github-alerts`    | remark-alerts                             |
+| `remd-attrs`            | remark-attributes                         |
+| `remd-ruby`             | remark-denden-ruby                        |
+| `remd-unwrap-images`    | rehype-unwrap-images                      |
+| `mdit-ins`              | markdown-it-ins                           |
+| `mdit-mark`             | markdown-it-mark                          |
+| `mdit-kbd`              | markdown-it-kbd                           |
+| `mdit-abbr`             | @mdit/plugin-abbr                         |
+| `mdit-sub`              | @mdit/plugin-sub                          |
+| `mdit-sup`              | @mdit/plugin-sup                          |
+| `mdit-definition-list`  | @mdit/plugin-dl                           |
+| `mdit-github-alerts`    | markdown-it-github-alerts                 |
+| `mdit-attrs`            | @mdit/plugin-attrs                        |
+| `mdit-ruby`             | markdown-it-ruby                          |
+| `mdit-unwrap-images`    | markdown-it-block-image                   |
+| `remd-header-sections`  | remark-sectionize                         |
+| `mdit-header-sections`  | markdown-it-header-sections               |
 
 All forks are full ownership transfers — not upstream-synced. Code is expected to diverge
 significantly. Do not use git subtree or submodules.
@@ -191,12 +191,12 @@ mdit-<name>/
 **`vite.config.ts`:**
 
 ```ts
-import { defineConfig } from 'vite-plus';
+import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   pack: {
-    entry: 'src/index.ts',
-    external: ['markdown-it'],
+    entry: "src/index.ts",
+    external: ["markdown-it"],
     dts: true,
   },
 });
@@ -241,14 +241,14 @@ Same shape as mdit with these differences:
 **`vite.config.ts`:**
 
 ```ts
-import { defineConfig } from 'vite-plus';
+import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   pack: {
-    entry: 'src/index.ts',
-    external: [],        // bundle everything
+    entry: "src/index.ts",
+    external: [], // bundle everything
     dts: false,
-    format: 'cjs',       // VSCode extension host requirement
+    format: "cjs", // VSCode extension host requirement
   },
 });
 ```
@@ -299,11 +299,11 @@ tests/
 **`vite.config.ts` for tests:**
 
 ```ts
-import { defineConfig } from 'vite-plus';
+import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   test: {
-    include: ['**/*.test.ts'],
+    include: ["**/*.test.ts"],
   },
 });
 ```
@@ -412,8 +412,8 @@ Bump files live in `.bumpy/`. Format:
 
 ```markdown
 ---
-'@saeris/mdit-del': minor
-'@saeris/remd-del': minor
+"@saeris/mdit-del": minor
+"@saeris/remd-del": minor
 ---
 
 Description of the change for the changelog.
@@ -500,7 +500,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      id-token: write  # required for npm and JSR OIDC trusted publishing
+      id-token: write # required for npm and JSR OIDC trusted publishing
     steps:
       - uses: actions/checkout@v4
         with:
@@ -519,12 +519,14 @@ jobs:
 ```
 
 **Required secrets:**
+
 - `BUMPY_GH_TOKEN` — Fine-grained PAT with Contents + Pull Requests write permissions.
   Needed so the "Version Packages" PR triggers CI workflows (the default `github.token`
   does not trigger other workflows due to GitHub's recursion guard).
 - `VSCE_PAT` — VS Code Marketplace personal access token.
 
 **One-time registry setup (per package, before first publish):**
+
 - **npm:** Go to the package's settings on npmjs.com → Trusted Publishers → add this
   repository and the `release.yml` workflow filename.
 - **JSR:** Go to the package's settings on jsr.io → Link GitHub repository.
@@ -548,6 +550,7 @@ Work through one feature set at a time within each phase. Resolve nuances per fe
 before moving to the next.
 
 ### Phase 0 — Foundation
+
 1. Fix `package.json` workspaces: `apps/*` → `docs/*`
 2. Update root `tsconfig.json`: remove `jsx`/`jsxImportSource` from base config
 3. Verify `bumpy ci release` + `jsr publish` round-trip (jsr.json version sync)
@@ -555,16 +558,20 @@ before moving to the next.
 5. Set up GitHub Actions workflows (CI, Bumpy check, Release)
 
 ### Phase 1 — Package templates
+
 Establish the canonical file shape for each package type before any migration:
+
 - `packages/mdit-*/` template
 - `packages/remd-*/` template
 - `extensions/*/` template
 - `tests/<name>/` template
 
 ### Phase 2 — First-party plugins (reference implementations)
+
 Migrate in order: `del` first (simpler), then `inline-svg` (involves Rehype + behavior skew).
 
 For each feature:
+
 1. Copy source into `packages/remd-<name>/` and `packages/mdit-<name>/`
 2. Strip changeset config, old CI, eslint/prettier (monorepo tools replace them)
 3. Align `package.json`, `jsr.json`, `tsconfig.json`, `vite.config.ts` to templates
@@ -575,6 +582,7 @@ For each feature:
 `del` specifically: create `extensions/markdown-del/` (does not exist yet).
 
 ### Phase 3 — Forks (third-party plugins)
+
 Work through waves in order of ascending complexity. One feature set at a time.
 
 - **Wave 1:** `ins`, `mark` — simple inline syntax
@@ -583,6 +591,7 @@ Work through waves in order of ascending complexity. One feature set at a time.
 - **Wave 4:** `unwrap-images` — transforms existing nodes
 
 For each fork:
+
 1. Copy source from upstream (do not use git subtree or submodules)
 2. Rename to convention, convert to TypeScript, convert to ESM-only
 3. Strip unnecessary upstream dependencies (audit runtime vs dev needs)
@@ -591,10 +600,12 @@ For each fork:
 6. Migrate corresponding extension; update bundled dep to workspace ref
 
 ### Phase 4 — Extension pack
+
 Migrate `markdown-preview-extended-syntax` into `extensions/`. The pack's
 `extensionDependencies` lists Marketplace IDs — these are stable and unchanged.
 
 ### Phase 5 — Test suite hardening + integration audit
+
 1. Ensure every feature has fixture coverage: basic usage, edge cases, escaping,
    nesting with standard Markdown (bold, links, etc.)
 2. Add CI check: fail if a remd or mdit package has no corresponding test directory
@@ -605,6 +616,7 @@ Migrate `markdown-preview-extended-syntax` into `extensions/`. The pack's
 4. Abstraction pass on `tests/utils/` (after ≥3 plugin pairs provide a sample)
 
 ### Phase 6 — Documentation site
+
 Set up Astro in `docs/`. One page per feature covering: syntax reference, rendered
 examples, install instructions for both remd and mdit variants, VSCode extension link.
 The docs Astro config consumes our own `remd-*` plugins for page rendering.
@@ -613,6 +625,7 @@ Tabbed code preview UI (à la Vocs) is **deferred** until we have our own plugin
 for it.
 
 ### Phase 7 — Publishing pipeline verification
+
 End-to-end test of the full bumpy + npm + JSR + vsce release flow. Resolve any
 jsr.json version sync issues found in Phase 0.
 
@@ -620,23 +633,23 @@ jsr.json version sync issues found in Phase 0.
 
 ## 12. Toolchain reference
 
-| Tool | Invocation | Purpose |
-|---|---|---|
-| Vite+ | `vp` | Unified CLI — do not invoke underlying tools directly |
-| Build (libraries) | `vp pack` | tsdown/Rolldown — produces dist/ |
-| Type check | `vp check` | oxlint + oxfmt + TypeScript |
-| Test | `vp test` | Vitest |
-| Install | `vp install` or `vp i` | Yarn (detected via packageManager field) |
-| One-off binary | `vp dlx <pkg>` | Equivalent to npx/yarn dlx |
-| Bumpy | `vp dlx @varlock/bumpy` | Version management and publishing |
-| JSR | `vp dlx jsr` | JSR publish |
-| vsce | `vp dlx @vscode/vsce` | VSCode Marketplace publish |
+| Tool              | Invocation              | Purpose                                               |
+| ----------------- | ----------------------- | ----------------------------------------------------- |
+| Vite+             | `vp`                    | Unified CLI — do not invoke underlying tools directly |
+| Build (libraries) | `vp pack`               | tsdown/Rolldown — produces dist/                      |
+| Type check        | `vp check`              | oxlint + oxfmt + TypeScript                           |
+| Test              | `vp test`               | Vitest                                                |
+| Install           | `vp install` or `vp i`  | Yarn (detected via packageManager field)              |
+| One-off binary    | `vp dlx <pkg>`          | Equivalent to npx/yarn dlx                            |
+| Bumpy             | `vp dlx @varlock/bumpy` | Version management and publishing                     |
+| JSR               | `vp dlx jsr`            | JSR publish                                           |
+| vsce              | `vp dlx @vscode/vsce`   | VSCode Marketplace publish                            |
 
 **Import rule:** Always import from `vite-plus`, never from `vite` or `vitest` directly.
 
 ```ts
-import { defineConfig } from 'vite-plus';
-import { expect, test, describe } from 'vite-plus/test';
+import { defineConfig } from "vite-plus";
+import { expect, test, describe } from "vite-plus/test";
 ```
 
 ---
