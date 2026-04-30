@@ -58,3 +58,11 @@ _==marked inside italic==_
 <!-- @case: mixed inline content -->
 
 ==**bold** and regular==
+
+<!-- @case: empty mark -->
+
+====
+
+<!-- @case: unclosed opening -->
+
+foo ==bar

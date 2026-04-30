@@ -58,3 +58,7 @@ _--deleted inside italic--_
 <!-- @case: mixed inline content -->
 
 --**bold** and regular--
+
+<!-- @case: unclosed opening -->
+
+foo --bar

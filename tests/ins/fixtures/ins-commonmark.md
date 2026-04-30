@@ -58,3 +58,11 @@ _++inserted inside italic++_
 <!-- @case: mixed inline content -->
 
 ++**bold** and regular++
+
+<!-- @case: empty ins -->
+
+++++
+
+<!-- @case: unclosed opening -->
+
+foo ++bar

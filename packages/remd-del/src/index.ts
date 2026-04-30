@@ -35,9 +35,6 @@ export const REGEX_STARTING_GLOBAL = /--(?![\s]|-+\s)/g;
 export const REGEX_ENDING = /(?<!\s|\s-|\s-|\s-|\s-)--/;
 export const REGEX_ENDING_GLOBAL = /(?<!\s|\s-|\s-|\s-|\s-)--/g;
 
-export const REGEX_EMPTY = /--\s*--/;
-export const REGEX_EMPTY_GLOBAL = /--\s*--/g;
-
 export const remarkDel: Plugin<[], Root> = () => {
   const constructDeleteNode = (children: PhrasingContent[]): Delete => {
     return {
@@ -138,50 +135,9 @@ export const remarkDel: Plugin<[], Root> = () => {
     return index; // re-visit after restructuring children
   };
 
-  const visitorThird: Visitor<Text, Parent> = (node, index, parent): VisitorResult => {
-    /* v8 ignore next */
-    if (!parent || typeof index === `undefined`) return;
-
-    if (!REGEX_EMPTY.test(node.value)) return;
-
-    const children: PhrasingContent[] = [];
-    const value = node.value;
-    let tempValue = ``;
-    let prevMatchIndex = 0;
-    let prevMatchLength = 0;
-
-    const matches = Array.from(value.matchAll(REGEX_EMPTY_GLOBAL));
-
-    for (const match of matches) {
-      const [matched] = match;
-      const mIndex = match.index;
-      const mLength = matched.length;
-
-      const textPartIndex = prevMatchIndex + prevMatchLength;
-
-      prevMatchIndex = mIndex;
-      prevMatchLength = mLength;
-
-      if (mIndex > textPartIndex) {
-        children.push(u(`text`, value.substring(textPartIndex, mIndex)));
-      }
-
-      children.push(constructDeleteNode([]));
-
-      tempValue = value.slice(mIndex + mLength);
-    }
-
-    if (tempValue) {
-      children.push(u(`text`, tempValue));
-    }
-
-    if (children.length) parent.children.splice(index, 1, ...children);
-  };
-
   const transformer: Transformer<Root> = (tree) => {
     visit(tree, `text`, visitorFirst);
     visit(tree, `text`, visitorSecond);
-    visit(tree, `text`, visitorThird);
   };
 
   return transformer;
