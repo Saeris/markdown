@@ -18,7 +18,11 @@ accessed through `vp` — do not invoke vitest, oxlint, oxfmt, tsdown, or yarn d
 └── tests/                 # shared cross-implementation test suite
 ```
 
-**Root `package.json` workspaces:** `docs/*`, `extensions/*`, `packages/*`, `tests/*`
+**Root `package.json` workspaces:** `docs/*`, `extensions/*`, `packages/*`, `tests`
+
+> **Note:** `tests` is a single workspace package at the `tests/` path — it is NOT a glob
+> (`tests/*`). Using `tests/*` causes Yarn to look for sub-packages inside `tests/`, which
+> don't exist.
 
 ---
 
@@ -94,6 +98,18 @@ significantly. Do not use git subtree or submodules.
   - Use the feature name when the HTML element name is too generic (`mark`, `attrs`,
     `unwrap-images`, `github-alerts`, `inline-svg`)
 
+### 3.1 Export naming convention
+
+Named exports from plugin packages follow a consistent convention so that imports remain
+unambiguous when multiple plugins are used together in the same file:
+
+- **`remd-*` packages:** `remark<Name>` — e.g., `remarkDel`, `remarkIns`, `remarkMark`
+- **`mdit-*` packages:** `<name>` — the bare feature name, e.g., `del`, `ins`, `mark`
+
+The mdit convention avoids a redundant `Plugin` suffix or namespace prefix. Since
+`remark*` and plain names occupy separate import namespaces there are no conflicts when
+both are imported together.
+
 ---
 
 ## 4. Package standards
@@ -124,8 +140,8 @@ mdit-<name>/
   "engines": { "node": ">=24.0.0" },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
     }
   },
   "files": ["dist"],
@@ -133,6 +149,7 @@ mdit-<name>/
     "markdown-it": "^14.0.0"
   },
   "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
     "markdown-it": "^14.0.0"
   },
   "bumpy": {
@@ -147,11 +164,13 @@ mdit-<name>/
 ```
 
 - No `main`, no `module` field — `exports` is the sole entry point
+- Build output uses `.mjs`/`.d.mts` extensions (tsdown ESM output); the `exports` map
+  must match exactly — `.js`/`.d.ts` will fail to resolve at runtime
 - `peerDependencies` lists `markdown-it`; consumers must provide it
 - `devDependencies` mirrors peerDependencies so the package can be built/tested locally
-- `@types/` packages: add to `devDependencies` of the individual package only if needed
-  for TypeScript compilation. Do not hoist to root. Modern unified/mdast packages ship
-  their own types; audit per plugin during migration.
+- `@types/markdown-it` is required in `devDependencies` — `markdown-it` v14's package
+  exports do not include a `types` condition, so `moduleResolution: "Bundler"` cannot
+  find types without the `@types/` package. Add it to every mdit package and to `tests/`.
 - `bumpy.buildCommand` runs `vp pack` before publishing; `bumpy.publishCommand` syncs
   `jsr.json`, publishes to npm, then publishes to JSR. Requires `allowCustomCommands: true`
   in `.bumpy/_config.json`.
@@ -196,23 +215,44 @@ import { defineConfig } from "vite-plus";
 export default defineConfig({
   pack: {
     entry: "src/index.ts",
-    external: ["markdown-it"],
+    deps: { neverBundle: ["markdown-it"] },
     dts: true,
   },
 });
 ```
 
+> **Note:** `external` is deprecated in tsdown. Use `deps.neverBundle` instead.
+> `deps.neverBundle` accepts an array of package names to exclude from the bundle.
+
 ### 4.2 `packages/remd-*/`
 
 Same shape as mdit with these differences:
 
-- `peerDependencies` always includes `unified`; add additional unified ecosystem packages
-  (e.g., `mdast-util-*`, `micromark-*`, `hast-util-*`) that appear in the public API
-  surface or are required at runtime by the consumer. Audit per plugin during migration.
-- `external` in `vite.config.ts` lists all peerDependencies.
+- `peerDependencies` always includes `unified`. Only list packages that appear in the
+  public API surface or are required at runtime by the consumer. `unist-util-*` helper
+  packages are implementation details — put them in `devDependencies` so tsdown bundles
+  them into the output. Audit per plugin during migration.
+- `vite.config.ts` uses `deps: { neverBundle: ["unified"], onlyBundle: false }`.
+  `onlyBundle: false` suppresses the tsdown hint that fires when bundling some deps but
+  not others — this is intentional for remd packages (peer deps excluded, unist-util-\*
+  bundled).
 - Some plugins are Remark (operate on mdast) and some are Rehype (operate on hast).
   The `remd-` prefix covers both; the README for each package clarifies which it is and
   where it fits in the unified pipeline.
+
+**`vite.config.ts` (remd):**
+
+```ts
+import { defineConfig } from "vite-plus";
+
+export default defineConfig({
+  pack: {
+    entry: "src/index.ts",
+    deps: { neverBundle: ["unified"], onlyBundle: false },
+    dts: true,
+  },
+});
+```
 
 ### 4.3 `extensions/*/`
 
@@ -237,6 +277,9 @@ Same shape as mdit with these differences:
 - Source is migrated from JavaScript to TypeScript as part of migration
 - Output must be a single bundled file with no external requires so it works in the
   VSCode web extension host (browser environment, no Node.js APIs)
+- Extension `tsconfig.json` must NOT include `"types": ["vscode"]` — extension source
+  only uses the companion `mdit-*` package types, not the VSCode API directly. Adding
+  the `types` override knocks out `@types/node` and causes compilation errors.
 
 **`vite.config.ts`:**
 
@@ -246,7 +289,7 @@ import { defineConfig } from "vite-plus";
 export default defineConfig({
   pack: {
     entry: "src/index.ts",
-    external: [], // bundle everything
+    deps: { neverBundle: [] }, // bundle everything
     dts: false,
     format: "cjs", // VSCode extension host requirement
   },
@@ -277,24 +320,88 @@ tests/
 ├── package.json
 ├── vite.config.ts        # vitest config discovering all *.test.ts
 ├── utils/
-│   └── index.ts          # shared test helpers (populated after first 3 plugin pairs)
+│   └── index.ts          # shared test helpers: normalizeHtml, parseFixture
 └── <name>/
     ├── fixtures/
-    │   └── <name>.md     # markdown input (shared between remd and mdit tests)
+    │   ├── <name>-commonmark.md   # CommonMark baseline cases
+    │   └── <name>-gfm.md         # GFM integration cases
     ├── expected/
-    │   └── <name>.html   # expected HTML output (identical for both implementations)
+    │   ├── <name>-commonmark.html
+    │   └── <name>-gfm.html
     ├── remd.test.ts
     └── mdit.test.ts
 ```
 
-**Test approach:**
+**Fixture format — `<!-- @case: name -->` delimiters:**
 
-- Fixtures are plain `.md` files; expected output is plain `.html` files
-- Both `remd.test.ts` and `mdit.test.ts` load the same `.md` fixture and compare against
-  the same `.html` expected output
-- HTML is normalized before comparison (attribute order, whitespace) using shared helpers
-- Shared helpers in `tests/utils/` are extracted after the first three plugin pairs
-  provide a sufficient sample for abstraction
+Both `.md` and `.html` fixture files use HTML comments as named section delimiters.
+Only comments matching `<!-- @case: <name> -->` are treated as delimiters; all other
+HTML in the content is left untouched.
+
+```markdown
+<!-- @case: basic word -->
+
+--Delete--
+
+<!-- @case: del at start of sentence -->
+
+--Delete me-- and leave me
+```
+
+```html
+<!-- @case: basic word -->
+<p><del>Delete</del></p>
+
+<!-- @case: del at start of sentence -->
+<p><del>Delete me</del> and leave me</p>
+```
+
+**`parseFixture` utility** (in `tests/utils/index.ts`) splits both files on the
+`<!-- @case: ... -->` pattern and returns `{ name: string; content: string }[]`.
+Tests use `test.each` over the parsed pairs, producing individual named entries in
+Vitest output and full per-case focus in Wallabyjs.
+
+```ts
+test.each(cases)("del (remark): %s", ({ name, input, expected }) => {
+  expect(normalizeHtml(String(processor.processSync(input)))).toBe(expected);
+});
+```
+
+**`normalizeHtml` utility** collapses whitespace between tags and trims. It does
+NOT need to strip HTML comments — comments are parsed out of the fixture file before
+content ever reaches the processor.
+
+**Fixture baseline split:**
+
+- **CommonMark fixture** (`<name>-commonmark.md`): covers all cases that are valid under
+  the CommonMark spec and produce identical output from both the remd and mdit
+  implementations. Both test files load this fixture with a plain processor/instance.
+- **GFM fixture** (`<name>-gfm.md`): covers interoperability with GFM constructs
+  (tables, `~~strikethrough~~`, task list items). The remd test file uses a processor
+  that includes `remark-gfm`; the mdit test file uses an instance with
+  `markdown-it-task-lists` (tables and `~~strikethrough~~` are built-in to mdit by
+  default — there is no single GFM bundle equivalent to `remark-gfm`).
+
+**HTML interop testing:**
+
+When a fixture tests raw HTML passthrough (e.g., inline HTML elements alongside plugin
+syntax), the test file opts in per-processor:
+
+- remd: pass `{ allowDangerousHtml: true }` to `remarkRehype`
+- mdit: pass `{ html: true }` to the `MarkdownIt` constructor
+
+This is a per-test-file opt-in, not a global setting. Baseline and GFM fixtures should
+not require it.
+
+**Known implementation divergences to exclude from shared fixtures:**
+
+These cases produce different output between `remd-*` and `mdit-*` implementations and
+must be kept in implementation-specific test files if tested at all:
+
+- **Empty del** (`--  --`): remd produces `<del></del>`; mdit produces no del (spaces
+  prevent the delimiter from being left-flanking)
+- **Nested del** (`--outer --inner-- text--`): remd flattens (greedy regex captures
+  outer match first); mdit nests (delimiter stack pairs inner first, then outer)
 
 **`vite.config.ts` for tests:**
 
@@ -327,7 +434,7 @@ for build/emit:
 
 All packages use `vp pack` (tsdown via Vite+). Do not install tsdown directly.
 
-- **Output format:** ESM for plugin packages (`.js` with `"type": "module"`), CJS bundle
+- **Output format:** ESM for plugin packages (`.mjs`/`.d.mts` via tsdown), CJS bundle
   for extensions
 - **Tree-shaking:** Enabled by default via Rolldown
 - **Type declarations:** `dts: true` for plugin packages, `dts: false` for extensions
@@ -342,8 +449,26 @@ Run with `vp test` from the repo root or from `tests/`.
 - Framework: Vitest (via Vite+) — import from `vite-plus/test`
 - All tests live in `tests/<name>/`
 - Plugin packages themselves contain no test files
-- After the first three plugin pairs are migrated, perform a shared-utilities abstraction
-  pass on `tests/utils/`
+
+**Fixture baseline:** CommonMark is the agreed baseline for shared fixtures. Both
+`remark-parse` and `markdown-it` implement CommonMark; any CommonMark-valid markdown
+in a shared fixture will behave identically at the parser level. GFM features (tables,
+strikethrough, task lists) require plugins on the remd side (`remark-gfm`) and are
+tested in a separate GFM fixture file.
+
+**Test granularity:** Each fixture file is parsed into named cases via `parseFixture`
+and driven through `test.each`. This produces individually-named test entries in Vitest
+output and supports per-case focus in Wallabyjs. See §4.4 for the full fixture format
+and utility API.
+
+**GFM dependency matrix:**
+
+| Feature            | remd (remark) | mdit (markdown-it)       |
+| ------------------ | ------------- | ------------------------ |
+| Tables             | `remark-gfm`  | built-in                 |
+| Strikethrough `~~` | `remark-gfm`  | built-in                 |
+| Task list items    | `remark-gfm`  | `markdown-it-task-lists` |
+| Autolink literals  | `remark-gfm`  | `linkify: true` option   |
 
 **Integration audit (Phase 5):** After all plugins are present, add tests for combined
 usage of multiple plugins in a single document. Priority scenarios:
