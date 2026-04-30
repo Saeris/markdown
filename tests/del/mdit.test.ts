@@ -3,15 +3,25 @@ import { join } from "node:path";
 import { expect, test } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { del } from "@saeris/mdit-del";
-import { normalizeHtml } from "../utils/index.js";
+import { normalizeHtml, parseFixture } from "../utils/index.js";
 
-const fixture = readFileSync(join(import.meta.dirname, "fixtures/del.md"), "utf8");
-const expected = normalizeHtml(
-  readFileSync(join(import.meta.dirname, "expected/del.html"), "utf8"),
+const dir = import.meta.dirname;
+const read = (path: string) => readFileSync(join(dir, path), "utf8");
+
+const cmCases = parseFixture(
+  read("fixtures/del-commonmark.md"),
+  read("expected/del-commonmark.html"),
 );
 
-const md = new MarkdownIt({ html: true }).use(del);
+const gfmCases = parseFixture(read("fixtures/del-gfm.md"), read("expected/del-gfm.html"));
 
-test("del (markdown-it)", () => {
-  expect(normalizeHtml(md.render(fixture))).toBe(expected);
+// tables and ~~strikethrough~~ are built-in to markdown-it's default preset
+const md = new MarkdownIt().use(del);
+
+test.each(cmCases)("del (markdown-it): $name", ({ input, expected }) => {
+  expect(normalizeHtml(md.render(input))).toBe(expected);
+});
+
+test.each(gfmCases)("del (markdown-it) gfm: $name", ({ input, expected }) => {
+  expect(normalizeHtml(md.render(input))).toBe(expected);
 });

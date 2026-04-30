@@ -1,30 +1,59 @@
+<!-- @case: basic word -->
 <p><del>Delete</del></p>
+
+<!-- @case: start of sentence -->
 <p><del>Delete me</del> and leave me</p>
+
+<!-- @case: end of sentence -->
 <p>leave me and <del>Delete me</del></p>
+
+<!-- @case: middle of sentence -->
 <p>leave me and <del>Delete me</del> and leave me</p>
+
+<!-- @case: multiple del -->
 <p><del>first deleted</del> and <del>second deleted</del></p>
+
+<!-- @case: spaces prevent match -->
 <p>foo -- bar -- baz</p>
+
+<!-- @case: adjacent to word chars -->
 <p>foo<del>bar</del>baz</p>
+
+<!-- @case: wrapping strong -->
 <p>
   <del><strong>bold deleted</strong></del>
 </p>
+
+<!-- @case: wrapping emphasis -->
 <p>
   <del><em>italic deleted</em></del>
 </p>
+
+<!-- @case: inside strong -->
 <p>
   <strong><del>deleted inside bold</del></strong>
 </p>
+
+<!-- @case: inside emphasis -->
 <p>
   <em><del>deleted inside italic</del></em>
 </p>
+
+<!-- @case: in heading -->
 <h2><del>Deleted heading</del></h2>
+
+<!-- @case: in list items -->
 <ul>
   <li><del>first item</del></li>
   <li><del>second item</del></li>
 </ul>
+
+<!-- @case: in blockquote -->
 <blockquote>
   <p><del>blockquote content</del></p>
 </blockquote>
+
+<!-- @case: mixed inline content -->
 <p>
   <del><strong>bold</strong> and regular</del>
 </p>

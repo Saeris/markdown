@@ -3,18 +3,39 @@ import { join } from "node:path";
 import { expect, test } from "vite-plus/test";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import { remarkDel } from "@saeris/remd-del";
-import { normalizeHtml } from "../utils/index.js";
+import { normalizeHtml, parseFixture } from "../utils/index.js";
 
-const fixture = readFileSync(join(import.meta.dirname, "fixtures/del.md"), "utf8");
-const expected = normalizeHtml(
-  readFileSync(join(import.meta.dirname, "expected/del.html"), "utf8"),
+const dir = import.meta.dirname;
+const read = (path: string) => readFileSync(join(dir, path), "utf8");
+
+const cmCases = parseFixture(
+  read("fixtures/del-commonmark.md"),
+  read("expected/del-commonmark.html"),
 );
 
-const processor = unified().use(remarkParse).use(remarkDel).use(remarkRehype).use(rehypeStringify);
+const gfmCases = parseFixture(read("fixtures/del-gfm.md"), read("expected/del-gfm.html"));
 
-test("del (remark)", () => {
-  expect(normalizeHtml(String(processor.processSync(fixture)))).toBe(expected);
+const cmProcessor = unified()
+  .use(remarkParse)
+  .use(remarkDel)
+  .use(remarkRehype)
+  .use(rehypeStringify);
+
+const gfmProcessor = unified()
+  .use(remarkParse)
+  .use(remarkGfm)
+  .use(remarkDel)
+  .use(remarkRehype)
+  .use(rehypeStringify);
+
+test.each(cmCases)("del (remark): $name", ({ input, expected }) => {
+  expect(normalizeHtml(String(cmProcessor.processSync(input)))).toBe(expected);
+});
+
+test.each(gfmCases)("del (remark) gfm: $name", ({ input, expected }) => {
+  expect(normalizeHtml(String(gfmProcessor.processSync(input)))).toBe(expected);
 });
