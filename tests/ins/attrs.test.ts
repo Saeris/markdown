@@ -1,4 +1,4 @@
-import { expect, test } from "vite-plus/test";
+import { expect, test, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -27,37 +27,34 @@ const remd = (src: string) =>
     ),
   );
 
-const cases = [
-  {
-    name: "ins inline with class attr",
-    input: "++inserted++{.new}",
-    mdit: '<p><ins class="new">inserted</ins></p>',
-    remd: '<p><ins class="new">inserted</ins></p>',
-  },
-  {
-    name: "ins inline with id attr",
-    input: "++added++{#ins-1}",
-    mdit: '<p><ins id="ins-1">added</ins></p>',
-    remd: '<p><ins id="ins-1">added</ins></p>',
-  },
-  {
-    name: "ins with heading attrs",
-    input: "## New Section {.new}\n\n++inserted content++",
-    mdit: '<h2 class="new">New Section</h2><p><ins>inserted content</ins></p>',
-    remd: '<h2 class="new">New Section</h2><p><ins>inserted content</ins></p>',
-  },
-  {
-    name: "ins and block attrs coexist",
-    input: "Some ++inserted++ text here. {.updated}",
-    mdit: '<p class="updated">Some <ins>inserted</ins> text here.</p>',
-    remd: '<p class="updated">Some <ins>inserted</ins> text here.</p>',
-  },
-];
+describe("ins + attrs: ins inline with class attr", () => {
+  const input = "++inserted++{.new}";
+  const expected = '<p><ins class="new">inserted</ins></p>';
 
-test.each(cases)("ins + attrs (markdown-it): $name", ({ input, mdit: expected }) => {
-  expect(normalizeHtml(md.render(input))).toBe(expected);
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });
 
-test.each(cases)("ins + attrs (remark): $name", ({ input, remd: expected }) => {
-  expect(remd(input)).toBe(expected);
+describe("ins + attrs: ins inline with id attr", () => {
+  const input = "++added++{#ins-1}";
+  const expected = '<p><ins id="ins-1">added</ins></p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
+});
+
+describe("ins + attrs: ins with heading attrs", () => {
+  const input = "## New Section {.new}\n\n++inserted content++";
+  const expected = '<h2 class="new">New Section</h2><p><ins>inserted content</ins></p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
+});
+
+describe("ins + attrs: ins and block attrs coexist", () => {
+  const input = "Some ++inserted++ text here. {.updated}";
+  const expected = '<p class="updated">Some <ins>inserted</ins> text here.</p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });

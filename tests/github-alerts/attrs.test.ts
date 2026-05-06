@@ -1,4 +1,4 @@
-import { expect, test } from "vite-plus/test";
+import { expect, test, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -28,40 +28,41 @@ const remd = (src: string) =>
     ),
   );
 
-test("github-alerts + attrs (markdown-it): heading with attrs alongside alert", () => {
+describe("github-alerts + attrs: heading with attrs alongside alert", () => {
   const input = "## Notes {.section}\n\n> [!NOTE]\n> Some note content.";
-  expect(normalizeHtml(md.render(input))).toMatchSnapshot();
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toMatchSnapshot());
+  test("remark", () => expect(remd(input)).toMatchSnapshot());
 });
 
-test("github-alerts + attrs (markdown-it): paragraph with attrs after alert", () => {
+describe("github-alerts + attrs: paragraph with attrs after alert", () => {
   const input = "> [!TIP]\n> A helpful tip.\n\nRead more. {.callout}";
-  const result = normalizeHtml(md.render(input));
-  expect(result).toContain('class="callout"');
-  expect(result).toContain('data-alert="tip"');
+
+  test("markdown-it", () => {
+    const result = normalizeHtml(md.render(input));
+    expect(result).toContain('class="callout"');
+    expect(result).toContain('data-alert="tip"');
+  });
+
+  test("remark", () => {
+    const result = remd(input);
+    expect(result).toContain('class="callout"');
+    expect(result).toContain('data-alert="tip"');
+  });
 });
 
-test("github-alerts + attrs (markdown-it): alerts and attrs coexist", () => {
+describe("github-alerts + attrs: alerts and attrs coexist", () => {
   const input = "> [!WARNING]\n> Be careful.\n\n> [!NOTE]\n> Just a note.";
-  const result = normalizeHtml(md.render(input));
-  expect(result).toContain('data-alert="warning"');
-  expect(result).toContain('data-alert="note"');
-});
 
-test("github-alerts + attrs (remark): heading with attrs alongside alert", () => {
-  const input = "## Notes {.section}\n\n> [!NOTE]\n> Some note content.";
-  expect(remd(input)).toMatchSnapshot();
-});
+  test("markdown-it", () => {
+    const result = normalizeHtml(md.render(input));
+    expect(result).toContain('data-alert="warning"');
+    expect(result).toContain('data-alert="note"');
+  });
 
-test("github-alerts + attrs (remark): paragraph with attrs after alert", () => {
-  const input = "> [!TIP]\n> A helpful tip.\n\nRead more. {.callout}";
-  const result = remd(input);
-  expect(result).toContain('class="callout"');
-  expect(result).toContain('data-alert="tip"');
-});
-
-test("github-alerts + attrs (remark): alerts and attrs coexist", () => {
-  const input = "> [!WARNING]\n> Be careful.\n\n> [!NOTE]\n> Just a note.";
-  const result = remd(input);
-  expect(result).toContain('data-alert="warning"');
-  expect(result).toContain('data-alert="note"');
+  test("remark", () => {
+    const result = remd(input);
+    expect(result).toContain('data-alert="warning"');
+    expect(result).toContain('data-alert="note"');
+  });
 });

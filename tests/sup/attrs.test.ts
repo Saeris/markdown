@@ -1,4 +1,4 @@
-import { expect, test } from "vite-plus/test";
+import { expect, test, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -27,31 +27,26 @@ const remd = (src: string) =>
     ),
   );
 
-const cases = [
-  {
-    name: "sup inline with class attr",
-    input: "E=mc^2^{.physics}",
-    mdit: '<p>E=mc<sup class="physics">2</sup></p>',
-    remd: '<p>E=mc<sup class="physics">2</sup></p>',
-  },
-  {
-    name: "sup with heading attrs",
-    input: "## References {.refs}\n\nSee note^1^.",
-    mdit: '<h2 class="refs">References</h2><p>See note<sup>1</sup>.</p>',
-    remd: '<h2 class="refs">References</h2><p>See note<sup>1</sup>.</p>',
-  },
-  {
-    name: "sup and block attrs coexist",
-    input: "Area is r^2^ × π. {.math}",
-    mdit: '<p class="math">Area is r<sup>2</sup> × π.</p>',
-    remd: '<p class="math">Area is r<sup>2</sup> × π.</p>',
-  },
-];
+describe("sup + attrs: sup inline with class attr", () => {
+  const input = "E=mc^2^{.physics}";
+  const expected = '<p>E=mc<sup class="physics">2</sup></p>';
 
-test.each(cases)("sup + attrs (markdown-it): $name", ({ input, mdit: expected }) => {
-  expect(normalizeHtml(md.render(input))).toBe(expected);
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });
 
-test.each(cases)("sup + attrs (remark): $name", ({ input, remd: expected }) => {
-  expect(remd(input)).toBe(expected);
+describe("sup + attrs: sup with heading attrs", () => {
+  const input = "## References {.refs}\n\nSee note^1^.";
+  const expected = '<h2 class="refs">References</h2><p>See note<sup>1</sup>.</p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
+});
+
+describe("sup + attrs: sup and block attrs coexist", () => {
+  const input = "Area is r^2^ × π. {.math}";
+  const expected = '<p class="math">Area is r<sup>2</sup> × π.</p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });

@@ -1,4 +1,4 @@
-import { expect, test } from "vite-plus/test";
+import { expect, test, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -25,31 +25,28 @@ const remd = (src: string) =>
     ),
   );
 
-const cases = [
-  {
-    name: "dl with heading attrs",
-    input: "## Glossary {.glossary}\n\nTerm\n: Definition",
-    mdit: '<h2 class="glossary">Glossary</h2><dl><dt>Term</dt><dd>Definition</dd></dl>',
-    remd: '<h2 class="glossary">Glossary</h2><dl><dt>Term</dt><dd>Definition</dd></dl>',
-  },
-  {
-    name: "dl with block attrs on surrounding paragraph",
-    input: "Term\n: Definition\n\nFollowing paragraph. {.note}",
-    mdit: '<dl><dt>Term</dt><dd>Definition</dd></dl><p class="note">Following paragraph.</p>',
-    remd: '<dl><dt>Term</dt><dd>Definition</dd></dl><p class="note">Following paragraph.</p>',
-  },
-  {
-    name: "dl coexists with attrs without interference",
-    input: "Apple\n: A red fruit\n\nBanana\n: A yellow fruit",
-    mdit: "<dl><dt>Apple</dt><dd>A red fruit</dd><dt>Banana</dt><dd>A yellow fruit</dd></dl>",
-    remd: "<dl><dt>Apple</dt><dd>A red fruit</dd><dt>Banana</dt><dd>A yellow fruit</dd></dl>",
-  },
-];
+describe("definition-list + attrs: dl with heading attrs", () => {
+  const input = "## Glossary {.glossary}\n\nTerm\n: Definition";
+  const expected = '<h2 class="glossary">Glossary</h2><dl><dt>Term</dt><dd>Definition</dd></dl>';
 
-test.each(cases)("definition-list + attrs (markdown-it): $name", ({ input, mdit: expected }) => {
-  expect(normalizeHtml(md.render(input))).toBe(expected);
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });
 
-test.each(cases)("definition-list + attrs (remark): $name", ({ input, remd: expected }) => {
-  expect(remd(input)).toBe(expected);
+describe("definition-list + attrs: dl with block attrs on surrounding paragraph", () => {
+  const input = "Term\n: Definition\n\nFollowing paragraph. {.note}";
+  const expected =
+    '<dl><dt>Term</dt><dd>Definition</dd></dl><p class="note">Following paragraph.</p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
+});
+
+describe("definition-list + attrs: dl coexists with attrs without interference", () => {
+  const input = "Apple\n: A red fruit\n\nBanana\n: A yellow fruit";
+  const expected =
+    "<dl><dt>Apple</dt><dd>A red fruit</dd><dt>Banana</dt><dd>A yellow fruit</dd></dl>";
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });

@@ -1,4 +1,4 @@
-import { expect, test } from "vite-plus/test";
+import { expect, test, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -27,37 +27,34 @@ const remd = (src: string) =>
     ),
   );
 
-const cases = [
-  {
-    name: "kbd inline with class attr",
-    input: "[[Ctrl]]{.key}",
-    mdit: '<p><kbd class="key">Ctrl</kbd></p>',
-    remd: '<p><kbd class="key">Ctrl</kbd></p>',
-  },
-  {
-    name: "kbd inline with id attr",
-    input: "[[Enter]]{#enter-key}",
-    mdit: '<p><kbd id="enter-key">Enter</kbd></p>',
-    remd: '<p><kbd id="enter-key">Enter</kbd></p>',
-  },
-  {
-    name: "kbd with heading attrs",
-    input: "## Shortcuts {.shortcuts}\n\nPress [[Ctrl]].",
-    mdit: '<h2 class="shortcuts">Shortcuts</h2><p>Press <kbd>Ctrl</kbd>.</p>',
-    remd: '<h2 class="shortcuts">Shortcuts</h2><p>Press <kbd>Ctrl</kbd>.</p>',
-  },
-  {
-    name: "kbd and block attrs coexist",
-    input: "Press [[Ctrl]] to copy text. {.tip}",
-    mdit: '<p class="tip">Press <kbd>Ctrl</kbd> to copy text.</p>',
-    remd: '<p class="tip">Press <kbd>Ctrl</kbd> to copy text.</p>',
-  },
-];
+describe("kbd + attrs: kbd inline with class attr", () => {
+  const input = "[[Ctrl]]{.key}";
+  const expected = '<p><kbd class="key">Ctrl</kbd></p>';
 
-test.each(cases)("kbd + attrs (markdown-it): $name", ({ input, mdit: expected }) => {
-  expect(normalizeHtml(md.render(input))).toBe(expected);
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });
 
-test.each(cases)("kbd + attrs (remark): $name", ({ input, remd: expected }) => {
-  expect(remd(input)).toBe(expected);
+describe("kbd + attrs: kbd inline with id attr", () => {
+  const input = "[[Enter]]{#enter-key}";
+  const expected = '<p><kbd id="enter-key">Enter</kbd></p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
+});
+
+describe("kbd + attrs: kbd with heading attrs", () => {
+  const input = "## Shortcuts {.shortcuts}\n\nPress [[Ctrl]].";
+  const expected = '<h2 class="shortcuts">Shortcuts</h2><p>Press <kbd>Ctrl</kbd>.</p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
+});
+
+describe("kbd + attrs: kbd and block attrs coexist", () => {
+  const input = "Press [[Ctrl]] to copy text. {.tip}";
+  const expected = '<p class="tip">Press <kbd>Ctrl</kbd> to copy text.</p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });

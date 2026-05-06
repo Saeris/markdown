@@ -1,4 +1,4 @@
-import { expect, test } from "vite-plus/test";
+import { expect, test, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -27,37 +27,37 @@ const remd = (src: string) =>
     ),
   );
 
-const cases = [
-  {
-    name: "abbr with block attrs on paragraph",
-    input: "*[HTML]: Hyper Text Markup Language\n\nThe HTML specification. {.intro}",
-    mdit: '<p class="intro">The <abbr title="Hyper Text Markup Language">HTML</abbr> specification.</p>',
-    remd: '<p class="intro">The <abbr title="Hyper Text Markup Language">HTML</abbr> specification.</p>',
-  },
-  {
-    name: "abbr with heading attrs",
-    input: "*[API]: Application Programming Interface\n\n## API Reference {#api-ref}",
-    mdit: '<h2 id="api-ref"><abbr title="Application Programming Interface">API</abbr> Reference</h2>',
-    remd: '<h2 id="api-ref"><abbr title="Application Programming Interface">API</abbr> Reference</h2>',
-  },
-  {
-    name: "abbr definition does not consume attrs block",
-    input: "*[CSS]: Cascading Style Sheets\n\nUse CSS for styling.\n\n{.note}",
-    mdit: '<p>Use <abbr title="Cascading Style Sheets">CSS</abbr> for styling.</p><p>{.note}</p>',
-    remd: '<p>Use <abbr title="Cascading Style Sheets">CSS</abbr> for styling.</p><p>{.note}</p>',
-  },
-  {
-    name: "abbr and softbreak attrs coexist",
-    input: "*[JS]: JavaScript\n\nUse JS today.\n{.highlight}",
-    mdit: '<p class="highlight">Use <abbr title="JavaScript">JS</abbr> today.</p>',
-    remd: '<p class="highlight">Use <abbr title="JavaScript">JS</abbr> today.</p>',
-  },
-];
+describe("abbr + attrs: abbr with block attrs on paragraph", () => {
+  const input = "*[HTML]: Hyper Text Markup Language\n\nThe HTML specification. {.intro}";
+  const expected =
+    '<p class="intro">The <abbr title="Hyper Text Markup Language">HTML</abbr> specification.</p>';
 
-test.each(cases)("abbr + attrs (markdown-it): $name", ({ input, mdit: expected }) => {
-  expect(normalizeHtml(md.render(input))).toBe(expected);
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });
 
-test.each(cases)("abbr + attrs (remark): $name", ({ input, remd: expected }) => {
-  expect(remd(input)).toBe(expected);
+describe("abbr + attrs: abbr with heading attrs", () => {
+  const input = "*[API]: Application Programming Interface\n\n## API Reference {#api-ref}";
+  const expected =
+    '<h2 id="api-ref"><abbr title="Application Programming Interface">API</abbr> Reference</h2>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
+});
+
+describe("abbr + attrs: abbr definition does not consume attrs block", () => {
+  const input = "*[CSS]: Cascading Style Sheets\n\nUse CSS for styling.\n\n{.note}";
+  const expected =
+    '<p>Use <abbr title="Cascading Style Sheets">CSS</abbr> for styling.</p><p>{.note}</p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
+});
+
+describe("abbr + attrs: abbr and softbreak attrs coexist", () => {
+  const input = "*[JS]: JavaScript\n\nUse JS today.\n{.highlight}";
+  const expected = '<p class="highlight">Use <abbr title="JavaScript">JS</abbr> today.</p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });

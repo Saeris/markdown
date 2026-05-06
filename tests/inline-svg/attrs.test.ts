@@ -1,5 +1,5 @@
 import { fileURLToPath } from "node:url";
-import { expect, test } from "vite-plus/test";
+import { expect, test, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -26,36 +26,34 @@ const remd = async (src: string) => {
   return normalizeHtml(String(file));
 };
 
-test("inline-svg + attrs (markdown-it): heading with attrs", () => {
+describe("inline-svg + attrs: heading with attrs", () => {
   const input = "## Diagrams {.diagrams}";
-  expect(normalizeHtml(md.render(input, env))).toBe('<h2 class="diagrams">Diagrams</h2>');
+  const expected = '<h2 class="diagrams">Diagrams</h2>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input, env))).toBe(expected));
+  test("rehype", async () => expect(await remd(input)).toBe(expected));
 });
 
-test("inline-svg + attrs (markdown-it): paragraph with attrs", () => {
+describe("inline-svg + attrs: paragraph with attrs", () => {
   const input = "Inline images below. {.gallery}";
-  expect(normalizeHtml(md.render(input, env))).toBe('<p class="gallery">Inline images below.</p>');
+  const expected = '<p class="gallery">Inline images below.</p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input, env))).toBe(expected));
+  test("rehype", async () => expect(await remd(input)).toBe(expected));
 });
 
-test("inline-svg + attrs (markdown-it): plugins coexist without interference", () => {
+describe("inline-svg + attrs: plugins coexist without interference", () => {
   const input = "## Gallery {.gallery}\n\nImages here.";
-  const result = normalizeHtml(md.render(input, env));
-  expect(result).toContain('class="gallery"');
-  expect(result).toContain("<h2");
-});
 
-test("inline-svg + attrs (rehype): heading with attrs", async () => {
-  const input = "## Diagrams {.diagrams}";
-  expect(await remd(input)).toBe('<h2 class="diagrams">Diagrams</h2>');
-});
+  test("markdown-it", () => {
+    const result = normalizeHtml(md.render(input, env));
+    expect(result).toContain('class="gallery"');
+    expect(result).toContain("<h2");
+  });
 
-test("inline-svg + attrs (rehype): paragraph with attrs", async () => {
-  const input = "Inline images below. {.gallery}";
-  expect(await remd(input)).toBe('<p class="gallery">Inline images below.</p>');
-});
-
-test("inline-svg + attrs (rehype): plugins coexist without interference", async () => {
-  const input = "## Gallery {.gallery}\n\nImages here.";
-  const result = await remd(input);
-  expect(result).toContain('class="gallery"');
-  expect(result).toContain("<h2");
+  test("rehype", async () => {
+    const result = await remd(input);
+    expect(result).toContain('class="gallery"');
+    expect(result).toContain("<h2");
+  });
 });

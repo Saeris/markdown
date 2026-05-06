@@ -1,4 +1,4 @@
-import { expect, test } from "vite-plus/test";
+import { expect, test, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -27,31 +27,27 @@ const remd = (src: string) =>
     ),
   );
 
-const cases = [
-  {
-    name: "ruby with heading attrs",
-    input: "## Kanji {.kanji}\n\n{漢字|かんじ}",
-    mdit: '<h2 class="kanji">Kanji</h2><p><ruby>漢字<rt>かんじ</rt></ruby></p>',
-    remd: '<h2 class="kanji">Kanji</h2><p><ruby>漢字<rt>かんじ</rt></ruby></p>',
-  },
-  {
-    name: "ruby and block attrs coexist",
-    input: "Read {漢字|かんじ} carefully. {.note}",
-    mdit: '<p class="note">Read <ruby>漢字<rt>かんじ</rt></ruby> carefully.</p>',
-    remd: '<p class="note">Read <ruby>漢字<rt>かんじ</rt></ruby> carefully.</p>',
-  },
-  {
-    name: "ruby and attrs coexist without interference",
-    input: "{日本|にほん}語\n\n{漢字|かんじ}",
-    mdit: "<p><ruby>日本<rt>にほん</rt></ruby>語</p><p><ruby>漢字<rt>かんじ</rt></ruby></p>",
-    remd: "<p><ruby>日本<rt>にほん</rt></ruby>語</p><p><ruby>漢字<rt>かんじ</rt></ruby></p>",
-  },
-];
+describe("ruby + attrs: ruby with heading attrs", () => {
+  const input = "## Kanji {.kanji}\n\n{漢字|かんじ}";
+  const expected = '<h2 class="kanji">Kanji</h2><p><ruby>漢字<rt>かんじ</rt></ruby></p>';
 
-test.each(cases)("ruby + attrs (markdown-it): $name", ({ input, mdit: expected }) => {
-  expect(normalizeHtml(md.render(input))).toBe(expected);
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });
 
-test.each(cases)("ruby + attrs (remark): $name", ({ input, remd: expected }) => {
-  expect(remd(input)).toBe(expected);
+describe("ruby + attrs: ruby and block attrs coexist", () => {
+  const input = "Read {漢字|かんじ} carefully. {.note}";
+  const expected = '<p class="note">Read <ruby>漢字<rt>かんじ</rt></ruby> carefully.</p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
+});
+
+describe("ruby + attrs: ruby and attrs coexist without interference", () => {
+  const input = "{日本|にほん}語\n\n{漢字|かんじ}";
+  const expected =
+    "<p><ruby>日本<rt>にほん</rt></ruby>語</p><p><ruby>漢字<rt>かんじ</rt></ruby></p>";
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });

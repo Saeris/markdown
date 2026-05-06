@@ -1,4 +1,4 @@
-import { expect, test } from "vite-plus/test";
+import { expect, test, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -27,37 +27,34 @@ const remd = (src: string) =>
     ),
   );
 
-const cases = [
-  {
-    name: "del inline with class attr",
-    input: "--deleted--{.removed}",
-    mdit: '<p><del class="removed">deleted</del></p>',
-    remd: '<p><del class="removed">deleted</del></p>',
-  },
-  {
-    name: "del inline with id attr",
-    input: "--removed--{#del-1}",
-    mdit: '<p><del id="del-1">removed</del></p>',
-    remd: '<p><del id="del-1">removed</del></p>',
-  },
-  {
-    name: "del with heading attrs",
-    input: "## Old Title {.deprecated}\n\n--deprecated--",
-    mdit: '<h2 class="deprecated">Old Title</h2><p><del>deprecated</del></p>',
-    remd: '<h2 class="deprecated">Old Title</h2><p><del>deprecated</del></p>',
-  },
-  {
-    name: "del and block attrs coexist",
-    input: "Some --deleted-- text and more. {.updated}",
-    mdit: '<p class="updated">Some <del>deleted</del> text and more.</p>',
-    remd: '<p class="updated">Some <del>deleted</del> text and more.</p>',
-  },
-];
+describe("del + attrs: del inline with class attr", () => {
+  const input = "--deleted--{.removed}";
+  const expected = '<p><del class="removed">deleted</del></p>';
 
-test.each(cases)("del + attrs (markdown-it): $name", ({ input, mdit: expected }) => {
-  expect(normalizeHtml(md.render(input))).toBe(expected);
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });
 
-test.each(cases)("del + attrs (remark): $name", ({ input, remd: expected }) => {
-  expect(remd(input)).toBe(expected);
+describe("del + attrs: del inline with id attr", () => {
+  const input = "--removed--{#del-1}";
+  const expected = '<p><del id="del-1">removed</del></p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
+});
+
+describe("del + attrs: del with heading attrs", () => {
+  const input = "## Old Title {.deprecated}\n\n--deprecated--";
+  const expected = '<h2 class="deprecated">Old Title</h2><p><del>deprecated</del></p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
+});
+
+describe("del + attrs: del and block attrs coexist", () => {
+  const input = "Some --deleted-- text and more. {.updated}";
+  const expected = '<p class="updated">Some <del>deleted</del> text and more.</p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });

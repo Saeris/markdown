@@ -1,4 +1,4 @@
-import { expect, test } from "vite-plus/test";
+import { expect, test, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -27,31 +27,26 @@ const remd = (src: string) =>
     ),
   );
 
-const cases = [
-  {
-    name: "sub inline with block attr on paragraph",
-    input: "H~2~O molecule. {.chemical}",
-    mdit: '<p class="chemical">H<sub>2</sub>O molecule.</p>',
-    remd: '<p class="chemical">H<sub>2</sub>O molecule.</p>',
-  },
-  {
-    name: "sub with heading attrs",
-    input: "## Formulas {.formulas}\n\nH~2~O",
-    mdit: '<h2 class="formulas">Formulas</h2><p>H<sub>2</sub>O</p>',
-    remd: '<h2 class="formulas">Formulas</h2><p>H<sub>2</sub>O</p>',
-  },
-  {
-    name: "sub and block attrs coexist",
-    input: "Water is H~2~O and CO~2~. {.chemistry}",
-    mdit: '<p class="chemistry">Water is H<sub>2</sub>O and CO<sub>2</sub>.</p>',
-    remd: '<p class="chemistry">Water is H<sub>2</sub>O and CO<sub>2</sub>.</p>',
-  },
-];
+describe("sub + attrs: sub inline with block attr on paragraph", () => {
+  const input = "H~2~O molecule. {.chemical}";
+  const expected = '<p class="chemical">H<sub>2</sub>O molecule.</p>';
 
-test.each(cases)("sub + attrs (markdown-it): $name", ({ input, mdit: expected }) => {
-  expect(normalizeHtml(md.render(input))).toBe(expected);
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });
 
-test.each(cases)("sub + attrs (remark): $name", ({ input, remd: expected }) => {
-  expect(remd(input)).toBe(expected);
+describe("sub + attrs: sub with heading attrs", () => {
+  const input = "## Formulas {.formulas}\n\nH~2~O";
+  const expected = '<h2 class="formulas">Formulas</h2><p>H<sub>2</sub>O</p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
+});
+
+describe("sub + attrs: sub and block attrs coexist", () => {
+  const input = "Water is H~2~O and CO~2~. {.chemistry}";
+  const expected = '<p class="chemistry">Water is H<sub>2</sub>O and CO<sub>2</sub>.</p>';
+
+  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
+  test("remark", () => expect(remd(input)).toBe(expected));
 });
