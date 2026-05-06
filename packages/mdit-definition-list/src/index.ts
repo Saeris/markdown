@@ -2,36 +2,71 @@ import type { PluginSimple } from "markdown-it";
 import type { RuleBlock } from "markdown-it/lib/parser_block.mjs";
 import type StateBlock from "markdown-it/lib/rules_block/state_block.mjs";
 
-// Search `[:~][\n ]`, returns next pos after marker on success
-// or -1 on fail.
+const COLON = 58;
+const TILDE = 126;
+const SPACE = 32;
+const TAB = 9;
+const TAB_SIZE = 4;
+
+const expandTabStop = (offset: number) => offset + TAB_SIZE - (offset % TAB_SIZE);
+
+// Search `[:~][\n ]`, returns next pos after marker on success or -1 on fail.
 const checkAndSkipMarker = (state: StateBlock, line: number): number => {
   let start = state.bMarks[line] + state.tShift[line];
   const max = state.eMarks[line];
 
   if (start >= max) return -1;
 
-  // Check bullet
   const marker = state.src.charCodeAt(start++);
-
-  if (marker !== 126 /* ~ */ && marker !== 58 /* : */) return -1;
+  if (marker !== TILDE && marker !== COLON) return -1;
 
   // skip spaces and tabs after marker
   let pos = start;
   while (pos < max) {
     const ch = state.src.charCodeAt(pos);
-    if (ch !== 32 /* space */ && ch !== 9 /* tab */) break;
+    if (ch !== SPACE && ch !== TAB) break;
     pos++;
   }
 
-  if (
-    // require space or tab after ":"
-    start === pos ||
-    // no empty definitions, e.g. "  : "
-    pos >= max
-  )
-    return -1;
+  // require at least one space/tab after marker, and non-empty content
+  if (start === pos || pos >= max) return -1;
 
   return start;
+};
+
+// Saves mutable state fields, calls body, then restores them.
+const withStateIsolation = (
+  state: StateBlock,
+  ddLine: number,
+  contentStart: number,
+  offset: number,
+  endLine: number,
+  body: () => void,
+): void => {
+  const savedTight = state.tight;
+  const savedDDIndent = state.ddIndent;
+  const savedIndent = state.blkIndent;
+  const savedTShift = state.tShift[ddLine];
+  const savedSCount = state.sCount[ddLine];
+  const savedParentType = state.parentType;
+
+  state.blkIndent = state.ddIndent = state.sCount[ddLine] + 2;
+  state.tShift[ddLine] = contentStart - state.bMarks[ddLine];
+  state.sCount[ddLine] = offset;
+  state.tight = true;
+  // @ts-expect-error: This type is not standard
+  state.parentType = "dl";
+  // @ts-expect-error: An internal param is used
+  state.md.block.tokenize(state, ddLine, endLine, true);
+
+  body();
+
+  state.tShift[ddLine] = savedTShift;
+  state.sCount[ddLine] = savedSCount;
+  state.tight = savedTight;
+  state.parentType = savedParentType;
+  state.blkIndent = savedIndent;
+  state.ddIndent = savedDDIndent;
 };
 
 const markTightParagraphs = (state: StateBlock, index: number): void => {
@@ -124,8 +159,8 @@ const dlRule: RuleBlock = (state, startLine, endLine, silent) => {
       while (pos < max) {
         const ch = state.src.charCodeAt(pos);
 
-        if (ch === 9 /* \t */) offset += 4 - (offset % 4);
-        else if (ch === 32 /* space */) offset++;
+        if (ch === TAB) offset = expandTabStop(offset);
+        else if (ch === SPACE) offset++;
         else break;
 
         pos++;
@@ -133,35 +168,12 @@ const dlRule: RuleBlock = (state, startLine, endLine, silent) => {
 
       contentStart = pos;
 
-      const oldTight = state.tight;
-      const oldDDIndent = state.ddIndent;
-      const oldIndent = state.blkIndent;
-      const oldTShift = state.tShift[ddLine];
-      const oldSCount = state.sCount[ddLine];
-      const oldParentType = state.parentType;
-
-      state.blkIndent = state.ddIndent = state.sCount[ddLine] + 2;
-      state.tShift[ddLine] = contentStart - state.bMarks[ddLine];
-      state.sCount[ddLine] = offset;
-      state.tight = true;
-      // @ts-expect-error: This type is not standard
-      state.parentType = "dl";
-      // @ts-expect-error: An internal param is used
-      state.md.block.tokenize(state, ddLine, endLine, true);
-
-      // If any of list item is tight, mark list as tight
-      if (!state.tight || prevEmptyEnd) tight = false;
-
-      // Item become loose if finish with empty line,
-      // but we should filter last element, because it means list finish
-      prevEmptyEnd = state.line - ddLine > 1 && state.isEmpty(state.line - 1);
-
-      state.tShift[ddLine] = oldTShift;
-      state.sCount[ddLine] = oldSCount;
-      state.tight = oldTight;
-      state.parentType = oldParentType;
-      state.blkIndent = oldIndent;
-      state.ddIndent = oldDDIndent;
+      withStateIsolation(state, ddLine, contentStart, offset, endLine, () => {
+        // If any list item is loose, mark the whole list as loose
+        if (!state.tight || prevEmptyEnd) tight = false;
+        // Item is loose if it ends with a blank line (excluding the terminal blank)
+        prevEmptyEnd = state.line - ddLine > 1 && state.isEmpty(state.line - 1);
+      });
 
       state.push("dd_close", "dd", -1);
 

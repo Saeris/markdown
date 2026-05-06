@@ -64,6 +64,8 @@ declare module "mdast" {
   }
 }
 
+export const clonePoint = <T extends object>(p: T): T => ({ ...p }) as T;
+
 export type FlowToken = Token & {
   _tokenizer?: {
     events: Array<[string, Token, unknown]>;

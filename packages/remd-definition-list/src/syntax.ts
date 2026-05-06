@@ -13,7 +13,7 @@ import type {
   TokenizeContext,
   Tokenizer,
 } from "micromark-util-types";
-import { tokenTypes } from "./types.js";
+import { tokenTypes, clonePoint } from "./types.js";
 import { analyzeDefTermFlow, subtokenizeDefTerm } from "./def-term-flow.js";
 import type { FlowToken } from "./types.js";
 
@@ -26,6 +26,12 @@ const ignorablePrefixTypes = new Set([
   "blockQuoteMarker",
   "blockQuotePrefixWhitespace",
 ]);
+
+// Token types that are transparent when scanning for a valid def-term predecessor.
+const skippableFlowTypes = new Set(["lineEnding", "linePrefix", "lineEndingBlank", "content"]);
+
+// Token types that qualify as valid def-term content (tableHead/tableRow from gfm-table).
+const validTermTypes = new Set(["paragraph", "chunkContent", "tableHead", "tableRow"]);
 
 const defListConstruct: Construct = {
   name: "defList",
@@ -74,27 +80,26 @@ function resolveAllDefinitionTerm(events: Event[], context: TokenizeContext): Ev
     const event = evts[index];
     if (event[0] === "enter" && event[1].type === tokenTypes.defList) {
       dlStack.push(event[1]);
-    }
-    if (event[0] === "exit" && event[1].type === tokenTypes.defList) {
-      let defListFound = false;
-      let i = 1;
-      while (index + i < evts.length) {
-        const forwardEvent = evts[index + i];
-        if (forwardEvent[0] === "enter" && forwardEvent[1].type === tokenTypes.defList) {
-          defListFound = true;
-          break;
-        } else if (!ignorablePrefixTypes.has(forwardEvent[1].type)) {
+    } else if (event[0] === "exit" && event[1].type === tokenTypes.defList) {
+      // scan forward past ignorable prefix events to find an adjacent defList
+      let nextDlOffset = 1;
+      while (index + nextDlOffset < evts.length) {
+        const ahead = evts[index + nextDlOffset];
+        if (ahead[0] === "enter" && ahead[1].type === tokenTypes.defList) break;
+        if (!ignorablePrefixTypes.has(ahead[1].type)) {
+          nextDlOffset = 0;
           break;
         }
-        i++;
+        nextDlOffset++;
       }
-      if (defListFound) {
-        event[1].end = Object.assign({}, evts[index + i][1].end);
-        splice(events, index, i + 1, []);
-        index -= i;
+      if (nextDlOffset > 0 && index + nextDlOffset < evts.length) {
+        // adjacent defList found — extend current token and splice out the gap+enter
+        event[1].end = clonePoint(evts[index + nextDlOffset][1].end);
+        splice(events, index, nextDlOffset + 1, []);
+        index -= nextDlOffset;
       } else {
-        const token = dlStack.pop();
-        event[1] = token!;
+        // no adjacent defList — fix up exit token to reference the enter token
+        event[1] = dlStack.pop()!;
       }
     }
     index++;
@@ -119,9 +124,7 @@ function resolveDefList(
 
     if (event[0] === "enter" && event[1].type === tokenTypes.defList) {
       index += resolveDefList(index, events, context);
-    }
-
-    if (event[0] === "exit" && event[1].type === tokenTypes.defList) {
+    } else if (event[0] === "exit" && event[1].type === tokenTypes.defList) {
       // if the last description had internal blanks, mark it loose
       if ((event[1] as FlowToken)._prevLoose && defListDescriptionToken) {
         (defListDescriptionToken as FlowToken)._loose = true;
@@ -138,18 +141,14 @@ function resolveDefList(
       }
 
       break;
-    }
-
-    if (event[0] === "exit" && event[1].type === tokenTypes.defListDescriptionPrefix) {
+    } else if (event[0] === "exit" && event[1].type === tokenTypes.defListDescriptionPrefix) {
       if (!expectFirstDescription) {
         index += addDescriptionExit(index, events);
         defListDescriptionToken = undefined;
       }
       index += addDescriptionEnter(index, events, (event[1] as FlowToken)._loose);
       expectFirstDescription = false;
-    }
-
-    if (event[0] === "enter" && event[1].type === tokenTypes.defListDescriptionPrefix) {
+    } else if (event[0] === "enter" && event[1].type === tokenTypes.defListDescriptionPrefix) {
       // mark the previous description loose if it had internal blanks
       if ((event[1] as FlowToken)._prevLoose && defListDescriptionToken) {
         (defListDescriptionToken as FlowToken)._loose = true;
@@ -173,8 +172,8 @@ function resolveDefList(
   function addDescriptionEnter(index: number, events: EventTuple[], loose?: boolean): number {
     defListDescriptionToken = {
       type: tokenTypes.defListDescription,
-      start: Object.assign({}, events[index + 1][1].start),
-      end: Object.assign({}, events[index + 1][1].end),
+      start: clonePoint(events[index + 1][1].start),
+      end: clonePoint(events[index + 1][1].end),
       _loose: loose,
     };
     allDescriptionTokens.push(defListDescriptionToken);
@@ -183,7 +182,7 @@ function resolveDefList(
   }
 
   function addDescriptionExit(index: number, events: EventTuple[]): number {
-    defListDescriptionToken!.end = Object.assign({}, events[index - 1][1].end);
+    defListDescriptionToken!.end = clonePoint(events[index - 1][1].end);
 
     // _prevLoose is set on the next prefix when the current description had internal blanks
     // (handled in the enter defListDescriptionPrefix block)
@@ -207,8 +206,8 @@ function createDefTermEvent(
     const defListEnterEvent = events[defListStartIndex];
     const termToken: Token = {
       type: tokenTypes.defListTerm,
-      start: Object.assign({}, defListEnterEvent[1].start),
-      end: Object.assign({}, defListEnterEvent[1].start),
+      start: clonePoint(defListEnterEvent[1].start),
+      end: clonePoint(defListEnterEvent[1].start),
     };
     splice(events as Event[], defListStartIndex, 0, [
       ["enter", termToken, context] as Event,
@@ -283,12 +282,12 @@ function resolveDefinitionTermTo(defListStartIndex: number, events: EventTuple[]
   );
 
   if (blockQuoteExitIndex != null) {
-    blockQuoteExit![1].end = Object.assign({}, events[newDefListStartIndex - 1][1].end);
+    blockQuoteExit![1].end = clonePoint(events[newDefListStartIndex - 1][1].end);
     splice(events as Event[], newDefListStartIndex, 0, [blockQuoteExit! as Event]);
     newDefListStartIndex += 1;
   }
 
-  defListEnterEvent[1].start = Object.assign({}, events[newDefListStartIndex][1].start);
+  defListEnterEvent[1].start = clonePoint(events[newDefListStartIndex][1].start);
   splice(events as Event[], newDefListStartIndex, 0, [defListEnterEvent as Event]);
   return newDefListStartIndex - defListStartIndex;
 }
@@ -329,16 +328,9 @@ function checkPossibleDefTerm(events: EventTuple[]): boolean {
         if (blanklines >= 1) break;
         blanklines++;
       }
-      if (
-        tmpToken.type !== "lineEnding" &&
-        tmpToken.type !== "linePrefix" &&
-        tmpToken.type !== "lineEndingBlank" &&
-        tmpToken.type !== "content"
-      ) {
+      if (!skippableFlowTypes.has(tmpToken.type as string)) {
         if (flagBlockQuote && !lazyLines[tmpToken.end.line]) return false;
-        // tableHead/tableRow are added by gfm-table extension; check via string comparison
-        const t = tmpToken.type as string;
-        return t === "paragraph" || t === "chunkContent" || t === "tableHead" || t === "tableRow";
+        return validTermTypes.has(tmpToken.type as string);
       }
     }
   }
@@ -352,36 +344,32 @@ function tokenizeDefListStart(
   ok: State,
   nok: State,
 ): State {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const self = this;
-  if (self.containerState == null) {
-    self.containerState = {};
+  if (this.containerState == null) {
+    this.containerState = {};
   }
 
-  const tail = self.events[self.events.length - 1];
+  const tail = this.events[this.events.length - 1];
   let initialSize =
     tail && tail[1].type === "linePrefix" ? tail[2].sliceSerialize(tail[1], true).length : 0;
 
-  if (self.containerState.type == null) {
-    if (checkPossibleDefTerm(self.events as EventTuple[])) {
+  if (this.containerState.type == null) {
+    if (checkPossibleDefTerm(this.events as EventTuple[])) {
       effects.enter(tokenTypes.defList, { _container: true });
-      self.containerState.type = tokenTypes.defList;
+      this.containerState.type = tokenTypes.defList;
     } else {
       return nok;
     }
   }
 
-  return start;
-
-  function start(code: number | null): State | undefined {
+  const start = (code: number | null): State | undefined => {
     if (code !== 58 /* : */ && code !== 126 /* ~ */) return nok(code);
 
     effects.enter(tokenTypes.defListDescriptionPrefix, {
-      _loose: self.containerState?.lastBlankLine,
-      _prevLoose: self.containerState?.hadBlankInDescription,
+      _loose: this.containerState?.lastBlankLine,
+      _prevLoose: this.containerState?.hadBlankInDescription,
     });
-    self.containerState!.lastBlankLine = undefined;
-    self.containerState!.hadBlankInDescription = undefined;
+    this.containerState!.lastBlankLine = undefined;
+    this.containerState!.hadBlankInDescription = undefined;
     effects.enter(tokenTypes.defListDescriptionMarker);
     effects.consume(code);
     effects.exit(tokenTypes.defListDescriptionMarker);
@@ -390,9 +378,9 @@ function tokenizeDefListStart(
       nok,
       effects.attempt(defListDescriptionPrefixWhitespaceConstruct, prefixEnd, otherPrefix),
     );
-  }
+  };
 
-  function otherPrefix(code: number | null): State | undefined {
+  const otherPrefix = (code: number | null): State | undefined => {
     if (markdownSpace(code)) {
       effects.enter(tokenTypes.defListDescriptionPrefixWhitespace);
       effects.consume(code!);
@@ -400,14 +388,16 @@ function tokenizeDefListStart(
       return prefixEnd;
     }
     return nok(code);
-  }
+  };
 
-  function prefixEnd(code: number | null): State | undefined {
-    self.containerState!.size =
+  const prefixEnd = (code: number | null): State | undefined => {
+    this.containerState!.size =
       initialSize +
-      self.sliceSerialize(effects.exit(tokenTypes.defListDescriptionPrefix), true).length;
+      this.sliceSerialize(effects.exit(tokenTypes.defListDescriptionPrefix), true).length;
     return ok(code);
-  }
+  };
+
+  return start;
 }
 
 function tokenizeDefListContinuation(
@@ -416,62 +406,56 @@ function tokenizeDefListContinuation(
   ok: State,
   nok: State,
 ): State {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const self = this;
-  self.containerState!._closeFlow = undefined;
-  return effects.check(blankLine, onBlank, notBlank);
+  this.containerState!._closeFlow = undefined;
 
-  function onBlank(code: number | null): State | undefined {
-    self.containerState!.furtherBlankLines = self.containerState!.furtherBlankLines ?? false;
-    self.containerState!.lastBlankLine = true;
-    return factorySpace(effects, ok, "linePrefix", self.containerState!.size! + 1)(code);
-  }
+  const onBlank = (code: number | null): State | undefined => {
+    this.containerState!.furtherBlankLines = this.containerState!.furtherBlankLines ?? false;
+    this.containerState!.lastBlankLine = true;
+    return factorySpace(effects, ok, "linePrefix", this.containerState!.size! + 1)(code);
+  };
 
-  function notBlank(code: number | null): State | undefined {
-    if (self.containerState!.furtherBlankLines ?? !markdownSpace(code)) {
-      self.containerState!.furtherBlankLines = undefined;
-      return notInCurrentItem(code);
-    }
-    const hadBlank = self.containerState!.lastBlankLine;
-    self.containerState!.furtherBlankLines = undefined;
-    self.containerState!.lastBlankLine = undefined;
-    return effects.attempt(indentConstruct, indentOk, notInCurrentItem)(code);
-
-    function indentOk(code: number | null): State | undefined {
-      // blank was seen and continuation was accepted — blank is internal to description
-      if (hadBlank) {
-        self.containerState!.hadBlankInDescription = true;
-      }
-      return ok(code);
-    }
-  }
-
-  function notInCurrentItem(code: number | null): State | undefined {
-    self.containerState!._closeFlow = true;
+  const notInCurrentItem = (code: number | null): State | undefined => {
+    this.containerState!._closeFlow = true;
     // interrupt is set by the micromark runtime on TokenizeContext
-    (self as unknown as { interrupt: boolean | undefined }).interrupt = undefined;
+    (this as unknown as { interrupt: boolean | undefined }).interrupt = undefined;
     return factorySpace(
       effects,
       effects.attempt(defListConstruct, ok, nok),
       "linePrefix",
-      self.parser.constructs.disable.null?.includes("codeIndented") ? undefined : 4,
+      this.parser.constructs.disable.null?.includes("codeIndented") ? undefined : 4,
     )(code);
-  }
+  };
+
+  const notBlank = (code: number | null): State | undefined => {
+    if (this.containerState!.furtherBlankLines ?? !markdownSpace(code)) {
+      this.containerState!.furtherBlankLines = undefined;
+      return notInCurrentItem(code);
+    }
+    const hadBlank = this.containerState!.lastBlankLine;
+    this.containerState!.furtherBlankLines = undefined;
+    this.containerState!.lastBlankLine = undefined;
+    // indentOk is the success branch of the attempt — only reached when indented
+    // continuation is accepted, meaning the preceding blank was genuinely internal
+    const indentOk = (code: number | null): State | undefined => {
+      if (hadBlank) this.containerState!.hadBlankInDescription = true;
+      return ok(code);
+    };
+    return effects.attempt(indentConstruct, indentOk, notInCurrentItem)(code);
+  };
+
+  return effects.check(blankLine, onBlank, notBlank);
 }
 
 function tokenizeIndent(this: TokenizeContext, effects: Effects, ok: State, nok: State): State {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const self = this;
-  return factorySpace(effects, afterPrefix, "linePrefix", self.containerState!.size! + 1);
-
-  function afterPrefix(code: number | null): State | undefined {
-    const tail = self.events[self.events.length - 1];
+  const afterPrefix = (code: number | null): State | undefined => {
+    const tail = this.events[this.events.length - 1];
     return tail &&
       tail[1].type === "linePrefix" &&
-      tail[2].sliceSerialize(tail[1], true).length === self.containerState!.size
+      tail[2].sliceSerialize(tail[1], true).length === this.containerState!.size
       ? ok(code)
       : nok(code);
-  }
+  };
+  return factorySpace(effects, afterPrefix, "linePrefix", this.containerState!.size! + 1);
 }
 
 function tokenizeDefListDescriptionPrefixWhitespace(
@@ -480,23 +464,20 @@ function tokenizeDefListDescriptionPrefixWhitespace(
   ok: State,
   nok: State,
 ): State {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const self = this;
-  return factorySpace(
-    effects,
-    afterPrefix,
-    tokenTypes.defListDescriptionPrefixWhitespace,
-    self.parser.constructs.disable.null?.includes("codeIndented") ? undefined : 4 + 1,
-  );
-
-  function afterPrefix(code: number | null): State | undefined {
-    const tail = self.events[self.events.length - 1];
+  const afterPrefix = (code: number | null): State | undefined => {
+    const tail = this.events[this.events.length - 1];
     return !markdownSpace(code) &&
       tail &&
       tail[1].type === tokenTypes.defListDescriptionPrefixWhitespace
       ? ok(code)
       : nok(code);
-  }
+  };
+  return factorySpace(
+    effects,
+    afterPrefix,
+    tokenTypes.defListDescriptionPrefixWhitespace,
+    this.parser.constructs.disable.null?.includes("codeIndented") ? undefined : 4 + 1,
+  );
 }
 
 function tokenizeDefListEnd(this: TokenizeContext, effects: Effects): void {

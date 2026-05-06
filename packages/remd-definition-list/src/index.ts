@@ -19,14 +19,12 @@ export const remarkDefinitionList: Plugin<[], Root> = function () {
   (data.fromMarkdownExtensions ??= []).push(defListFromMarkdown);
 };
 
+const newline = () => u("text", "\n") as ElementContent;
+
 const defList2hast = (state: State, node: DefinitionList): ElementContent => {
   const items = state.all(node);
-  const children: ElementContent[] = [];
-  for (const item of items) {
-    children.push(u("text", "\n") as ElementContent);
-    children.push(item);
-  }
-  if (items.length > 0) children.push(u("text", "\n") as ElementContent);
+  const children: ElementContent[] =
+    items.length > 0 ? [...items.flatMap((item) => [newline(), item]), newline()] : [];
   const result: ElementContent = { type: "element", tagName: "dl", properties: {}, children };
   state.patch(node, result);
   return result;
@@ -44,28 +42,24 @@ const defListTerm2hast = (state: State, node: DefinitionTerm): ElementContent =>
 };
 
 const defListDescription2hast = (state: State, node: DefinitionDescription): ElementContent => {
+  const rawChildren = state.all(node);
   const children: ElementContent[] = [];
-  const tmpChildren = state.all(node);
   let lastChildUnwrapped = false;
 
-  for (let i = 0; i < tmpChildren.length; i++) {
-    const child = tmpChildren[i];
-    const isP = child.type === "element" && child.tagName === "p";
-    if (node.spread || i !== 0 || !isP) {
-      children.push(u("text", "\n") as ElementContent);
-    }
-    if (!node.spread && isP) {
-      children.push(...child.children);
-      lastChildUnwrapped = true;
+  for (let i = 0; i < rawChildren.length; i++) {
+    const child = rawChildren[i];
+    const isP = child.type === "element" && (child as { tagName?: string }).tagName === "p";
+    const unwrap = !node.spread && isP;
+    if (!unwrap || i !== 0) children.push(newline());
+    if (unwrap) {
+      children.push(...(child as { children: ElementContent[] }).children);
     } else {
       children.push(child);
-      lastChildUnwrapped = false;
     }
+    lastChildUnwrapped = unwrap;
   }
 
-  if (!lastChildUnwrapped && children.length > 0) {
-    children.push(u("text", "\n") as ElementContent);
-  }
+  if (!lastChildUnwrapped && children.length > 0) children.push(newline());
 
   const result: ElementContent = { type: "element", tagName: "dd", properties: {}, children };
   state.patch(node, result);

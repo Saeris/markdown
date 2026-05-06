@@ -1,6 +1,6 @@
 import { splice } from "micromark-util-chunked";
 import type { Event, Token, TokenizeContext } from "micromark-util-types";
-import { tokenTypes } from "./types.js";
+import { tokenTypes, clonePoint } from "./types.js";
 import type { FlowToken } from "./types.js";
 
 type EventTuple = [string, Token, TokenizeContext];
@@ -120,8 +120,7 @@ function getSubtokensForDefTerm(termFlowToken: FlowToken): {
 
   if (pExitIndex != null) {
     if (paragraphEvents.length >= 1) {
-      flowEvents[pExitIndex][1].end = Object.assign(
-        {},
+      flowEvents[pExitIndex][1].end = clonePoint(
         paragraphEvents[paragraphEvents.length - 1][1].end,
       );
     } else if (pEnterIndex != null) {
@@ -131,8 +130,7 @@ function getSubtokensForDefTerm(termFlowToken: FlowToken): {
 
   if (contentExitIndex != null) {
     if (contentEvents.length >= 1) {
-      flowEvents[contentExitIndex][1].end = Object.assign(
-        {},
+      flowEvents[contentExitIndex][1].end = clonePoint(
         contentEvents[contentEvents.length - 1][1].end,
       );
     } else if (contentEnterIndex != null) {
@@ -140,7 +138,9 @@ function getSubtokensForDefTerm(termFlowToken: FlowToken): {
     }
   }
 
-  removedEventIndexes.sort((a, b) => b - a);
+  // splice in descending order so earlier indices stay valid
+  const descending = (a: number, b: number) => b - a;
+  removedEventIndexes.sort(descending);
   for (const i of removedEventIndexes) {
     splice(flowEvents as Event[], i, 1, []);
   }
@@ -168,8 +168,8 @@ export function subtokenizeDefTerm(
   if (numOfChildren > 0) {
     const termToken: Token = {
       type: tokenTypes.defListTerm,
-      start: Object.assign({}, termFlowToken.start),
-      end: Object.assign({}, termFlowToken.end),
+      start: clonePoint(termFlowToken.start),
+      end: clonePoint(termFlowToken.end),
     };
     childEvents.push(["enter", termToken, context]);
     childEvents.push(...subtokens.leadingChildEvents);
