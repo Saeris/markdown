@@ -87,7 +87,10 @@ export const testRule = (tokens: Token[], index: number, test: RuleTest): TestRe
   if (test.content !== undefined && !matches(test.content, token.content)) {
     return { match: false, position: null, range: null };
   }
-  if (test.meta !== undefined && !test.meta((token.meta as Record<string, unknown> | null) ?? null)) {
+  if (
+    test.meta !== undefined &&
+    !test.meta((token.meta as Record<string, unknown> | null) ?? null)
+  ) {
     return { match: false, position: null, range: null };
   }
   if (test.attrChecker) {

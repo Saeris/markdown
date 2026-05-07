@@ -14,7 +14,10 @@
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     },
-    "./styles": "./dist/steps.css"
+    "./styles": {
+      "development": "./src/steps.css",
+      "default": "./dist/steps.css"
+    }
   },
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",

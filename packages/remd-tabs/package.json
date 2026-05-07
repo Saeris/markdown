@@ -1,5 +1,5 @@
 {
-  "name": "@saeris/mdit-github-alerts",
+  "name": "@saeris/remd-tabs",
   "version": "0.0.0",
   "license": "MIT",
   "author": "Drake Costa <drake@saeris.io> (https://saeris.gg)",
@@ -10,21 +10,21 @@
   "type": "module",
   "exports": {
     ".": {
-      "development": "./src/index.ts",
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     },
-    "./styles": {
-      "development": "./src/github-alerts.css",
-      "default": "./dist/github-alerts.css"
-    }
+    "./styles": "./dist/tabs.css"
+  },
+  "dependencies": {
+    "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
-    "@types/markdown-it": "^14.1.2",
-    "markdown-it": "^14.1.1"
+    "@types/hast": "^3.0.4",
+    "@types/mdast": "^4.0.4",
+    "unified": "^11.0.5"
   },
   "peerDependencies": {
-    "markdown-it": "^14.0.0"
+    "unified": "^11.0.0"
   },
   "engines": {
     "node": ">=24.0.0"

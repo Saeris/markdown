@@ -206,7 +206,12 @@ const buildTree = (
     i = childEnd;
   }
 
-  return { type: "stepsList", depth: targetDepth, children: items, data: { attrsRole: "container" } };
+  return {
+    type: "stepsList",
+    depth: targetDepth,
+    children: items,
+    data: { attrsRole: "container" },
+  };
 };
 
 // ── Remark plugin ─────────────────────────────────────────────────────────────

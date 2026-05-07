@@ -230,7 +230,10 @@ export const createListRules = (options: DelimiterConfig): AttrRule[] => {
         if (t.type === closeToken.type) depth++;
         else if (t.type === openType) {
           depth--;
-          if (depth === 0) { listOpenIdx = i; break; }
+          if (depth === 0) {
+            listOpenIdx = i;
+            break;
+          }
         }
       }
 

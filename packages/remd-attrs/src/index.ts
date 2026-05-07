@@ -164,7 +164,14 @@ export const remarkAttrs: Plugin<[AttrsOptions?], Root> = (options = {}) => {
       // Third-party plugins opt in by setting data.attrsRole = "containerItem" and
       // exposing their title content in data.attrsTitle: PhrasingContent[].
       visit(tree, (node: Node) => {
-        const n = node as { type: string; data?: { attrsRole?: string; attrsTitle?: { type: string; value: string }[]; hProperties?: Properties } };
+        const n = node as {
+          type: string;
+          data?: {
+            attrsRole?: string;
+            attrsTitle?: { type: string; value: string }[];
+            hProperties?: Properties;
+          };
+        };
         if (n.data?.attrsRole !== "containerItem" || !n.data.attrsTitle) return;
         const title = n.data.attrsTitle;
         const last = title[title.length - 1];

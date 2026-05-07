@@ -8,7 +8,14 @@ import type { Token } from "micromark-util-types";
 import type { DefinitionDescription, DefinitionList, DefinitionTerm, FlowToken } from "./types.js";
 
 function enterDefList(this: CompileContext, token: Token): void {
-  this.enter({ type: "defList", children: [], data: { attrsRole: "container" } } as unknown as DefinitionList, token);
+  this.enter(
+    {
+      type: "defList",
+      children: [],
+      data: { attrsRole: "container" },
+    } as unknown as DefinitionList,
+    token,
+  );
 }
 
 function exitDefList(this: CompileContext, token: Token): void {

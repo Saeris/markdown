@@ -1,5 +1,5 @@
 {
-  "name": "@saeris/mdit-github-alerts",
+  "name": "@saeris/mdit-tabs",
   "version": "0.0.0",
   "license": "MIT",
   "author": "Drake Costa <drake@saeris.io> (https://saeris.gg)",
@@ -15,8 +15,8 @@
       "import": "./dist/index.mjs"
     },
     "./styles": {
-      "development": "./src/github-alerts.css",
-      "default": "./dist/github-alerts.css"
+      "development": "./src/tabs.css",
+      "default": "./dist/tabs.css"
     }
   },
   "devDependencies": {
