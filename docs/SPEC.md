@@ -45,7 +45,7 @@ Default render path uses zero client-side JavaScript. JS is added only when CSS 
 Markdown content lives in `public/plugins/<name>/index.md`. Each file is:
 
 - Served as a raw file at `/plugins/<name>/index.md` — no build step required
-- Rendered by Astro at `/plugins/<name>/` via a dynamic `[...slug].astro` page that fetches and processes the raw `.md`
+- Indexed by Astro's content collections system, which provides typed frontmatter, `getStaticPaths`, and `render()` for the dynamic route
 - Importable directly into VSCode's markdown preview for WYSIWYG editing
 
 Each `.md` file imports a shared stylesheet for the preview context:
@@ -64,6 +64,8 @@ title: Plugin Name
 
 The `@import` path is relative so it resolves correctly from `public/plugins/<name>/index.md` back to `src/styles/markdown.css` when opened in VSCode preview. Astro's build does not process these imports — they are VSCode-only.
 
+**Content collections** (Astro 6): a `plugins` collection is defined in `src/content.config.ts` pointing at `public/plugins/`. The collection uses a `z.object` schema to type the frontmatter. The dynamic route calls `getCollection("plugins")` in `getStaticPaths` and `render()` in the page component. This replaces the earlier `fetch`/`Astro.glob` approach and also provides the data source for future search indexing and sidebar generation.
+
 ### 2.4 Folder structure
 
 ```
@@ -76,27 +78,28 @@ docs/
 │       │   └── index.md
 │       ├── ins/
 │       │   └── index.md
-│       └── ...               # one directory per plugin
+│       └── ...                  # one directory per plugin
 ├── src/
 │   ├── components/
 │   │   ├── Header.astro
 │   │   ├── Sidebar.astro
 │   │   ├── TableOfContents.astro
-│   │   ├── Theme.astro          # theme script (localStorage + data-theme)
-│   │   └── ThemeSwitcher.astro  # toggle button
+│   │   ├── Theme.astro           # theme script (localStorage + data-theme)
+│   │   └── ThemeSwitcher.astro   # toggle button
+│   ├── content.config.ts         # Astro content collections schema
 │   ├── layouts/
-│   │   ├── Root.astro           # <html>, <head>, theme script slot
-│   │   └── Plugin.astro         # shell for rendered plugin pages
+│   │   ├── Root.astro            # <html>, <head>, theme script slot
+│   │   └── Markdown.astro        # shell for any markdown documentation page
 │   ├── pages/
-│   │   ├── index.astro          # landing / plugin index
+│   │   ├── index.astro           # landing / plugin index
 │   │   └── plugins/
-│   │       └── [...slug].astro  # dynamic route: fetch + render public/ markdown
+│   │       └── [...slug].astro   # dynamic route: getStaticPaths from collection
 │   └── styles/
 │       ├── reset.css
-│       ├── theme.css            # CSS custom properties, color-scheme tokens
-│       ├── global.css           # base typography, layout primitives
-│       └── markdown.css         # prose styles for rendered plugin content
-├── astro.config.mjs
+│       ├── theme.css             # CSS custom properties, color-scheme tokens
+│       ├── global.css            # base typography, layout primitives
+│       └── markdown.css          # prose styles for rendered markdown content
+├── astro.config.ts
 ├── package.json
 ├── tsconfig.json
 └── vite.config.ts
@@ -208,16 +211,47 @@ Pages added in order of plugin maturity. Start with plugins that have complete t
 
 ### 4.3 Markdown rendering pipeline
 
-The `[...slug].astro` dynamic route:
+**Content collection** (`src/content.config.ts`):
 
-1. Reads the request slug (e.g. `plugins/del`)
-2. Fetches the raw markdown from `public/<slug>/index.md` using `Astro.glob` or `fetch`
-3. Processes it with Astro's built-in markdown pipeline, configured to include our `remd-*` plugins
-4. Renders the result inside the `Plugin.astro` layout
+```ts
+import { defineCollection, z } from "astro:content";
+import { glob } from "astro/loaders";
 
-The `astro.config.mjs` markdown configuration:
+const plugins = defineCollection({
+  loader: glob({ pattern: "*/index.md", base: "./public/plugins" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+  }),
+});
 
-```js
+export const collections = { plugins };
+```
+
+**Dynamic route** (`src/pages/plugins/[...slug].astro`):
+
+```ts
+import { getCollection, render } from "astro:content";
+import Markdown from "../../layouts/Markdown.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("plugins");
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+```
+
+The page renders `<Content />` inside `Markdown.astro`, passing `headings` to the TOC component.
+
+**`astro.config.ts`** wires in the `remd-*` plugins and sets the `markdown.remarkPlugins` / `rehypePlugins` arrays. The config file uses `defineConfig` from `"astro/config"` — not from `"vite-plus"`. The `vite.config.ts` is separate and handles Vite+ task wrappers (`vp exec astro build`).
+
+```ts
+import { defineConfig } from "astro/config";
 import { remarkDel } from "@saeris/remd-del";
 // ... all remd-* plugins
 
@@ -255,15 +289,16 @@ Follows the guide-to-japanese pattern:
 Goal: a working skeleton with correct layout, theming, and navigation. No real content yet.
 
 1. Update `docs/package.json` — add `@saeris/remd-*` workspace deps, adjust engines to node 24+
-2. Update `astro.config.mjs` — wire up remd plugins, set `site`, switch to `defineConfig` from `vite-plus`
-3. Author `src/styles/` — `reset.css`, `theme.css` (tokens), `global.css`, `markdown.css` (stub)
-4. Author `src/layouts/Root.astro` — `<html>`, `<head>`, `<Theme>` script, topnav slot, main slot
-5. Author `src/layouts/Plugin.astro` — sidebar + content + TOC three-column shell
-6. Author `src/components/` — `Header.astro`, `Sidebar.astro`, `TableOfContents.astro`, `Theme.astro`, `ThemeSwitcher.astro`
-7. Author `src/pages/index.astro` — plugin index landing page (list of plugin links)
-8. Author `src/pages/plugins/[...slug].astro` — dynamic route stub (renders markdown from `public/`)
-9. Add one stub content file: `public/plugins/del/index.md` — minimal content to validate the pipeline end-to-end
-10. Confirm `vp exec astro dev` renders the shell correctly
+2. Update `astro.config.ts` — wire up remd plugins, set `site`
+3. Author `src/content.config.ts` — define `plugins` collection with `glob` loader pointing at `public/plugins/`
+4. Author `src/styles/` — `reset.css`, `theme.css` (tokens), `global.css`, `markdown.css` (stub)
+5. Author `src/layouts/Root.astro` — `<html>`, `<head>`, `<Theme>` script, topnav slot, main slot
+6. Author `src/layouts/Markdown.astro` — sidebar + content + TOC three-column shell
+7. Author `src/components/` — `Header.astro`, `Sidebar.astro`, `TableOfContents.astro`, `Theme.astro`, `ThemeSwitcher.astro`
+8. Author `src/pages/index.astro` — plugin index landing page (list of plugin links)
+9. Author `src/pages/plugins/[...slug].astro` — dynamic route via `getCollection("plugins")`
+10. Add one stub content file: `public/plugins/del/index.md` — minimal content to validate the pipeline end-to-end
+11. Confirm `vp exec astro dev` renders the shell correctly
 
 ### Phase 6.2 — Content
 
