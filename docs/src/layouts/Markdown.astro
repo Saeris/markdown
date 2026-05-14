@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import Root from "./Root.astro";
 import Sidebar from "../components/Sidebar.astro";
 import TableOfContents from "../components/TableOfContents.astro";
+import PageNav from "../components/PageNav.astro";
 import "@saeris/remd-tabs/tabs.css";
 import "@saeris/remd-github-alerts/github-alerts.css";
 import "@saeris/remd-steps/steps.css";
@@ -12,9 +13,10 @@ interface Props {
   title: string;
   description?: string;
   headings: MarkdownHeading[];
+  lastModified?: string | null;
 }
 
-const { title, description, headings } = Astro.props as Props;
+const { title, description, headings, lastModified } = Astro.props as Props;
 const currentPath = new URL(Astro.request.url).pathname;
 
 const entries = await getCollection("docs");
@@ -45,6 +47,7 @@ const sidebarGroups = [...groupMap.entries()].map(([group, items]) => ({
       <article class="markdown-content">
         <slot />
       </article>
+      <PageNav currentPath={currentPath} lastModified={lastModified} />
     </main>
 
     <aside class="app-toc">
