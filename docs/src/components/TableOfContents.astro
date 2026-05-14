@@ -8,19 +8,35 @@ interface Props {
 const { headings } = Astro.props as Props;
 
 const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+
+const scopeList = filtered.map((_, i) => `--toc-section-${i}`).join(", ");
 ---
 
 {
   filtered.length > 0 && (
-    <nav aria-label="On this page">
+    <nav
+      aria-label="On this page"
+      style={`--toc-scope-list: ${scopeList};`}
+      data-toc
+    >
       <p class="toc-title">On this page</p>
-      <ul>
-        {filtered.map((heading) => (
-          <li data-depth={heading.depth}>
-            <a href={`#${heading.slug}`}>{heading.text}</a>
-          </li>
-        ))}
-      </ul>
+      <div class="toc-body">
+        <div class="toc-indicator" aria-hidden="true">
+          <svg class="toc-track" focusable="false">
+            <circle class="toc-marker" cx="0" cy="0" r="3.5" />
+          </svg>
+        </div>
+        <ul>
+          {filtered.map((heading, i) => (
+            <li
+              data-depth={heading.depth}
+              style={`--for: --toc-section-${i};`}
+            >
+              <a href={`#${heading.slug}`}>{heading.text}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
   )
 }
@@ -39,51 +55,409 @@ const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
     margin-block-end: 0.5rem;
   }
 
+  .toc-body {
+    position: relative;
+  }
+
+  /* ── Indicator layer ─────────────────────────────────────────── */
+
+  .toc-indicator {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .toc-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    overflow: visible;
+    mask-image: linear-gradient(to bottom, transparent 0px, black 12px);
+  }
+
+  :global(.toc-track-line) {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1;
+    opacity: 0.25;
+  }
+
+  :global(.toc-tail-down),
+  :global(.toc-tail-up) {
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition: opacity 0.25s ease;
+  }
+
+  .toc-marker {
+    fill: var(--color-accent);
+    offset-rotate: 0deg;
+    opacity: 0;
+    transition:
+      offset-distance 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.2s ease;
+  }
+
+  nav[data-toc-ready] .toc-marker {
+    opacity: 1;
+  }
+
+  /* ── Links ───────────────────────────────────────────────────── */
+
   ul {
     display: flex;
     flex-direction: column;
     gap: 0.125rem;
-  }
-
-  li[data-depth="3"] a {
-    padding-inline-start: 1rem;
+    padding-inline-start: 20px;
   }
 
   a {
     display: block;
     color: var(--color-fg-muted);
     padding-block: 0.1875rem;
-    border-inline-start: 2px solid transparent;
     padding-inline-start: 0.5rem;
-    transition: color 0.15s ease, border-color 0.15s ease;
+    transition: color 0.15s ease;
 
     &:hover {
       color: var(--color-fg);
-      border-inline-start-color: var(--color-border);
+    }
+  }
+
+  li[data-depth="3"] a {
+    padding-inline-start: 1rem;
+  }
+
+  /* ── Scroll-driven active state ──────────────────────────────── */
+  /*
+    Chrome 115+, Edge 115+, Safari 18+.
+    Firefox fallback: .active class via IntersectionObserver.
+  */
+
+  @supports (animation-timeline: scroll()) {
+    a {
+      animation: toc-active linear;
+      animation-timeline: var(--for);
+      animation-range: entry 15% exit 85%;
+
+      &:hover {
+        animation-play-state: paused;
+      }
     }
 
-    &.active {
-      color: var(--color-accent);
-      border-inline-start-color: var(--color-accent);
+    @keyframes toc-active {
+      0%, 99.9% {
+        color: var(--color-accent);
+        font-weight: 500;
+      }
+    }
+
+    a.active {
+      color: inherit;
+      font-weight: inherit;
+    }
+  }
+
+  /* ── Reduced motion ──────────────────────────────────────────── */
+
+  @media (prefers-reduced-motion: reduce) {
+    .toc-marker,
+    :global(.toc-tail-down),
+    :global(.toc-tail-up) {
+      transition: none;
     }
   }
 </style>
 
 <script>
-  const headingElements = document.querySelectorAll<HTMLElement>(
-    ".markdown-content h2, .markdown-content h3",
+  const nav = document.querySelector<HTMLElement>("[data-toc]");
+  if (!nav) throw new Error("ToC nav not found");
+
+  const items = [...nav.querySelectorAll<HTMLLIElement>("ul li")];
+  const links = [...nav.querySelectorAll<HTMLAnchorElement>("ul a")];
+
+  // ── Scroll-driven active state ────────────────────────────────────────────
+
+  const supportsScrollTimeline = CSS.supports("animation-timeline", "scroll()");
+
+  if (supportsScrollTimeline) {
+    const contentEl = document.querySelector<HTMLElement>(".markdown-content");
+    const scopeList = nav.style.getPropertyValue("--toc-scope-list");
+    // Must be on the common ancestor of both .app-content and .app-toc
+    document.body.style.timelineScope = scopeList;
+
+    links.forEach((link, i) => {
+      const id = link.getAttribute("href")?.slice(1);
+      if (!id) return;
+      const heading = contentEl?.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
+      if (!heading) return;
+      heading.style.viewTimeline = `--toc-section-${i} block`;
+    });
+  }
+
+  // ── SVG path + HTML indicator elements ───────────────────────────────────
+
+  const svg = nav.querySelector<SVGSVGElement>(".toc-track");
+  const markerEl = nav.querySelector<SVGCircleElement>(".toc-marker");
+
+  if (!svg || !markerEl || items.length === 0) {
+    throw new Error("ToC indicator elements not found");
+  }
+
+  const DEPTH2_X = 8;
+  const DEPTH3_X = 18;
+  const DEPTH_STEP_Y = 8; // vertical px added at a depth transition (matches evilcharts)
+
+  const NS = "http://www.w3.org/2000/svg";
+
+  let tailLength = 0;
+
+  // Scroll direction: "down" = tail above marker, "up" = tail below marker
+  let scrollDir: "down" | "up" = "down";
+  let lastScrollY = window.scrollY;
+  window.addEventListener("scroll", () => {
+    const y = window.scrollY;
+    if (y === lastScrollY) return;
+    const newDir = y > lastScrollY ? "down" : "up";
+    lastScrollY = y;
+    if (newDir !== scrollDir) {
+      scrollDir = newDir;
+      // Cross-fade: incoming direction fades in, outgoing fades out
+      if (tailPathDown && tailPathUp) {
+        tailPathDown.style.opacity = scrollDir === "down" ? "1" : "0";
+        tailPathUp.style.opacity   = scrollDir === "up"   ? "1" : "0";
+      }
+    }
+  }, { passive: true });
+
+  let pathLengths: number[] = [];
+  let totalLength = 0;
+  let trackPath: SVGPathElement | null = null;
+  let tailPathDown: SVGPathElement | null = null;
+  let tailPathUp: SVGPathElement | null = null;
+  let tailGradDown: SVGLinearGradientElement | null = null;
+  let tailGradUp: SVGLinearGradientElement | null = null;
+
+  function getX(depth: number) {
+    return depth === 3 ? DEPTH3_X : DEPTH2_X;
+  }
+
+  function buildPath() {
+    const bodyEl = nav!.querySelector<HTMLElement>(".toc-body")!;
+    const bodyTop = bodyEl.getBoundingClientRect().top;
+
+    const points = items.map((li) => {
+      const rect = li.getBoundingClientRect();
+      const depth = parseInt(li.dataset.depth ?? "2", 10);
+      return {
+        x: getX(depth),
+        y: rect.top - bodyTop + rect.height / 2,
+        depth,
+      };
+    });
+
+    const last = points[points.length - 1];
+    const svgHeight = last.y + DEPTH_STEP_Y;
+    svg!.setAttribute("height", String(svgHeight));
+    svg!.setAttribute("width", "20");
+
+    let d = `M ${points[0].x} ${points[0].y}`;
+    let cumLen = 0;
+    pathLengths = [0];
+
+    for (let i = 1; i < points.length; i++) {
+      const curr = points[i];
+
+      const prev = points[i - 1];
+
+      if (prev.depth !== curr.depth) {
+        const stepY = prev.y + DEPTH_STEP_Y;
+        const dx = Math.abs(curr.x - prev.x);
+        d += ` L ${prev.x} ${stepY} L ${curr.x} ${curr.y}`;
+        cumLen += DEPTH_STEP_Y + Math.hypot(dx, curr.y - stepY);
+      } else {
+        d += ` L ${curr.x} ${curr.y}`;
+        cumLen += curr.y - prev.y;
+      }
+      pathLengths.push(cumLen);
+    }
+    totalLength = cumLen;
+
+    if (!trackPath) {
+      trackPath = document.createElementNS(NS, "path");
+      trackPath.setAttribute("class", "toc-track-line");
+      svg!.insertBefore(trackPath, markerEl);
+    }
+    trackPath.setAttribute("d", d);
+
+    // Create gradient defs + tail paths once (one per direction for cross-fade)
+    if (!tailPathDown) {
+      const defs = document.createElementNS(NS, "defs");
+
+      const mkGrad = (id: string) => {
+        const g = document.createElementNS(NS, "linearGradient");
+        g.setAttribute("id", id);
+        g.setAttribute("gradientUnits", "userSpaceOnUse");
+        g.setAttribute("x1", String(DEPTH2_X));
+        g.setAttribute("x2", String(DEPTH2_X));
+        g.setAttribute("y1", "0");
+        g.setAttribute("y2", "0");
+        const s0 = document.createElementNS(NS, "stop");
+        s0.setAttribute("offset", "0%");
+        s0.setAttribute("stop-color", "var(--color-accent)");
+        s0.setAttribute("stop-opacity", "0");
+        const s1 = document.createElementNS(NS, "stop");
+        s1.setAttribute("offset", "100%");
+        s1.setAttribute("stop-color", "var(--color-accent)");
+        s1.setAttribute("stop-opacity", "1");
+        g.append(s0, s1);
+        return g;
+      };
+
+      tailGradDown = mkGrad("toc-tail-down");
+      tailGradUp   = mkGrad("toc-tail-up");
+      defs.append(tailGradDown, tailGradUp);
+      svg!.appendChild(defs);
+
+      const mkPath = (gradId: string, cls: string, initialOpacity: string) => {
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("class", cls);
+        p.setAttribute("stroke", `url(#${gradId})`);
+        p.style.opacity = initialOpacity;
+        return p;
+      };
+
+      tailPathDown = mkPath("toc-tail-down", "toc-tail-down", "1");
+      tailPathUp   = mkPath("toc-tail-up",   "toc-tail-up",   "0");
+      svg!.append(tailPathDown, tailPathUp);
+    }
+    tailPathDown!.setAttribute("d", d);
+    tailPathUp!.setAttribute("d", d);
+
+    // Tail length = average item spacing * 3, capped to totalLength
+    if (items.length > 1) {
+      tailLength = Math.min((totalLength / (items.length - 1)) * 3, totalLength);
+    }
+
+    markerEl!.style.offsetPath = `path("${d}")`;
+    if (!markerEl!.style.offsetDistance) markerEl!.style.offsetDistance = "0%";
+  }
+
+  function setActiveIndex(index: number) {
+    if (totalLength === 0 || pathLengths.length === 0) return;
+    const clampedIdx = Math.min(index, pathLengths.length - 1);
+    const markerLen = pathLengths[clampedIdx];
+    markerEl!.style.offsetDistance = `${((markerLen / totalLength) * 100).toFixed(2)}%`;
+    updateTail(markerLen);
+  }
+
+  let rafId = 0;
+  let targetMarkerLen = 0;
+
+  function setTailGeometry(grad: SVGLinearGradientElement, path: SVGPathElement, liveLen: number, dir: "down" | "up") {
+    const segStart = dir === "down" ? Math.max(0, liveLen - tailLength) : liveLen;
+    const segEnd   = dir === "down" ? liveLen : Math.min(totalLength, liveLen + tailLength);
+    const tailLen  = segEnd - segStart;
+    grad.setAttribute("y1", dir === "down" ? String(segStart) : String(segEnd));
+    grad.setAttribute("y2", String(liveLen));
+    path.setAttribute("stroke-dasharray", `${tailLen} ${totalLength}`);
+    path.setAttribute("stroke-dashoffset", String(-segStart));
+  }
+
+  function tailRafLoop() {
+    if (!tailGradDown || !tailGradUp || !tailPathDown || !tailPathUp || tailLength === 0 || totalLength === 0) return;
+
+    const computed = getComputedStyle(markerEl!).getPropertyValue("offset-distance").trim();
+    const pctVal = parseFloat(computed);
+    const liveLen = isNaN(pctVal) ? targetMarkerLen : (pctVal / 100) * totalLength;
+
+    setTailGeometry(tailGradDown, tailPathDown, liveLen, "down");
+    setTailGeometry(tailGradUp,   tailPathUp,   liveLen, "up");
+
+    if (Math.abs(liveLen - targetMarkerLen) > 0.5) {
+      rafId = requestAnimationFrame(tailRafLoop);
+    } else {
+      rafId = 0;
+    }
+  }
+
+  function updateTail(markerLen: number) {
+    targetMarkerLen = markerLen;
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(tailRafLoop);
+  }
+
+  // ── Marker position tracking ──────────────────────────────────────────────
+
+  // Prebuilt map: heading id → link index, avoids O(n) findIndex on every IO/hash event
+  const linkIndexByHeadingId = new Map(
+    links.map((l, i) => [l.getAttribute("href")?.slice(1), i])
   );
 
-  const observer = new IntersectionObserver(
+  function onActiveLink(link: HTMLAnchorElement) {
+    const idx = links.indexOf(link);
+    if (idx !== -1) setActiveIndex(idx);
+  }
+
+  links.forEach((link) => {
+    link.addEventListener("click", () => onActiveLink(link));
+  });
+
+  window.addEventListener("hashchange", () => {
+    const idx = linkIndexByHeadingId.get(window.location.hash.slice(1));
+    if (idx !== undefined) onActiveLink(links[idx]);
+  });
+
+  const headingTargets = links.map((link) => {
+    const id = link.getAttribute("href")?.slice(1);
+    return id ? document.querySelector<HTMLElement>(`#${CSS.escape(id)}`) : null;
+  });
+
+  const markerObserver = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
-        const id = entry.target.getAttribute("id");
-        const link = document.querySelector<HTMLAnchorElement>(`.app-toc a[href="#${id}"]`);
-        if (link) link.classList.toggle("active", entry.isIntersecting);
+        if (entry.isIntersecting) {
+          const idx = linkIndexByHeadingId.get(entry.target.getAttribute("id") ?? "");
+          if (idx !== undefined) onActiveLink(links[idx]);
+        }
       }
     },
     { rootMargin: "-20% 0% -70% 0%" },
   );
 
-  headingElements.forEach((el) => observer.observe(el));
+  headingTargets.forEach((el) => el && markerObserver.observe(el));
+
+  if (!supportsScrollTimeline) {
+    const headingEls = document.querySelectorAll<HTMLElement>(
+      ".markdown-content h2, .markdown-content h3",
+    );
+    const activeObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const id = entry.target.getAttribute("id");
+          const link = nav!.querySelector<HTMLAnchorElement>(`a[href="#${id}"]`);
+          if (link) link.classList.toggle("active", entry.isIntersecting);
+        }
+      },
+      { rootMargin: "-20% 0% -70% 0%" },
+    );
+    headingEls.forEach((el) => activeObserver.observe(el));
+  }
+
+  // ── Init + resize ─────────────────────────────────────────────────────────
+
+  function init() {
+    buildPath();
+    const initIdx = linkIndexByHeadingId.get(window.location.hash.slice(1)) ?? 0;
+    setActiveIndex(initIdx);
+    nav!.dataset.tocReady = "";
+  }
+
+  init();
+  let resizeRafId = 0;
+  new ResizeObserver(() => {
+    cancelAnimationFrame(resizeRafId);
+    resizeRafId = requestAnimationFrame(init);
+  }).observe(nav.querySelector(".toc-body")!);
 </script>
