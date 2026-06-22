@@ -1,3 +1,6 @@
+// micromark tokenizer construct — bridges into the micromark-util-types
+// shapes with casts the lib API can't infer.
+/* oxlint-disable typescript/no-unsafe-type-assertion */
 import { factorySpace } from "micromark-factory-space";
 import { markdownSpace } from "micromark-util-character";
 import { blankLine } from "micromark-core-commonmark";

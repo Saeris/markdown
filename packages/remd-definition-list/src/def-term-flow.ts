@@ -1,3 +1,7 @@
+// Token surgery against micromark's Event/Token structures; the internal
+// types it exposes deliberately preserve flexibility that this file
+// narrows by cast.
+/* oxlint-disable typescript/no-unsafe-type-assertion */
 import { splice } from "micromark-util-chunked";
 import type { Event, Token, TokenizeContext } from "micromark-util-types";
 import { tokenTypes, clonePoint } from "./types.js";

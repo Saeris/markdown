@@ -1,3 +1,7 @@
+// Bridges micromark/mdast token types via the standard
+// mdast-util-from-markdown enter/exit handlers; the handler signatures
+// require widening casts that no narrower type captures.
+/* oxlint-disable typescript/no-unsafe-type-assertion */
 import type {
   CompileContext,
   Extension as FromMarkdownExtension,

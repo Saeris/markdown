@@ -1,5 +1,8 @@
 // Forked and modified from https://github.com/fabon-f/remark-denden-ruby
 
+// Tokenizer + fromMarkdown handlers + mdast post-processing all live here;
+// bridging the three layers requires casts the per-layer types can't infer.
+/* oxlint-disable typescript/no-unsafe-type-assertion */
 import { visit } from "unist-util-visit";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { markdownLineEnding } from "micromark-util-character";

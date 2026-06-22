@@ -1,3 +1,7 @@
+// AlertType cast and the AlertNode subtype bridging across the
+// remark visitor and rehype hast handler require casts the public
+// mdast types cannot carry through.
+/* oxlint-disable typescript/no-unsafe-type-assertion */
 import { visit } from "unist-util-visit";
 import type { Plugin } from "unified";
 import type { Root, Blockquote } from "mdast";

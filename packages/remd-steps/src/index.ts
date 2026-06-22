@@ -1,3 +1,8 @@
+// This plugin performs heavy tree-rewriting across mdast/hast/unist types
+// that don't unify cleanly; type assertions bridging those boundaries are
+// reviewed and intentional, so the rule is disabled file-wide rather than
+// per-cast.
+/* oxlint-disable typescript/no-unsafe-type-assertion */
 import { visit } from "unist-util-visit";
 import type { Plugin } from "unified";
 import type {
