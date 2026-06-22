@@ -227,8 +227,8 @@ const plugins = defineCollection({
   loader: glob({ pattern: "*/index.md", base: "./public/plugins" }),
   schema: z.object({
     title: z.string(),
-    description: z.string().optional(),
-  }),
+    description: z.string().optional()
+  })
 });
 
 export const collections = { plugins };
@@ -244,7 +244,7 @@ export async function getStaticPaths() {
   const entries = await getCollection("plugins");
   return entries.map((entry) => ({
     params: { slug: entry.id },
-    props: { entry },
+    props: { entry }
   }));
 }
 
@@ -266,13 +266,13 @@ export default defineConfig({
     remarkPlugins: [
       remarkDel,
       remarkIns,
-      remarkMark,
+      remarkMark
       // ...
     ],
     rehypePlugins: [
       // rehype-based remd plugins (unwrap-images, inline-svg, etc.)
-    ],
-  },
+    ]
+  }
 });
 ```
 

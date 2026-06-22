@@ -1,14 +1,14 @@
 ---
 import type { MarkdownHeading } from "astro";
 import { getCollection } from "astro:content";
+import "@saeris/remd-tabs/tabs.css";
+import "@saeris/remd-github-alerts/github-alerts.css";
+import "@saeris/remd-steps/steps.css";
 import Root from "./Root.astro";
 import Sidebar from "../components/Sidebar.astro";
 import SidebarDrawer from "../components/SidebarDrawer.astro";
 import TableOfContents from "../components/TableOfContents.astro";
 import PageNav from "../components/PageNav.astro";
-import "@saeris/remd-tabs/tabs.css";
-import "@saeris/remd-github-alerts/github-alerts.css";
-import "@saeris/remd-steps/steps.css";
 
 interface Props {
   title: string;

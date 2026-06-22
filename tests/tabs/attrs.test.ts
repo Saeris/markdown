@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vite-plus/test";
+import { expect, it, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -23,22 +23,23 @@ const remd = (src: string) =>
         .use(remarkAttrs)
         .use(remarkRehype, { handlers: tabsHastHandlers as never })
         .use(rehypeStringify, { allowDangerousHtml: true })
-        .processSync(src),
-    ),
+        .processSync(src)
+    )
   );
 
 describe("tabs + attrs: class on tab label applies to <label>", () => {
   // "% Tab One {.active}" → <label class="markdown-tabs-label active" ...>
-  const input = "% Tab One {.active}\n> Content for tab one.\n% Tab Two\n> Content for tab two.";
+  const input =
+    "% Tab One {.active}\n> Content for tab one.\n% Tab Two\n> Content for tab two.";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="markdown-tabs-label active"');
     expect(result).toContain('class="markdown-tabs-label"');
     expect(result).not.toContain("{.active}");
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-tabs-label active"');
     expect(result).toContain('class="markdown-tabs-label"');
@@ -47,16 +48,17 @@ describe("tabs + attrs: class on tab label applies to <label>", () => {
 });
 
 describe("tabs + attrs: id on tab label applies to <label>", () => {
-  const input = "% Tab One {#first-tab}\n> Content for tab one.\n% Tab Two\n> Content for tab two.";
+  const input =
+    "% Tab One {#first-tab}\n> Content for tab one.\n% Tab Two\n> Content for tab two.";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('id="first-tab"');
     expect(result).toContain('class="markdown-tabs-label"');
     expect(result).not.toContain("{#first-tab}");
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('id="first-tab"');
     expect(result).toContain('class="markdown-tabs-label"');
@@ -69,14 +71,14 @@ describe("tabs + attrs: standalone attr paragraph after tab group applies to <di
   const input =
     "% npm\n> ```sh\n> npm install\n> ```\n% pnpm\n> ```sh\n> pnpm add\n> ```\n\n{#install-tabs}";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('id="install-tabs"');
     expect(result).toContain('class="markdown-tabs"');
     expect(result).not.toContain("<p>{#install-tabs}</p>");
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('id="install-tabs"');
     expect(result).toContain('class="markdown-tabs"');
@@ -85,15 +87,16 @@ describe("tabs + attrs: standalone attr paragraph after tab group applies to <di
 });
 
 describe("tabs + attrs: class on standalone attr paragraph after tab group applies to <div>", () => {
-  const input = "% Tab One\n> Content.\n% Tab Two\n> Content.\n\n{.highlighted}";
+  const input =
+    "% Tab One\n> Content.\n% Tab Two\n> Content.\n\n{.highlighted}";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain("markdown-tabs highlighted");
     expect(result).not.toContain("<p>{.highlighted}</p>");
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain("markdown-tabs highlighted");
     expect(result).not.toContain("<p>{.highlighted}</p>");
@@ -101,9 +104,10 @@ describe("tabs + attrs: class on standalone attr paragraph after tab group appli
 });
 
 describe("tabs + attrs: attrs on heading before tab group do not bleed into container", () => {
-  const input = "## Install {.section}\n\n% Tab One\n> Content.\n% Tab Two\n> Content.";
+  const input =
+    "## Install {.section}\n\n% Tab One\n> Content.\n% Tab Two\n> Content.";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="section"');
     expect(result).toContain('class="markdown-tabs"');
@@ -111,7 +115,7 @@ describe("tabs + attrs: attrs on heading before tab group do not bleed into cont
     expect(result).not.toContain("{.section}");
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('class="section"');
     expect(result).toContain('class="markdown-tabs"');
@@ -121,16 +125,17 @@ describe("tabs + attrs: attrs on heading before tab group do not bleed into cont
 });
 
 describe("tabs + attrs: attrs on paragraph after tab group do not apply to container", () => {
-  const input = "% Tab One\n> Content.\n% Tab Two\n> Content.\n\nRead more. {.note}";
+  const input =
+    "% Tab One\n> Content.\n% Tab Two\n> Content.\n\nRead more. {.note}";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="markdown-tabs"');
     expect(result).toContain('class="note"');
     expect(result).not.toContain("markdown-tabs note");
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-tabs"');
     expect(result).toContain('class="note"');
@@ -141,7 +146,7 @@ describe("tabs + attrs: attrs on paragraph after tab group do not apply to conta
 describe("tabs + attrs: multiple tab labels each with attrs", () => {
   const input = "% Tab One {.complete}\n> Body.\n% Tab Two {.active}\n> Body.";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="markdown-tabs-label complete"');
     expect(result).toContain('class="markdown-tabs-label active"');
@@ -149,7 +154,7 @@ describe("tabs + attrs: multiple tab labels each with attrs", () => {
     expect(result).not.toContain("{.active}");
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-tabs-label complete"');
     expect(result).toContain('class="markdown-tabs-label active"');
@@ -162,14 +167,14 @@ describe("tabs + attrs: tabs and attrs coexist without interference", () => {
   const input =
     "Some *text*. {.intro}\n\n% Tab One\n> Content.\n% Tab Two\n> Content.\n\nAnother paragraph. {.outro}";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="intro"');
     expect(result).toContain('class="markdown-tabs"');
     expect(result).toContain('class="outro"');
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('class="intro"');
     expect(result).toContain('class="markdown-tabs"');

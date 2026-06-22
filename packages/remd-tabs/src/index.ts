@@ -7,7 +7,7 @@ import type {
   PhrasingContent,
   BlockContent,
   DefinitionContent,
-  RootContent,
+  RootContent
 } from "mdast";
 import type { Element, ElementContent, Properties } from "hast";
 import type { State } from "mdast-util-to-hast";
@@ -23,7 +23,7 @@ interface RawTab {
   open: boolean;
   labelNodes: PhrasingContent[]; // inline nodes for the label
   labelText: string; // plain text for aria-label / data-tab
-  body: (BlockContent | DefinitionContent)[]; // blockquote contents
+  body: Array<BlockContent | DefinitionContent>; // blockquote contents
 }
 
 // ── Paragraph line splitting ──────────────────────────────────────────────────
@@ -38,7 +38,7 @@ const paraToLines = (para: Paragraph): PhrasingContent[][] => {
       const parts = child.value.split("\n");
       for (let p = 0; p < parts.length; p++) {
         if (p > 0) segs.push(null);
-        if (parts[p] !== "") segs.push({ type: "text", value: parts[p]! });
+        if (parts[p] !== "") segs.push({ type: "text", value: parts[p] });
       }
     } else if (child.type === "break") {
       segs.push(null);
@@ -50,7 +50,7 @@ const paraToLines = (para: Paragraph): PhrasingContent[][] => {
   const lines: PhrasingContent[][] = [[]];
   for (const seg of segs) {
     if (seg === null) lines.push([]);
-    else lines[lines.length - 1]!.push(seg);
+    else lines[lines.length - 1].push(seg);
   }
   return lines;
 };
@@ -59,8 +59,9 @@ const paraToLines = (para: Paragraph): PhrasingContent[][] => {
 const toPlainText = (nodes: PhrasingContent[]): string =>
   nodes
     .map((n) => {
-      if (n.type === "text" || n.type === "inlineCode") return "value" in n ? n.value : "";
-      if ("children" in n) return toPlainText(n.children as PhrasingContent[]);
+      if (n.type === "text" || n.type === "inlineCode")
+        return "value" in n ? n.value : "";
+      if ("children" in n) return toPlainText(n.children);
       return "";
     })
     .join("");
@@ -74,7 +75,7 @@ const toPlainText = (nodes: PhrasingContent[]): string =>
 const extractHeaderPara = (
   para: Paragraph,
   requireDepthOne = true,
-  prevDepth = 0,
+  prevDepth = 0
 ): RawTab[] | null => {
   const lines = paraToLines(para);
   const tabs: RawTab[] = [];
@@ -82,7 +83,7 @@ const extractHeaderPara = (
 
   for (const lineSegs of lines) {
     const first = lineSegs[0];
-    if (!first || first.type !== "text") return null;
+    if (first?.type !== "text") return null;
 
     const header = parseTabHeader(first.value);
     if (!header) return null;
@@ -97,7 +98,13 @@ const extractHeaderPara = (
       ? [{ type: "text", value: labelText }, ...lineSegs.slice(1)]
       : lineSegs.slice(1);
 
-    tabs.push({ depth, open, labelNodes, labelText: toPlainText(labelNodes), body: [] });
+    tabs.push({
+      depth,
+      open,
+      labelNodes,
+      labelText: toPlainText(labelNodes),
+      body: []
+    });
   }
 
   return tabs.length > 0 ? tabs : null;
@@ -119,7 +126,7 @@ const extractHeaderPara = (
 // reconstruct the body content for each segment.
 interface BQSegment {
   header: RawTab | null; // null means pre-header content (goes to prev tab)
-  body: (BlockContent | DefinitionContent)[];
+  body: Array<BlockContent | DefinitionContent>;
   // true when this blockquote was written with explicit `> %` nesting (multiple
   // block children) rather than being the standard absorbed-tabs pattern where
   // remark collapses consecutive `% Tab\n> body` lines into one blockquote.
@@ -135,8 +142,11 @@ interface BQSegment {
 const isExplicitBQ = (bq: Blockquote): boolean =>
   bq.children.some((child) => {
     if (child.type !== "paragraph") return false;
-    const first = (child as Paragraph).children[0];
-    return first?.type === "text" && parseTabHeader(first.value.split("\n")[0]!) !== null;
+    const first = child.children[0];
+    return (
+      first?.type === "text" &&
+      parseTabHeader(first.value.split("\n")[0]) !== null
+    );
   });
 
 // Walk to the deepest last child of a node and return its paragraph if it
@@ -146,17 +156,23 @@ const isExplicitBQ = (bq: Blockquote): boolean =>
 // absorbed paragraphs into custom nodes — the trailing "% Code" line ends up
 // inside a nested paragraph rather than at the blockquote's top level.
 const extractTrailingTabHeader = (
-  node: BlockContent | DefinitionContent,
-): { header: RawTab; truncatedPara: Paragraph | null; path: (BlockContent | DefinitionContent)[] } | null => {
+  node: BlockContent | DefinitionContent
+): {
+  header: RawTab;
+  truncatedPara: Paragraph | null;
+  path: Array<BlockContent | DefinitionContent>;
+} | null => {
   // Walk to the deepest last child that is a paragraph
-  const path: (BlockContent | DefinitionContent)[] = [];
+  const path: Array<BlockContent | DefinitionContent> = [];
   let current: BlockContent | DefinitionContent = node;
   while ("children" in current && current.children.length > 0) {
-    const last = current.children[current.children.length - 1] as BlockContent | DefinitionContent;
+    const last = current.children[current.children.length - 1] as
+      | BlockContent
+      | DefinitionContent;
     if (last.type === "paragraph") {
       path.push(current);
       // Check if this paragraph's last line is a tab header
-      const para = last as Paragraph;
+      const para = last;
       const lines = paraToLines(para);
       const lastLine = lines[lines.length - 1];
       if (!lastLine) return null;
@@ -173,7 +189,7 @@ const extractTrailingTabHeader = (
         open: header.open,
         labelNodes,
         labelText: toPlainText(labelNodes),
-        body: [],
+        body: []
       };
       // Build truncated paragraph without the last line
       const truncatedLines = lines.slice(0, -1);
@@ -196,10 +212,14 @@ const splitBlockquote = (bq: Blockquote, explicit: boolean): BQSegment[] => {
       // For non-paragraph children (e.g. defList from remarkDefinitionList),
       // check if the deepest last-child paragraph has a trailing tab header.
       // Remark may have absorbed a "% NextTab" line into that nested paragraph.
-      const extracted = extractTrailingTabHeader(child as BlockContent | DefinitionContent);
+      const extracted = extractTrailingTabHeader(
+        child as BlockContent | DefinitionContent
+      );
       if (extracted) {
         // Clone the child with the trailing header line removed from its nested paragraph
-        const cloned = JSON.parse(JSON.stringify(child)) as BlockContent | DefinitionContent;
+        const cloned = JSON.parse(JSON.stringify(child)) as
+          | BlockContent
+          | DefinitionContent;
         // Navigate to the deepest last child and replace the paragraph
         let target: any = cloned;
         for (let pi = 1; pi < extracted.path.length; pi++) {
@@ -207,7 +227,8 @@ const splitBlockquote = (bq: Blockquote, explicit: boolean): BQSegment[] => {
         }
         const deepestParent = target;
         if (extracted.truncatedPara) {
-          deepestParent.children[deepestParent.children.length - 1] = extracted.truncatedPara;
+          deepestParent.children[deepestParent.children.length - 1] =
+            extracted.truncatedPara;
         } else {
           deepestParent.children.splice(deepestParent.children.length - 1, 1);
         }
@@ -222,7 +243,7 @@ const splitBlockquote = (bq: Blockquote, explicit: boolean): BQSegment[] => {
     }
 
     // Check if this paragraph contains tab headers mixed with body text
-    const lines = paraToLines(child as Paragraph);
+    const lines = paraToLines(child);
     let bodyLines: PhrasingContent[][] = [];
 
     for (const lineSegs of lines) {
@@ -251,10 +272,10 @@ const splitBlockquote = (bq: Blockquote, explicit: boolean): BQSegment[] => {
               open: header.open,
               labelNodes,
               labelText: toPlainText(labelNodes),
-              body: [],
+              body: []
             },
             body: [],
-            explicit,
+            explicit
           };
           continue;
         }
@@ -278,7 +299,7 @@ const buildParagraph = (lines: PhrasingContent[][]): Paragraph | null => {
   const children: PhrasingContent[] = [];
   for (let i = 0; i < lines.length; i++) {
     if (i > 0) children.push({ type: "text", value: "\n" });
-    children.push(...lines[i]!);
+    children.push(...lines[i]);
   }
   if (children.length === 0) return null;
   return { type: "paragraph", children };
@@ -292,7 +313,7 @@ const buildTree = (
   start: number,
   end: number,
   containerClass: string,
-  startLine: number,
+  startLine: number
 ): TabsListNode => {
   const depthLabels = rawTabs
     .slice(start, end)
@@ -306,27 +327,31 @@ const buildTree = (
   const explicitOpenIdx = rawTabs
     .slice(start, end)
     .findIndex((t) => t.depth === targetDepth && t.open);
-  const explicitOpenAbsIdx = explicitOpenIdx >= 0 ? start + explicitOpenIdx : -1;
+  const explicitOpenAbsIdx =
+    explicitOpenIdx >= 0 ? start + explicitOpenIdx : -1;
 
   const items: TabsItemNode[] = [];
   let tabCounter = 0;
   let i = start;
 
   while (i < end) {
-    const raw = rawTabs[i]!;
+    const raw = rawTabs[i];
     if (raw.depth !== targetDepth) {
       i++;
       continue;
     }
 
     let childEnd = i + 1;
-    while (childEnd < end && rawTabs[childEnd]!.depth > targetDepth) childEnd++;
+    while (childEnd < end && rawTabs[childEnd].depth > targetDepth) childEnd++;
 
     // First %+ wins; if none, first tab is open
-    const isOpen = explicitOpenAbsIdx >= 0 ? i === explicitOpenAbsIdx : tabCounter === 0;
+    const isOpen =
+      explicitOpenAbsIdx >= 0 ? i === explicitOpenAbsIdx : tabCounter === 0;
     const bodyChildren: TabsItemNode["children"] = [...raw.body];
 
-    const hasDeeper = rawTabs.slice(i + 1, childEnd).some((t) => t.depth === targetDepth + 1);
+    const hasDeeper = rawTabs
+      .slice(i + 1, childEnd)
+      .some((t) => t.depth === targetDepth + 1);
 
     if (hasDeeper) {
       const nested = buildTree(
@@ -335,7 +360,7 @@ const buildTree = (
         i + 1,
         childEnd,
         containerClass,
-        startLine,
+        startLine
       );
       nested.containerClass = containerClass;
       bodyChildren.push(nested as unknown as BlockContent);
@@ -352,8 +377,8 @@ const buildTree = (
         attrsRole: "containerItem",
         attrsTitle: raw.labelNodes,
         attrsItemTitle: true,
-        hProperties: {},
-      },
+        hProperties: {}
+      }
     });
 
     tabCounter++;
@@ -366,7 +391,7 @@ const buildTree = (
     groupId: gId,
     blockId: bId,
     children: items,
-    data: { attrsRole: "container", hProperties: {} },
+    data: { attrsRole: "container", hProperties: {} }
   };
 };
 
@@ -377,18 +402,18 @@ const buildTree = (
 // checkBlankLines: when false, skip the line-gap termination check (for nested contexts
 // where blank lines inside blockquotes produce position gaps but are still part of the group).
 const processTabsInChildren = (
-  children: (BlockContent | DefinitionContent | RootContent)[],
+  children: Array<BlockContent | DefinitionContent | RootContent>,
   containerClass: string,
-  checkBlankLines = true,
+  checkBlankLines = true
 ): void => {
   const newChildren: typeof children = [];
   let i = 0;
 
   while (i < children.length) {
-    const node = children[i]!;
+    const node = children[i];
 
     if (node.type === "paragraph") {
-      const headerTabs = extractHeaderPara(node as Paragraph);
+      const headerTabs = extractHeaderPara(node);
 
       if (headerTabs && headerTabs.length > 0) {
         const rawTabs: RawTab[] = [...headerTabs];
@@ -398,21 +423,21 @@ const processTabsInChildren = (
         let prevEndLine = node.position?.end.line ?? 0;
 
         while (j < children.length) {
-          const sibling = children[j]!;
+          const sibling = children[j];
           const siblingStartLine =
-            (sibling as { position?: { start: { line: number } } }).position?.start.line ??
-            prevEndLine + 1;
+            (sibling as { position?: { start: { line: number } } }).position
+              ?.start.line ?? prevEndLine + 1;
 
           if (checkBlankLines && siblingStartLine > prevEndLine + 1) break;
 
           if (sibling.type === "blockquote") {
-            const bq = sibling as Blockquote;
+            const bq = sibling;
             const explicit = isExplicitBQ(bq);
             const segments = splitBlockquote(bq, explicit);
 
             const firstSeg = segments[0];
             if (firstSeg?.header === null) {
-              rawTabs[currentTabIdx]!.body.push(...firstSeg.body);
+              rawTabs[currentTabIdx].body.push(...firstSeg.body);
             }
 
             // Explicit blockquotes (`> % Label` nesting) have their headers
@@ -420,14 +445,16 @@ const processTabsInChildren = (
             // offset so they nest correctly.
             // Absorbed blockquotes (standard `% Tab\n> body` pattern) keep
             // literal depths — remark collapses them into a single paragraph child.
-            const depthOffset = explicit ? rawTabs[rawTabs.length - 1]!.depth : 0;
+            const depthOffset = explicit
+              ? rawTabs[rawTabs.length - 1].depth
+              : 0;
 
             for (let s = 1; s < segments.length; s++) {
-              const seg = segments[s]!;
+              const seg = segments[s];
               if (!seg.header) continue;
 
               const adjustedDepth = depthOffset + seg.header.depth;
-              const prevDepth = rawTabs[rawTabs.length - 1]!.depth;
+              const prevDepth = rawTabs[rawTabs.length - 1].depth;
               if (adjustedDepth > prevDepth + 1) continue;
 
               seg.header.depth = adjustedDepth;
@@ -453,15 +480,17 @@ const processTabsInChildren = (
                   if (b.type !== "blockquote") {
                     // Non-BQ outer sibling — belongs to the first escaped seg's body
                     if (escapedSegs.length > 0) {
-                      escapedSegs[escapedSegs.length - 1]!.body.push(
-                        b as BlockContent | DefinitionContent,
+                      escapedSegs[escapedSegs.length - 1].body.push(
+                        b as BlockContent | DefinitionContent
                       );
                     } else {
-                      seg.header.body.push(b as BlockContent | DefinitionContent);
+                      seg.header.body.push(
+                        b as BlockContent | DefinitionContent
+                      );
                     }
                     continue;
                   }
-                  const innerBq = b as Blockquote;
+                  const innerBq = b;
                   if (!isExplicitBQ(innerBq)) {
                     // Re-split absorbed inner blockquote to extract sibling headers
                     const innerSegs = splitBlockquote(innerBq, false);
@@ -470,7 +499,7 @@ const processTabsInChildren = (
                       seg.header.body.push(...innerFirst.body);
                     }
                     for (let is = 1; is < innerSegs.length; is++) {
-                      const innerSeg = innerSegs[is]!;
+                      const innerSeg = innerSegs[is];
                       if (!innerSeg.header) continue;
                       // If the re-split segment has no body, its body was hoisted to
                       // the outer BQ as a direct child — it is an outer-level escaped
@@ -482,8 +511,9 @@ const processTabsInChildren = (
                         deferredInnerSegs.push(innerSeg);
                         continue;
                       }
-                      const tentativeDepth = depthOffset + innerSeg.header.depth;
-                      const innerPrevDepth = rawTabs[rawTabs.length - 1]!.depth;
+                      const tentativeDepth =
+                        depthOffset + innerSeg.header.depth;
+                      const innerPrevDepth = rawTabs[rawTabs.length - 1].depth;
                       if (tentativeDepth > innerPrevDepth + 1) continue;
                       innerSeg.header.depth = tentativeDepth;
                       innerSeg.header.body.push(...innerSeg.body);
@@ -512,8 +542,8 @@ const processTabsInChildren = (
             prevEndLine = sibling.position?.end.line ?? prevEndLine;
             j++;
           } else if (sibling.type === "paragraph") {
-            const prevDepth = rawTabs[rawTabs.length - 1]!.depth;
-            const contHeaders = extractHeaderPara(sibling as Paragraph, false, prevDepth);
+            const prevDepth = rawTabs[rawTabs.length - 1].depth;
+            const contHeaders = extractHeaderPara(sibling, false, prevDepth);
             if (contHeaders && contHeaders.length > 0) {
               rawTabs.push(...contHeaders);
               currentTabIdx = rawTabs.length - 1;
@@ -527,7 +557,14 @@ const processTabsInChildren = (
           }
         }
 
-        const list = buildTree(rawTabs, 1, 0, rawTabs.length, containerClass, startLine);
+        const list = buildTree(
+          rawTabs,
+          1,
+          0,
+          rawTabs.length,
+          containerClass,
+          startLine
+        );
         list.containerClass = containerClass;
         newChildren.push(list as unknown as RootContent);
         i = j;
@@ -542,7 +579,9 @@ const processTabsInChildren = (
   children.splice(0, children.length, ...newChildren);
 };
 
-export const remarkTabs: Plugin<[TabsOptions?], Root> = function (options = {}) {
+export const remarkTabs: Plugin<[TabsOptions?], Root> = function (
+  options = {}
+) {
   const { containerClass = "markdown-tabs" } = options;
 
   return (tree) => {
@@ -556,7 +595,9 @@ export const remarkTabs: Plugin<[TabsOptions?], Root> = function (options = {}) 
     // a tab group when the content has been lifted out of its blockquote context.
     visit(tree, (node) => {
       if ("children" in node && node.type !== "root") {
-        const parent = node as { children: (BlockContent | DefinitionContent)[] };
+        const parent = node as {
+          children: Array<BlockContent | DefinitionContent>;
+        };
         if (parent.children.length > 0) {
           processTabsInChildren(parent.children, containerClass, false);
         }
@@ -572,11 +613,17 @@ const mergeHProperties = (base: Properties, extra?: Properties): Properties => {
   const { class: extraClass, ...rest } = extra;
   const result: Properties = { ...base, ...rest };
   if (extraClass)
-    result.class = base.class ? `${String(base.class)} ${String(extraClass)}` : extraClass;
+    result.class = base.class
+      ? `${String(base.class)} ${String(extraClass)}`
+      : extraClass;
   return result;
 };
 
-const buildTabsHast = (list: TabsListNode, containerClass: string, state: State): Element => {
+const buildTabsHast = (
+  list: TabsListNode,
+  containerClass: string,
+  state: State
+): Element => {
   const labelChildren: ElementContent[] = [];
   const panelChildren: ElementContent[] = [];
 
@@ -590,14 +637,19 @@ const buildTabsHast = (list: TabsListNode, containerClass: string, state: State)
       name: list.blockId,
       id: inputId,
       hidden: true,
-      ...(item.open ? { checked: true } : {}),
+      ...(item.open ? { checked: true } : {})
     };
-    labelChildren.push({ type: "element", tagName: "input", properties: inputProps, children: [] });
+    labelChildren.push({
+      type: "element",
+      tagName: "input",
+      properties: inputProps,
+      children: []
+    });
 
     // <label>
     const labelProps = mergeHProperties(
       { class: `${containerClass}-label`, for: inputId },
-      item.data?.hProperties,
+      item.data?.hProperties
     );
     labelChildren.push({
       type: "element",
@@ -605,17 +657,16 @@ const buildTabsHast = (list: TabsListNode, containerClass: string, state: State)
       properties: labelProps,
       children: state.all({
         type: "paragraph",
-        children: item.label,
-      } as Parameters<typeof state.all>[0]),
+        children: item.label
+      } as Parameters<typeof state.all>[0])
     });
 
     // Panel body and nested lists
-    const bodyBlocks = item.children.filter((c) => (c as { type: string }).type !== "tabsList") as (
-      | BlockContent
-      | DefinitionContent
-    )[];
+    const bodyBlocks = item.children.filter(
+      (c) => (c as { type: string }).type !== "tabsList"
+    );
     const nestedLists = item.children.filter(
-      (c) => (c as { type: string }).type === "tabsList",
+      (c) => (c as { type: string }).type === "tabsList"
     ) as unknown as TabsListNode[];
 
     const sectionChildren: ElementContent[] = [];
@@ -624,25 +675,27 @@ const buildTabsHast = (list: TabsListNode, containerClass: string, state: State)
       sectionChildren.push(
         ...state.all({
           type: "root",
-          children: bodyBlocks,
-        } as Parameters<typeof state.all>[0]),
+          children: bodyBlocks
+        } as Parameters<typeof state.all>[0])
       );
     }
 
     for (const nested of nestedLists) {
-      sectionChildren.push(buildTabsHast(nested, nested.containerClass ?? containerClass, state));
+      sectionChildren.push(
+        buildTabsHast(nested, nested.containerClass ?? containerClass, state)
+      );
     }
 
     // <section>
     const sectionProps = mergeHProperties(
       { class: `${containerClass}-panel`, "aria-label": labelPlain },
-      undefined,
+      undefined
     );
     panelChildren.push({
       type: "element",
       tagName: "section",
       properties: sectionProps,
-      children: sectionChildren,
+      children: sectionChildren
     });
   });
 
@@ -651,7 +704,7 @@ const buildTabsHast = (list: TabsListNode, containerClass: string, state: State)
     type: "element",
     tagName: "div",
     properties: { class: `${containerClass}-labels` },
-    children: labelChildren,
+    children: labelChildren
   };
 
   // <div class="...-panels">
@@ -659,20 +712,20 @@ const buildTabsHast = (list: TabsListNode, containerClass: string, state: State)
     type: "element",
     tagName: "div",
     properties: { class: `${containerClass}-panels` },
-    children: panelChildren,
+    children: panelChildren
   };
 
   // <div> container
   const divProps = mergeHProperties(
     { class: containerClass, "data-tabs-group": list.groupId },
-    list.data?.hProperties,
+    list.data?.hProperties
   );
 
   const result: Element = {
     type: "element",
     tagName: "div",
     properties: divProps,
-    children: [labelsDiv, panelsDiv],
+    children: [labelsDiv, panelsDiv]
   };
 
   state.patch(list as unknown as Parameters<typeof state.patch>[0], result);
@@ -683,5 +736,5 @@ export const tabsHastHandlers = {
   tabsList(state: State, node: TabsListNode): ElementContent {
     const containerClass = node.containerClass ?? "markdown-tabs";
     return buildTabsHast(node, containerClass, state);
-  },
+  }
 } as const;

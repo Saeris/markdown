@@ -1,14 +1,20 @@
 import { visit, SKIP } from "unist-util-visit";
 import type { Visitor } from "unist-util-visit";
 import type { Plugin, Transformer } from "unified";
-import type { Root, Text, Heading, Paragraph, ListItem, Code } from "mdast";
+import type { Root, Heading, Paragraph, ListItem, Code } from "mdast";
 import type { Properties } from "hast";
 import type { Node, Parent } from "unist";
 import { applyAttrs } from "./applyAttrs.js";
 import { getDelimiterChecker } from "./getDelimiterChecker.js";
 import type { AttrsOptions } from "./types.js";
 
-export type { AttrsOptions, AttrRuleName, DelimiterConfig, Attr, DelimiterRange } from "./types.js";
+export type {
+  AttrsOptions,
+  AttrRuleName,
+  DelimiterConfig,
+  Attr,
+  DelimiterRange
+} from "./types.js";
 
 type AttrNode = Node & { data?: { hProperties?: Properties } };
 type RuleSet = Set<string>;
@@ -21,11 +27,12 @@ const ALL_RULES = new Set([
   "heading",
   "hr",
   "softbreak",
-  "block",
+  "block"
 ]);
 
 const resolveRules = (rule: AttrsOptions["rule"]): RuleSet => {
-  if (rule === false || (Array.isArray(rule) && rule.length === 0)) return new Set();
+  if (rule === false || (Array.isArray(rule) && rule.length === 0))
+    return new Set();
   if (rule === "all" || rule === true || rule === undefined) return ALL_RULES;
   return new Set((rule as string[]).filter((r) => ALL_RULES.has(r)));
 };
@@ -35,15 +42,15 @@ const resolveRules = (rule: AttrsOptions["rule"]): RuleSet => {
 const makeSiblingAttrVisitor =
   (
     siblingType: string,
-    check: ReturnType<typeof import("./getDelimiterChecker.js").getDelimiterChecker>,
-    allowed: (string | RegExp)[],
+    check: ReturnType<typeof getDelimiterChecker>,
+    allowed: Array<string | RegExp>
   ): Visitor =>
   (node: Node, index: number | undefined, parent: Parent | undefined) => {
     if (!parent || typeof index === "undefined") return;
     if (node.type !== "paragraph") return;
     const para = node as Paragraph;
-    if (para.children.length !== 1 || para.children[0]!.type !== "text") return;
-    const content = (para.children[0] as Text).value.trim();
+    if (para.children.length !== 1 || para.children[0].type !== "text") return;
+    const content = para.children[0].value.trim();
     const range = check(content, "only");
     if (!range) return;
     const prev = parent.children[index - 1];
@@ -67,7 +74,8 @@ export const remarkAttrs: Plugin<[AttrsOptions?], Root> = (options = {}) => {
         const range = check(lang, "end") ?? check(lang, "only");
         if (!range) return;
         applyAttrs(node, lang, range, allowed);
-        node.lang = lang.slice(0, lang.lastIndexOf(left, range[0] - 1)).trimEnd() || null;
+        node.lang =
+          lang.slice(0, lang.lastIndexOf(left, range[0] - 1)).trimEnd() || null;
       });
     }
 
@@ -75,7 +83,7 @@ export const remarkAttrs: Plugin<[AttrsOptions?], Root> = (options = {}) => {
     if (rules.has("heading")) {
       visit(tree, "heading", (node: Heading) => {
         const last = node.children[node.children.length - 1];
-        if (!last || last.type !== "text") return;
+        if (last?.type !== "text") return;
         const content = last.value.trimEnd();
         const range = check(content, "end");
         if (!range) return;
@@ -90,7 +98,7 @@ export const remarkAttrs: Plugin<[AttrsOptions?], Root> = (options = {}) => {
     if (rules.has("block")) {
       visit(tree, "paragraph", (node: Paragraph) => {
         const last = node.children[node.children.length - 1];
-        if (!last || last.type !== "text") return;
+        if (last?.type !== "text") return;
         const content = last.value.trimEnd();
         const range = check(content, "end");
         if (!range) return;
@@ -108,8 +116,8 @@ export const remarkAttrs: Plugin<[AttrsOptions?], Root> = (options = {}) => {
         if (children.length < 2) return;
         const last = children[children.length - 1];
         const prev = children[children.length - 2];
-        if (!last || last.type !== "text") return;
-        if (!prev || prev.type !== "break") return;
+        if (last?.type !== "text") return;
+        if (prev?.type !== "break") return;
         const content = last.value.trim();
         const range = check(content, "only");
         if (!range) return;
@@ -125,10 +133,10 @@ export const remarkAttrs: Plugin<[AttrsOptions?], Root> = (options = {}) => {
         for (let i = children.length - 1; i >= 1; i--) {
           const child = children[i];
           const prev = children[i - 1];
-          if (!child || child.type !== "text") continue;
+          if (child?.type !== "text") continue;
           if (!prev) continue;
 
-          const content = (child as Text).value;
+          const content = child.value;
           const range = check(content, "only");
           if (!range) continue;
 
@@ -145,10 +153,10 @@ export const remarkAttrs: Plugin<[AttrsOptions?], Root> = (options = {}) => {
     if (rules.has("list")) {
       visit(tree, "listItem", (node: ListItem) => {
         const firstChild = node.children[0];
-        if (!firstChild || firstChild.type !== "paragraph") return;
-        const para = firstChild as Paragraph;
+        if (firstChild?.type !== "paragraph") return;
+        const para = firstChild;
         const last = para.children[para.children.length - 1];
-        if (!last || last.type !== "text") return;
+        if (last?.type !== "text") return;
         const content = last.value.trimEnd();
         const range = check(content, "end");
         if (!range) return;
@@ -168,14 +176,14 @@ export const remarkAttrs: Plugin<[AttrsOptions?], Root> = (options = {}) => {
           type: string;
           data?: {
             attrsRole?: string;
-            attrsTitle?: { type: string; value: string }[];
+            attrsTitle?: Array<{ type: string; value: string }>;
             hProperties?: Properties;
           };
         };
         if (n.data?.attrsRole !== "containerItem" || !n.data.attrsTitle) return;
         const title = n.data.attrsTitle;
         const last = title[title.length - 1];
-        if (!last || last.type !== "text") return;
+        if (last?.type !== "text") return;
         const content = last.value.trimEnd();
         const range = check(content, "end");
         if (!range) return;
@@ -187,20 +195,26 @@ export const remarkAttrs: Plugin<[AttrsOptions?], Root> = (options = {}) => {
       // ── custom container nodes (data.attrsRole === "container") ──────────
       // Third-party plugins opt in by setting data.attrsRole = "container".
       // A standalone attr paragraph after such a node applies to the node itself.
-      visit(tree, (node: Node, index: number | undefined, parent: Parent | undefined) => {
-        if (!parent || typeof index === "undefined") return;
-        if (node.type !== "paragraph") return;
-        const para = node as Paragraph;
-        if (para.children.length !== 1 || para.children[0]!.type !== "text") return;
-        const content = (para.children[0] as Text).value.trim();
-        const range = check(content, "only");
-        if (!range) return;
-        const prev = parent.children[index - 1] as { data?: { attrsRole?: string } } | undefined;
-        if (prev?.data?.attrsRole !== "container") return;
-        applyAttrs(prev as unknown as AttrNode, content, range, allowed);
-        parent.children.splice(index, 1);
-        return [SKIP, index];
-      });
+      visit(
+        tree,
+        (node: Node, index: number | undefined, parent: Parent | undefined) => {
+          if (!parent || typeof index === "undefined") return;
+          if (node.type !== "paragraph") return;
+          const para = node as Paragraph;
+          if (para.children.length !== 1 || para.children[0].type !== "text")
+            return;
+          const content = para.children[0].value.trim();
+          const range = check(content, "only");
+          if (!range) return;
+          const prev = parent.children[index - 1] as
+            | { data?: { attrsRole?: string } }
+            | undefined;
+          if (prev?.data?.attrsRole !== "container") return;
+          applyAttrs(prev as unknown as AttrNode, content, range, allowed);
+          parent.children.splice(index, 1);
+          return [SKIP, index];
+        }
+      );
     }
 
     // ── table: standalone paragraph after table containing only attrs ─────

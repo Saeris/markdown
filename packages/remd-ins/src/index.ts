@@ -40,11 +40,15 @@ export const remarkIns: Plugin<[], Root> = () => {
     return {
       type: `insert`,
       children,
-      data: { hName: `ins` },
+      data: { hName: `ins` }
     };
   };
 
-  const visitorFirst: Visitor<Text, Parent> = (node, index, parent): VisitorResult => {
+  const visitorFirst: Visitor<Text, Parent> = (
+    node,
+    index,
+    parent
+  ): VisitorResult => {
     /* v8 ignore next */
     if (!parent || typeof index === `undefined`) return;
 
@@ -72,7 +76,9 @@ export const remarkIns: Plugin<[], Root> = () => {
         children.push(u(`text`, value.substring(textPartIndex, mIndex)));
       }
 
-      children.push(constructInsertNode([{ type: `text`, value: insertedText.trim() }]));
+      children.push(
+        constructInsertNode([{ type: `text`, value: insertedText.trim() }])
+      );
 
       tempValue = value.slice(mIndex + mLength);
     }
@@ -84,7 +90,11 @@ export const remarkIns: Plugin<[], Root> = () => {
     if (children.length) parent.children.splice(index, 1, ...children);
   };
 
-  const visitorSecond: Visitor<Text, Parent> = (node, index, parent): VisitorResult => {
+  const visitorSecond: Visitor<Text, Parent> = (
+    node,
+    index,
+    parent
+  ): VisitorResult => {
     /* v8 ignore next */
     if (!parent || typeof index === `undefined`) return;
 
@@ -98,9 +108,19 @@ export const remarkIns: Plugin<[], Root> = () => {
 
     if (!closingNode) return;
 
-    const beforeChildren = findAllBefore(parent, openingNode) as PhrasingContent[];
-    const mainChildren = findAllBetween(parent, openingNode, closingNode) as PhrasingContent[];
-    const afterChildren = findAllAfter(parent, closingNode) as PhrasingContent[];
+    const beforeChildren = findAllBefore(
+      parent,
+      openingNode
+    ) as PhrasingContent[];
+    const mainChildren = findAllBetween(
+      parent,
+      openingNode,
+      closingNode
+    ) as PhrasingContent[];
+    const afterChildren = findAllAfter(
+      parent,
+      closingNode
+    ) as PhrasingContent[];
 
     const value = openingNode.value;
     const match = Array.from(value.matchAll(REGEX_STARTING_GLOBAL))[0];
@@ -130,7 +150,11 @@ export const remarkIns: Plugin<[], Root> = () => {
       afterChildren.unshift(u(`text`, value_.slice(mIndex_ + mLength_)));
     }
 
-    parent.children = [...beforeChildren, constructInsertNode(mainChildren), ...afterChildren];
+    parent.children = [
+      ...beforeChildren,
+      constructInsertNode(mainChildren),
+      ...afterChildren
+    ];
 
     return index; // re-visit after restructuring children
   };

@@ -11,7 +11,7 @@ const DISALLOWED_KEY_CHARS = new Set([9, 10, 12, 32, 47, 62, 34, 39, 61]);
 export const getAttrs = (
   str: string,
   range: DelimiterRange,
-  allowed: (string | RegExp)[],
+  allowed: Array<string | RegExp>
 ): Attr[] => {
   let key = "";
   let value = "";
@@ -28,7 +28,8 @@ export const getAttrs = (
     }
 
     if (code === CLASS_MARKER && key === "") {
-      key = str.charCodeAt(i + 1) === CLASS_MARKER ? (i++, "css-module") : "class";
+      key =
+        str.charCodeAt(i + 1) === CLASS_MARKER ? (i++, "css-module") : "class";
       parsingKey = false;
       continue;
     }
@@ -69,6 +70,8 @@ export const getAttrs = (
 
   if (allowed.length === 0) return attrs;
   return attrs.filter(([attr]) =>
-    allowed.some((item) => (item instanceof RegExp ? item.test(attr) : item === attr)),
+    allowed.some((item) =>
+      item instanceof RegExp ? item.test(attr) : item === attr
+    )
   );
 };

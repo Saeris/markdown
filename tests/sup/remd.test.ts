@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { expect, test } from "vite-plus/test";
+import { describe, expect, test, it } from "vite-plus/test";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
@@ -14,14 +14,17 @@ const read = (path: string) => readFileSync(join(dir, path), "utf8");
 
 const cmCases = parseFixture(
   read("fixtures/sup-commonmark.md"),
-  read("expected/sup-commonmark.html"),
+  read("expected/sup-commonmark.html")
 );
 
-const gfmCases = parseFixture(read("fixtures/sup-gfm.md"), read("expected/sup-gfm.html"));
+const gfmCases = parseFixture(
+  read("fixtures/sup-gfm.md"),
+  read("expected/sup-gfm.html")
+);
 
 const crossNodeCases = parseFixture(
   read("fixtures/sup-cross-node.md"),
-  read("expected/sup-cross-node.html"),
+  read("expected/sup-cross-node.html")
 );
 
 const cmProcessor = unified()
@@ -37,14 +40,25 @@ const gfmProcessor = unified()
   .use(remarkRehype)
   .use(rehypeStringify);
 
-test.each(cmCases)("sup (remark): $name", ({ input, expected }) => {
-  expect(normalizeHtml(String(cmProcessor.processSync(input)))).toBe(expected);
-});
+describe("sup/remd", () => {
+  it.each(cmCases)("sup (remark): $name", ({ input, expected }) => {
+    expect(normalizeHtml(String(cmProcessor.processSync(input)))).toBe(
+      expected
+    );
+  });
 
-test.each(gfmCases)("sup (remark) gfm: $name", ({ input, expected }) => {
-  expect(normalizeHtml(String(gfmProcessor.processSync(input)))).toBe(expected);
-});
+  it.each(gfmCases)("sup (remark) gfm: $name", ({ input, expected }) => {
+    expect(normalizeHtml(String(gfmProcessor.processSync(input)))).toBe(
+      expected
+    );
+  });
 
-test.each(crossNodeCases)("sup (remark) cross-node: $name", ({ input, expected }) => {
-  expect(normalizeHtml(String(cmProcessor.processSync(input)))).toBe(expected);
+  it.each(crossNodeCases)(
+    "sup (remark) cross-node: $name",
+    ({ input, expected }) => {
+      expect(normalizeHtml(String(cmProcessor.processSync(input)))).toBe(
+        expected
+      );
+    }
+  );
 });

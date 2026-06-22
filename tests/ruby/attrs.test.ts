@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vite-plus/test";
+import { expect, it, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -23,24 +23,28 @@ const remd = (src: string) =>
         .use(remarkAttrs)
         .use(remarkRehype)
         .use(rehypeStringify)
-        .processSync(src),
-    ),
+        .processSync(src)
+    )
   );
 
 describe("ruby + attrs: ruby with heading attrs", () => {
   const input = "## Kanji {.kanji}\n\n{漢字|かんじ}";
-  const expected = '<h2 class="kanji">Kanji</h2><p><ruby>漢字<rt>かんじ</rt></ruby></p>';
+  const expected =
+    '<h2 class="kanji">Kanji</h2><p><ruby>漢字<rt>かんじ</rt></ruby></p>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });
 
 describe("ruby + attrs: ruby and block attrs coexist", () => {
   const input = "Read {漢字|かんじ} carefully. {.note}";
-  const expected = '<p class="note">Read <ruby>漢字<rt>かんじ</rt></ruby> carefully.</p>';
+  const expected =
+    '<p class="note">Read <ruby>漢字<rt>かんじ</rt></ruby> carefully.</p>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });
 
 describe("ruby + attrs: ruby and attrs coexist without interference", () => {
@@ -48,6 +52,7 @@ describe("ruby + attrs: ruby and attrs coexist without interference", () => {
   const expected =
     "<p><ruby>日本<rt>にほん</rt></ruby>語</p><p><ruby>漢字<rt>かんじ</rt></ruby></p>";
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });

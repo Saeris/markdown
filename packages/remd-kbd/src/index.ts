@@ -40,10 +40,14 @@ export const remarkKbd: Plugin<[], Root> = () => {
   const constructKbdNode = (children: PhrasingContent[]): Kbd => ({
     type: `kbd`,
     children,
-    data: { hName: `kbd` },
+    data: { hName: `kbd` }
   });
 
-  const visitorFirst: Visitor<Text, Parent> = (node, index, parent): VisitorResult => {
+  const visitorFirst: Visitor<Text, Parent> = (
+    node,
+    index,
+    parent
+  ): VisitorResult => {
     /* v8 ignore next */
     if (!parent || typeof index === `undefined`) return;
 
@@ -83,23 +87,37 @@ export const remarkKbd: Plugin<[], Root> = () => {
     if (children.length) parent.children.splice(index, 1, ...children);
   };
 
-  const visitorSecond: Visitor<Text, Parent> = (node, index, parent): VisitorResult => {
+  const visitorSecond: Visitor<Text, Parent> = (
+    node,
+    index,
+    parent
+  ): VisitorResult => {
     /* v8 ignore next */
     if (!parent || typeof index === `undefined`) return;
 
-    if (!REGEX_STARTING.test(node.value)) return;
+    if (!node.value.includes("[[")) return;
 
     const openingNode = node;
 
     const closingNode = findAfter(parent, openingNode, (n) => {
-      return n.type === `text` && REGEX_ENDING.test((n as Text).value);
+      return n.type === `text` && (n as Text).value.includes("]]");
     });
 
     if (!closingNode) return;
 
-    const beforeChildren = findAllBefore(parent, openingNode) as PhrasingContent[];
-    const mainChildren = findAllBetween(parent, openingNode, closingNode) as PhrasingContent[];
-    const afterChildren = findAllAfter(parent, closingNode) as PhrasingContent[];
+    const beforeChildren = findAllBefore(
+      parent,
+      openingNode
+    ) as PhrasingContent[];
+    const mainChildren = findAllBetween(
+      parent,
+      openingNode,
+      closingNode
+    ) as PhrasingContent[];
+    const afterChildren = findAllAfter(
+      parent,
+      closingNode
+    ) as PhrasingContent[];
 
     const value = openingNode.value;
     const match = Array.from(value.matchAll(REGEX_STARTING_GLOBAL))[0];
@@ -129,7 +147,11 @@ export const remarkKbd: Plugin<[], Root> = () => {
       afterChildren.unshift(u(`text`, value_.slice(mIndex_ + mLength_)));
     }
 
-    parent.children = [...beforeChildren, constructKbdNode(mainChildren), ...afterChildren];
+    parent.children = [
+      ...beforeChildren,
+      constructKbdNode(mainChildren),
+      ...afterChildren
+    ];
 
     return index; // re-visit after restructuring children
   };

@@ -19,9 +19,9 @@
     --font-base: 18px;
     --scale: 1.125;
 
-    --fs-50:  calc(var(--fs-75)  / var(--scale)); /* ≈14.2px */
-    --fs-75:  calc(var(--fs-100) / var(--scale)); /* ≈16px   */
-    --fs-100: var(--font-base);                   /*  18px   ← anchor */
+    --fs-50: calc(var(--fs-75) / var(--scale)); /* ≈14.2px */
+    --fs-75: calc(var(--fs-100) / var(--scale)); /* ≈16px   */
+    --fs-100: var(--font-base); /*  18px   ← anchor */
     --fs-200: calc(var(--fs-100) * var(--scale)); /* ≈20.25px */
     --fs-300: calc(var(--fs-200) * var(--scale)); /* ≈22.8px  */
     --fs-400: calc(var(--fs-300) * var(--scale)); /* ≈25.6px  */
@@ -34,9 +34,9 @@
     /* ── Heading sizes (H6→Tiny … H1→Ultra) ────────────────────── */
     /*    clamp() for fluid scaling between narrow and wide viewports */
 
-    --ht: var(--fs-200);                            /* h6 — Tiny    ≈20px  */
-    --hs: var(--fs-300);                            /* h5 — Small   ≈22.8px */
-    --hm: var(--fs-400);                            /* h4 — Medium  ≈25.6px */
+    --ht: var(--fs-200); /* h6 — Tiny    ≈20px  */
+    --hs: var(--fs-300); /* h5 — Small   ≈22.8px */
+    --hm: var(--fs-400); /* h4 — Medium  ≈25.6px */
     --hl: clamp(var(--fs-400), 3vw, var(--fs-500)); /* h3 — Large   ≈28.8px */
     --hh: clamp(var(--fs-500), 4vw, var(--fs-600)); /* h2 — Huge    ≈32px  */
     --hu: clamp(var(--fs-600), 5vw, var(--fs-700)); /* h1 — Ultra   ≈36px  */
@@ -44,23 +44,23 @@
     /* ── Body sizes (Tiny … Large) ─────────────────────────────── */
     /*    Medium (--bm) maps to --font-base, our reading size.      */
 
-    --bt: var(--fs-50);  /* Tiny   ≈14.2px — timestamps, hints */
-    --bs: var(--fs-75);  /* Small  ≈16px   — captions, metadata */
+    --bt: var(--fs-50); /* Tiny   ≈14.2px — timestamps, hints */
+    --bs: var(--fs-75); /* Small  ≈16px   — captions, metadata */
     --bm: var(--fs-100); /* Medium  18px   — main prose ← default */
     --bl: var(--fs-200); /* Large  ≈20px   — lead paragraphs */
 
     /* ── Label sizes (Tiny … Medium) ───────────────────────────── */
     /*    Labels use the lower end of the body scale.               */
 
-    --lt: var(--fs-50);  /* Tiny   ≈14.2px — kbd hints, timestamps */
-    --ls: var(--fs-75);  /* Small  ≈16px   — section group titles  */
+    --lt: var(--fs-50); /* Tiny   ≈14.2px — kbd hints, timestamps */
+    --ls: var(--fs-75); /* Small  ≈16px   — section group titles  */
     --lm: var(--fs-100); /* Medium  18px   — nav links, sidebar    */
 
     /* ── Default semantic aliases ───────────────────────────────── */
 
     --fs-heading: var(--hu);
-    --fs-body:    var(--bm);
-    --fs-label:   var(--lm);
+    --fs-body: var(--bm);
+    --fs-label: var(--lm);
 
     /* ── Margins — derived from font size × ratio ───────────────── */
     /*    top  = size / ratio  (proportional breathing room above)  */
@@ -69,9 +69,9 @@
     --margin-top-ratio: var(--scale); /* Major Second on desktop */
     --header-margin: calc(var(--fs-heading) / var(--margin-top-ratio))
       calc(var(--fs-heading) * 0.25);
-    --body-margin:   calc(var(--fs-body) / var(--margin-top-ratio))
+    --body-margin: calc(var(--fs-body) / var(--margin-top-ratio))
       calc(var(--fs-body) * 0.25);
-    --label-margin:  calc(var(--fs-label) / var(--margin-top-ratio))
+    --label-margin: calc(var(--fs-label) / var(--margin-top-ratio))
       calc(var(--fs-label) * 0.25);
 
     /* ── Mobile type scale (Adobe Spectrum guidelines) ─────────────
@@ -81,23 +81,23 @@
     @media (width < 768px) {
       --font-base: 16px;
 
-      --bt: calc(var(--fs-75)  / var(--scale)); /* ≈14.2px */
-      --bs: var(--fs-75);                        /* ≈16px   */
-      --bm: var(--fs-100);                       /* ≈18px (paragraph prose, unchanged) */
-      --bl: var(--fs-200);                       /* ≈20px */
+      --bt: calc(var(--fs-75) / var(--scale)); /* ≈14.2px */
+      --bs: var(--fs-75); /* ≈16px   */
+      --bm: var(--fs-100); /* ≈18px (paragraph prose, unchanged) */
+      --bl: var(--fs-200); /* ≈20px */
 
       /* Headings shift one step down */
-      --ht: var(--fs-100);                       /* h6 ≈16px */
-      --hs: var(--fs-200);                       /* h5 ≈18px */
-      --hm: var(--fs-300);                       /* h4 ≈20px */
+      --ht: var(--fs-100); /* h6 ≈16px */
+      --hs: var(--fs-200); /* h5 ≈18px */
+      --hm: var(--fs-300); /* h4 ≈20px */
       --hl: clamp(var(--fs-300), 5vw, var(--fs-400)); /* h3 ≈22–25px */
       --hh: clamp(var(--fs-400), 6vw, var(--fs-500)); /* h2 ≈25–28px */
       --hu: clamp(var(--fs-500), 7vw, var(--fs-600)); /* h1 ≈28–32px */
 
       /* Tighter line heights on small screens */
-      --lh-body:    1.6;
+      --lh-body: 1.6;
       --lh-body-sm: 1.5;
-      --lh-code:    1.5;
+      --lh-code: 1.5;
     }
 
     /* Tighter ratio on narrow screens (Golden Ratio = more breathing room) */
@@ -110,29 +110,29 @@
     /*    Lighter weight in dark mode keeps perceived stroke width   */
     /*    consistent across themes without layout shift.             */
 
-    --fw-regular:  light-dark(400, 350);
-    --fw-medium:   light-dark(500, 450);
+    --fw-regular: light-dark(400, 350);
+    --fw-medium: light-dark(500, 450);
     --fw-semibold: light-dark(600, 550);
-    --fw-bold:     light-dark(700, 650);
+    --fw-bold: light-dark(700, 650);
 
     /* ── Line heights ───────────────────────────────────────────── */
 
     --lh-heading: 1.25;
-    --lh-body:    1.75;
+    --lh-body: 1.75;
     --lh-body-sm: 1.6;
-    --lh-label:   1.4;
-    --lh-code:    1.6;
+    --lh-label: 1.4;
+    --lh-code: 1.6;
 
     /* ── Colors — light-dark() pairs, hue 250 accent ───────────── */
 
-    --color-bg:          light-dark(oklch(0.98 0.004 250), oklch(0.12 0.008 250));
-    --color-bg-elevated: light-dark(oklch(1 0 0),          oklch(0.15 0.008 250));
-    --color-sidebar-bg:  light-dark(oklch(0.96 0.005 250), oklch(0.10 0.008 250));
-    --color-code-bg:     light-dark(oklch(0.94 0.006 250), oklch(0.17 0.010 250));
+    --color-bg: light-dark(oklch(0.98 0.004 250), oklch(0.12 0.008 250));
+    --color-bg-elevated: light-dark(oklch(1 0 0), oklch(0.15 0.008 250));
+    --color-sidebar-bg: light-dark(oklch(0.96 0.005 250), oklch(0.1 0.008 250));
+    --color-code-bg: light-dark(oklch(0.94 0.006 250), oklch(0.17 0.01 250));
 
-    --color-fg:          light-dark(oklch(0.18 0.010 250), oklch(0.92 0.005 250));
-    --color-fg-muted:    light-dark(oklch(0.48 0.020 250), oklch(0.62 0.020 250));
-    --color-fg-subtle:   light-dark(oklch(0.64 0.015 250), oklch(0.48 0.015 250));
+    --color-fg: light-dark(oklch(0.18 0.01 250), oklch(0.92 0.005 250));
+    --color-fg-muted: light-dark(oklch(0.48 0.02 250), oklch(0.62 0.02 250));
+    --color-fg-subtle: light-dark(oklch(0.64 0.015 250), oklch(0.48 0.015 250));
 
     /* Accent ramp derived via relative color syntax from a single base */
     --color-accent-base: oklch(0.52 0.18 250);
@@ -149,15 +149,18 @@
       oklch(from var(--color-accent-base) 0.18 0.04 h)
     );
 
-    --color-border:       light-dark(oklch(0.88 0.010 250), oklch(0.24 0.020 250));
-    --color-border-muted: light-dark(oklch(0.93 0.006 250), oklch(0.20 0.012 250));
+    --color-border: light-dark(oklch(0.88 0.01 250), oklch(0.24 0.02 250));
+    --color-border-muted: light-dark(
+      oklch(0.93 0.006 250),
+      oklch(0.2 0.012 250)
+    );
 
     /* ── Radius ─────────────────────────────────────────────────── */
 
-    --radius-sm:   0.25rem;
-    --radius-md:   0.375rem;
-    --radius-lg:   0.5rem;
-    --radius-xl:   0.75rem;
+    --radius-sm: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
     --radius-full: 9999px;
 
     /* ── Shadows ────────────────────────────────────────────────── */
@@ -167,9 +170,9 @@
 
     /* ── Layout ─────────────────────────────────────────────────── */
 
-    --nav-height:        56px;
-    --sidebar-width:     256px;
-    --toc-width:         200px;
+    --nav-height: 56px;
+    --sidebar-width: 256px;
+    --toc-width: 200px;
     --content-max-width: 760px;
   }
 

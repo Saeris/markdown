@@ -11,13 +11,16 @@ const ALERT_RE = /^\[!([^\]]+)\]([+-])?\s*(.*)?$/s;
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-export const githubAlerts: PluginWithOptions<AlertOptions> = (md, options = {}) => {
+export const githubAlerts: PluginWithOptions<AlertOptions> = (
+  md,
+  options = {}
+) => {
   const {
     types: extraTypes = {},
     titles: customTitles = {},
     matchCaseInsensitive = true,
     icons: showIcons = true,
-    containerClass = "markdown-alert",
+    containerClass = "markdown-alert"
   } = options;
 
   const aliasMap: Record<string, string> = { ...ALERT_ALIASES, ...extraTypes };
@@ -29,18 +32,19 @@ export const githubAlerts: PluginWithOptions<AlertOptions> = (md, options = {}) 
   const titleFor = (type: string) =>
     titles[type] ?? DEFAULT_TITLE[type as AlertType] ?? capitalize(type);
 
-  const iconFor = (type: string) => (showIcons ? (ICONS[type as AlertType] ?? "") : "");
+  const iconFor = (type: string) =>
+    showIcons ? (ICONS[type as AlertType] ?? "") : "";
 
   md.core.ruler.after("inline", "github_alerts", (state) => {
     const { tokens } = state;
 
     for (let i = 0; i < tokens.length; i++) {
-      if (tokens[i]!.type !== "blockquote_open") continue;
+      if (tokens[i].type !== "blockquote_open") continue;
 
       // Find the matching blockquote_close
       let closeIdx = i + 1;
       for (let depth = 1; depth > 0; closeIdx++) {
-        const t = tokens[closeIdx]!.type;
+        const t = tokens[closeIdx].type;
         if (t === "blockquote_open") depth++;
         else if (t === "blockquote_close") depth--;
       }
@@ -54,12 +58,12 @@ export const githubAlerts: PluginWithOptions<AlertOptions> = (md, options = {}) 
       const firstChild = firstInline.children[0];
       if (firstChild?.type !== "text") continue;
 
-      const firstLine = firstChild.content.split("\n")[0]!;
+      const firstLine = firstChild.content.split("\n")[0];
       const match = ALERT_RE.exec(firstLine.trim());
       if (!match) continue;
 
       const [, keyword, foldMarker, customTitle] = match;
-      const type = resolve(keyword!);
+      const type = resolve(keyword);
       if (!type) continue;
 
       const isFoldable = foldMarker === "+" || foldMarker === "-";
@@ -69,7 +73,9 @@ export const githubAlerts: PluginWithOptions<AlertOptions> = (md, options = {}) 
       // The first text child holds only the marker ("[!NOTE]") because mdit
       // splits inline children at softbreak boundaries; body lines are
       // subsequent softbreak + text sibling tokens.
-      const rest = firstChild.content.slice(firstLine.length).replace(/^\n/, "");
+      const rest = firstChild.content
+        .slice(firstLine.length)
+        .replace(/^\n/, "");
       if (rest) {
         // Rare: marker and body share one text node (no softbreak between them)
         firstChild.content = rest;
@@ -102,15 +108,23 @@ export const githubAlerts: PluginWithOptions<AlertOptions> = (md, options = {}) 
 
       // Replace blockquote_open/close with div (or details when foldable)
       const containerTag = isFoldable ? "details" : "div";
-      const containerOpen = new state.Token(`${containerTag}_open`, containerTag, 1);
+      const containerOpen = new state.Token(
+        `${containerTag}_open`,
+        containerTag,
+        1
+      );
       containerOpen.attrSet("class", containerClass);
       containerOpen.attrSet("data-alert", type);
       if (foldMarker === "+") containerOpen.attrSet("open", "");
-      containerOpen.map = tokens[i]!.map;
+      containerOpen.map = tokens[i].map;
       containerOpen.block = true;
       containerOpen.meta = { attrsRole: "container" };
 
-      const containerClose = new state.Token(`${containerTag}_close`, containerTag, -1);
+      const containerClose = new state.Token(
+        `${containerTag}_close`,
+        containerTag,
+        -1
+      );
       containerClose.block = true;
       containerClose.meta = { attrsRole: "container" };
 

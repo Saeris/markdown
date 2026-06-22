@@ -5,7 +5,7 @@ const DONE_ATTR = `data-svg-inlined`;
 
 async function inlineSvgImages(): Promise<void> {
   const images = document.querySelectorAll<HTMLImageElement>(
-    `img[src$=".svg"]:not([${DONE_ATTR}])`,
+    `img[src$=".svg"]:not([${DONE_ATTR}])`
   );
 
   for (const img of images) {
@@ -31,5 +31,8 @@ async function inlineSvgImages(): Promise<void> {
   }
 }
 
-window.addEventListener(`vscode.markdown.updateContent`, () => void inlineSvgImages());
+window.addEventListener(
+  `vscode.markdown.updateContent`,
+  () => void inlineSvgImages()
+);
 void inlineSvgImages();

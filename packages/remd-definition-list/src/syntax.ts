@@ -11,57 +11,72 @@ import type {
   State,
   Token,
   TokenizeContext,
-  Tokenizer,
+  Tokenizer
 } from "micromark-util-types";
 import { tokenTypes, clonePoint } from "./types.js";
 import { analyzeDefTermFlow, subtokenizeDefTerm } from "./def-term-flow.js";
 import type { FlowToken } from "./types.js";
 
 type EventTuple = [string, Token, TokenizeContext];
-type LazyParser = { parser: { lazy: Record<number, boolean> } };
+interface LazyParser {
+  parser: { lazy: Record<number, boolean> };
+}
 
 const ignorablePrefixTypes = new Set([
   "linePrefix",
   "blockQuotePrefix",
   "blockQuoteMarker",
-  "blockQuotePrefixWhitespace",
+  "blockQuotePrefixWhitespace"
 ]);
 
 // Token types that are transparent when scanning for a valid def-term predecessor.
-const skippableFlowTypes = new Set(["lineEnding", "linePrefix", "lineEndingBlank", "content"]);
+const skippableFlowTypes = new Set([
+  "lineEnding",
+  "linePrefix",
+  "lineEndingBlank",
+  "content"
+]);
 
 // Token types that qualify as valid def-term content (tableHead/tableRow from gfm-table).
-const validTermTypes = new Set(["paragraph", "chunkContent", "tableHead", "tableRow"]);
+const validTermTypes = new Set([
+  "paragraph",
+  "chunkContent",
+  "tableHead",
+  "tableRow"
+]);
 
 const defListConstruct: Construct = {
   name: "defList",
   tokenize: tokenizeDefListStart as Tokenizer,
   continuation: {
-    tokenize: tokenizeDefListContinuation as Tokenizer,
+    tokenize: tokenizeDefListContinuation as Tokenizer
   },
   resolveAll: resolveAllDefinitionTerm,
-  exit: tokenizeDefListEnd as Exiter,
+  exit: tokenizeDefListEnd as Exiter
 };
 
 const defListDescriptionPrefixWhitespaceConstruct: Construct = {
   tokenize: tokenizeDefListDescriptionPrefixWhitespace as Tokenizer,
-  partial: true,
+  partial: true
 };
 
 const indentConstruct: Construct = {
   tokenize: tokenizeIndent as Tokenizer,
-  partial: true,
+  partial: true
 };
 
 export const defList: Extension = {
   document: {
     [58]: defListConstruct,
     [126]: defListConstruct,
-    null: [],
-  },
+    null: []
+  }
 };
 
-function resolveAllDefinitionTerm(events: Event[], context: TokenizeContext): Event[] {
+function resolveAllDefinitionTerm(
+  events: Event[],
+  context: TokenizeContext
+): Event[] {
   const evts = events as EventTuple[];
 
   let index = 0;
@@ -110,7 +125,7 @@ function resolveAllDefinitionTerm(events: Event[], context: TokenizeContext): Ev
 function resolveDefList(
   defListStart: number,
   events: EventTuple[],
-  context: TokenizeContext,
+  context: TokenizeContext
 ): number {
   let indexOffset = 0;
   let defListDescriptionToken: Token | undefined;
@@ -141,14 +156,24 @@ function resolveDefList(
       }
 
       break;
-    } else if (event[0] === "exit" && event[1].type === tokenTypes.defListDescriptionPrefix) {
+    } else if (
+      event[0] === "exit" &&
+      event[1].type === tokenTypes.defListDescriptionPrefix
+    ) {
       if (!expectFirstDescription) {
         index += addDescriptionExit(index, events);
         defListDescriptionToken = undefined;
       }
-      index += addDescriptionEnter(index, events, (event[1] as FlowToken)._loose);
+      index += addDescriptionEnter(
+        index,
+        events,
+        (event[1] as FlowToken)._loose
+      );
       expectFirstDescription = false;
-    } else if (event[0] === "enter" && event[1].type === tokenTypes.defListDescriptionPrefix) {
+    } else if (
+      event[0] === "enter" &&
+      event[1].type === tokenTypes.defListDescriptionPrefix
+    ) {
       // mark the previous description loose if it had internal blanks
       if ((event[1] as FlowToken)._prevLoose && defListDescriptionToken) {
         (defListDescriptionToken as FlowToken)._loose = true;
@@ -157,8 +182,9 @@ function resolveDefList(
       if (events[index - 1][1].type === "lineEndingBlank") {
         (event[1] as FlowToken)._loose = true;
       } else if (events[index - 1][1].type === "chunkFlow") {
-        const flowEvents = (events[index - 1][1] as FlowToken)._tokenizer?.events;
-        if (flowEvents && flowEvents[flowEvents.length - 1][1].type === "lineEndingBlank") {
+        const flowEvents = (events[index - 1][1] as FlowToken)._tokenizer
+          ?.events;
+        if (flowEvents?.[flowEvents.length - 1][1].type === "lineEndingBlank") {
           (event[1] as FlowToken)._loose = true;
         }
       }
@@ -169,15 +195,21 @@ function resolveDefList(
 
   return indexOffset;
 
-  function addDescriptionEnter(index: number, events: EventTuple[], loose?: boolean): number {
+  function addDescriptionEnter(
+    index: number,
+    events: EventTuple[],
+    loose?: boolean
+  ): number {
     defListDescriptionToken = {
       type: tokenTypes.defListDescription,
       start: clonePoint(events[index + 1][1].start),
       end: clonePoint(events[index + 1][1].end),
-      _loose: loose,
+      _loose: loose
     };
     allDescriptionTokens.push(defListDescriptionToken);
-    splice(events as Event[], index + 1, 0, [["enter", defListDescriptionToken, context] as Event]);
+    splice(events as Event[], index + 1, 0, [
+      ["enter", defListDescriptionToken, context] as Event
+    ]);
     return 1;
   }
 
@@ -187,7 +219,9 @@ function resolveDefList(
     // _prevLoose is set on the next prefix when the current description had internal blanks
     // (handled in the enter defListDescriptionPrefix block)
 
-    splice(events as Event[], index, 0, [["exit", defListDescriptionToken!, context] as Event]);
+    splice(events as Event[], index, 0, [
+      ["exit", defListDescriptionToken!, context] as Event
+    ]);
     return 1;
   }
 }
@@ -196,7 +230,7 @@ function createDefTermEvent(
   events: EventTuple[],
   chunkFlowIndex: number,
   defListStartIndex: number,
-  flagBlockQuote: boolean,
+  flagBlockQuote: boolean
 ): number {
   const context = events[chunkFlowIndex][2];
   const flow = analyzeDefTermFlow(events[chunkFlowIndex][1] as FlowToken);
@@ -207,16 +241,17 @@ function createDefTermEvent(
     const termToken: Token = {
       type: tokenTypes.defListTerm,
       start: clonePoint(defListEnterEvent[1].start),
-      end: clonePoint(defListEnterEvent[1].start),
+      end: clonePoint(defListEnterEvent[1].start)
     };
     splice(events as Event[], defListStartIndex, 0, [
       ["enter", termToken, context] as Event,
-      ["exit", termToken, context] as Event,
+      ["exit", termToken, context] as Event
     ]);
     return defListStartIndex;
   }
 
-  const lazyLines = (events[chunkFlowIndex][2] as unknown as LazyParser).parser.lazy;
+  const lazyLines = (events[chunkFlowIndex][2] as unknown as LazyParser).parser
+    .lazy;
   let newDefListStartIndex = 0;
   let flowExitIndex: number | undefined;
 
@@ -245,7 +280,10 @@ function createDefTermEvent(
   return newDefListStartIndex;
 }
 
-function resolveDefinitionTermTo(defListStartIndex: number, events: EventTuple[]): number {
+function resolveDefinitionTermTo(
+  defListStartIndex: number,
+  events: EventTuple[]
+): number {
   let flowIndex: number | undefined;
   let blockQuoteExit: EventTuple | undefined;
   let blockQuoteExitIndex: number | undefined;
@@ -278,17 +316,25 @@ function resolveDefinitionTermTo(defListStartIndex: number, events: EventTuple[]
     events,
     flowIndex!,
     defListStartIndex,
-    blockQuoteExit != null,
+    blockQuoteExit != null
   );
 
   if (blockQuoteExitIndex != null) {
-    blockQuoteExit![1].end = clonePoint(events[newDefListStartIndex - 1][1].end);
-    splice(events as Event[], newDefListStartIndex, 0, [blockQuoteExit! as Event]);
+    blockQuoteExit![1].end = clonePoint(
+      events[newDefListStartIndex - 1][1].end
+    );
+    splice(events as Event[], newDefListStartIndex, 0, [
+      blockQuoteExit! as Event
+    ]);
     newDefListStartIndex += 1;
   }
 
-  defListEnterEvent[1].start = clonePoint(events[newDefListStartIndex][1].start);
-  splice(events as Event[], newDefListStartIndex, 0, [defListEnterEvent as Event]);
+  defListEnterEvent[1].start = clonePoint(
+    events[newDefListStartIndex][1].start
+  );
+  splice(events as Event[], newDefListStartIndex, 0, [
+    defListEnterEvent as Event
+  ]);
   return newDefListStartIndex - defListStartIndex;
 }
 
@@ -304,13 +350,19 @@ function checkPossibleDefTerm(events: EventTuple[]): boolean {
   for (let i = events.length - 1; i >= 0; i--) {
     const event = events[i];
     if (ignorablePrefixTypes.has(event[1].type)) continue;
-    if (i === events.length - 1 && event[1].type === "blockQuote" && event[0] === "exit") {
+    if (
+      i === events.length - 1 &&
+      event[1].type === "blockQuote" &&
+      event[0] === "exit"
+    ) {
       flagBlockQuote = true;
       continue;
     }
     if (event[1].type === "chunkFlow") {
       if (event[0] === "enter") {
-        flowEvents ??= (event[1] as FlowToken)._tokenizer?.events as EventTuple[] | undefined;
+        flowEvents ??= (event[1] as FlowToken)._tokenizer?.events as
+          | EventTuple[]
+          | undefined;
         termFlowStart = event;
       }
     } else {
@@ -342,15 +394,15 @@ function tokenizeDefListStart(
   this: TokenizeContext,
   effects: Effects,
   ok: State,
-  nok: State,
+  nok: State
 ): State {
-  if (this.containerState == null) {
-    this.containerState = {};
-  }
+  this.containerState ??= {};
 
   const tail = this.events[this.events.length - 1];
   let initialSize =
-    tail && tail[1].type === "linePrefix" ? tail[2].sliceSerialize(tail[1], true).length : 0;
+    tail?.[1].type === "linePrefix"
+      ? tail[2].sliceSerialize(tail[1], true).length
+      : 0;
 
   if (this.containerState.type == null) {
     if (checkPossibleDefTerm(this.events as EventTuple[])) {
@@ -366,7 +418,7 @@ function tokenizeDefListStart(
 
     effects.enter(tokenTypes.defListDescriptionPrefix, {
       _loose: this.containerState?.lastBlankLine,
-      _prevLoose: this.containerState?.hadBlankInDescription,
+      _prevLoose: this.containerState?.hadBlankInDescription
     });
     this.containerState!.lastBlankLine = undefined;
     this.containerState!.hadBlankInDescription = undefined;
@@ -376,14 +428,18 @@ function tokenizeDefListStart(
     return effects.check(
       blankLine,
       nok,
-      effects.attempt(defListDescriptionPrefixWhitespaceConstruct, prefixEnd, otherPrefix),
+      effects.attempt(
+        defListDescriptionPrefixWhitespaceConstruct,
+        prefixEnd,
+        otherPrefix
+      )
     );
   };
 
   const otherPrefix = (code: number | null): State | undefined => {
     if (markdownSpace(code)) {
       effects.enter(tokenTypes.defListDescriptionPrefixWhitespace);
-      effects.consume(code!);
+      effects.consume(code);
       effects.exit(tokenTypes.defListDescriptionPrefixWhitespace);
       return prefixEnd;
     }
@@ -393,7 +449,10 @@ function tokenizeDefListStart(
   const prefixEnd = (code: number | null): State | undefined => {
     this.containerState!.size =
       initialSize +
-      this.sliceSerialize(effects.exit(tokenTypes.defListDescriptionPrefix), true).length;
+      this.sliceSerialize(
+        effects.exit(tokenTypes.defListDescriptionPrefix),
+        true
+      ).length;
     return ok(code);
   };
 
@@ -404,25 +463,34 @@ function tokenizeDefListContinuation(
   this: TokenizeContext,
   effects: Effects,
   ok: State,
-  nok: State,
+  nok: State
 ): State {
   this.containerState!._closeFlow = undefined;
 
   const onBlank = (code: number | null): State | undefined => {
-    this.containerState!.furtherBlankLines = this.containerState!.furtherBlankLines ?? false;
+    this.containerState!.furtherBlankLines =
+      this.containerState!.furtherBlankLines ?? false;
     this.containerState!.lastBlankLine = true;
-    return factorySpace(effects, ok, "linePrefix", this.containerState!.size! + 1)(code);
+    return factorySpace(
+      effects,
+      ok,
+      "linePrefix",
+      this.containerState!.size! + 1
+    )(code);
   };
 
   const notInCurrentItem = (code: number | null): State | undefined => {
     this.containerState!._closeFlow = true;
     // interrupt is set by the micromark runtime on TokenizeContext
-    (this as unknown as { interrupt: boolean | undefined }).interrupt = undefined;
+    (this as unknown as { interrupt: boolean | undefined }).interrupt =
+      undefined;
     return factorySpace(
       effects,
       effects.attempt(defListConstruct, ok, nok),
       "linePrefix",
-      this.parser.constructs.disable.null?.includes("codeIndented") ? undefined : 4,
+      this.parser.constructs.disable.null?.includes("codeIndented")
+        ? undefined
+        : 4
     )(code);
   };
 
@@ -446,23 +514,32 @@ function tokenizeDefListContinuation(
   return effects.check(blankLine, onBlank, notBlank);
 }
 
-function tokenizeIndent(this: TokenizeContext, effects: Effects, ok: State, nok: State): State {
+function tokenizeIndent(
+  this: TokenizeContext,
+  effects: Effects,
+  ok: State,
+  nok: State
+): State {
   const afterPrefix = (code: number | null): State | undefined => {
     const tail = this.events[this.events.length - 1];
-    return tail &&
-      tail[1].type === "linePrefix" &&
+    return tail?.[1].type === "linePrefix" &&
       tail[2].sliceSerialize(tail[1], true).length === this.containerState!.size
       ? ok(code)
       : nok(code);
   };
-  return factorySpace(effects, afterPrefix, "linePrefix", this.containerState!.size! + 1);
+  return factorySpace(
+    effects,
+    afterPrefix,
+    "linePrefix",
+    this.containerState!.size! + 1
+  );
 }
 
 function tokenizeDefListDescriptionPrefixWhitespace(
   this: TokenizeContext,
   effects: Effects,
   ok: State,
-  nok: State,
+  nok: State
 ): State {
   const afterPrefix = (code: number | null): State | undefined => {
     const tail = this.events[this.events.length - 1];
@@ -476,7 +553,9 @@ function tokenizeDefListDescriptionPrefixWhitespace(
     effects,
     afterPrefix,
     tokenTypes.defListDescriptionPrefixWhitespace,
-    this.parser.constructs.disable.null?.includes("codeIndented") ? undefined : 4 + 1,
+    this.parser.constructs.disable.null?.includes("codeIndented")
+      ? undefined
+      : 4 + 1
   );
 }
 

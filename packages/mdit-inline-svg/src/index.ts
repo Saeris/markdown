@@ -12,7 +12,10 @@ export type { CacheEfficiency, Options } from "./options.js";
 
 const isExternalUrl = (src: string): boolean => /^(?:[a-z]+:|\/\/)/i.test(src);
 
-const resolveSvgPath = (src: string, currentDocument: unknown): string | null => {
+const resolveSvgPath = (
+  src: string,
+  currentDocument: unknown
+): string | null => {
   const decoded = decodeURIComponent(String(src));
   if (isExternalUrl(decoded)) return null;
   try {
@@ -27,26 +30,31 @@ const getAlt = (
   token: Token,
   md: MarkdownIt,
   options: MarkdownIt["options"],
-  env: unknown,
-): string => md.renderer.renderInlineAsText(token.children ?? [], options, env as object);
+  env: unknown
+): string =>
+  md.renderer.renderInlineAsText(token.children ?? [], options, env as object);
 
 const extractSvgParts = (
-  content: string,
+  content: string
 ): { viewBox: string; width: string; height: string; inner: string } => {
-  const openTag = content.match(/<svg([^>]*?)>/i)?.[1] ?? ``;
+  const openTag = /<svg([^>]*?)>/i.exec(content)?.[1] ?? ``;
   return {
-    viewBox: openTag.match(/viewBox="([^"]*)"/i)?.[1] ?? ``,
-    width: openTag.match(/\bwidth="([^"]*)"/i)?.[1] ?? ``,
-    height: openTag.match(/\bheight="([^"]*)"/i)?.[1] ?? ``,
-    inner: content.match(/<svg[^>]*>([\s\S]*?)<\/svg\s*>/i)?.[1]?.trim() ?? ``,
+    viewBox: /viewBox="([^"]*)"/i.exec(openTag)?.[1] ?? ``,
+    width: /\bwidth="([^"]*)"/i.exec(openTag)?.[1] ?? ``,
+    height: /\bheight="([^"]*)"/i.exec(openTag)?.[1] ?? ``,
+    inner: /<svg[^>]*>([\s\S]*?)<\/svg\s*>/i.exec(content)?.[1]?.trim() ?? ``
   };
 };
 
-const escAttr = (s: string): string => s.replace(/&/g, `&amp;`).replace(/"/g, `&quot;`);
+const escAttr = (s: string): string =>
+  s.replace(/&/g, `&amp;`).replace(/"/g, `&quot;`);
 
 const buildFullInline = (content: string, alt: string): string => {
   if (!alt) return content;
-  return content.replace(/<svg([^>]*)>/i, `<svg$1 aria-label="${escAttr(alt)}">`);
+  return content.replace(
+    /<svg([^>]*)>/i,
+    `<svg$1 aria-label="${escAttr(alt)}">`
+  );
 };
 
 const buildSpriteHtml = (id: string, viewBox: string, inner: string): string =>
@@ -59,13 +67,13 @@ const buildUseHtml = (
   viewBox: string,
   width: string,
   height: string,
-  alt: string,
+  alt: string
 ): string => {
   const attrs = [
     viewBox && `viewBox="${escAttr(viewBox)}"`,
     width && `width="${escAttr(width)}"`,
     height && `height="${escAttr(height)}"`,
-    alt && `aria-label="${escAttr(alt)}"`,
+    alt && `aria-label="${escAttr(alt)}"`
   ]
     .filter(Boolean)
     .join(` `);
@@ -181,7 +189,7 @@ export const inlineSvg = (md: MarkdownIt, config?: Partial<Options>): void => {
       idx: number,
       opts: MarkdownIt["options"],
       _env: unknown,
-      self: MarkdownIt["renderer"],
+      self: MarkdownIt["renderer"]
     ) => self.renderToken(tokens, idx, opts));
 
   md.renderer.rules.image = (tokens, idx, opts, env, self) => {

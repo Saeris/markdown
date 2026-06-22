@@ -36,13 +36,19 @@ export const REGEX_ENDING = /(?<!\s)\^/;
 export const REGEX_ENDING_GLOBAL = /(?<!\s)\^/g;
 
 export const remarkSup: Plugin<[], Root> = () => {
-  const constructSuperscriptNode = (children: PhrasingContent[]): Superscript => ({
+  const constructSuperscriptNode = (
+    children: PhrasingContent[]
+  ): Superscript => ({
     type: `superscript`,
     children,
-    data: { hName: `sup` },
+    data: { hName: `sup` }
   });
 
-  const visitorFirst: Visitor<Text, Parent> = (node, index, parent): VisitorResult => {
+  const visitorFirst: Visitor<Text, Parent> = (
+    node,
+    index,
+    parent
+  ): VisitorResult => {
     /* v8 ignore next */
     if (!parent || typeof index === `undefined`) return;
 
@@ -70,7 +76,11 @@ export const remarkSup: Plugin<[], Root> = () => {
         children.push(u(`text`, value.substring(textPartIndex, mIndex)));
       }
 
-      children.push(constructSuperscriptNode([{ type: `text`, value: superscriptText.trim() }]));
+      children.push(
+        constructSuperscriptNode([
+          { type: `text`, value: superscriptText.trim() }
+        ])
+      );
 
       tempValue = value.slice(mIndex + mLength);
     }
@@ -82,7 +92,11 @@ export const remarkSup: Plugin<[], Root> = () => {
     if (children.length) parent.children.splice(index, 1, ...children);
   };
 
-  const visitorSecond: Visitor<Text, Parent> = (node, index, parent): VisitorResult => {
+  const visitorSecond: Visitor<Text, Parent> = (
+    node,
+    index,
+    parent
+  ): VisitorResult => {
     /* v8 ignore next */
     if (!parent || typeof index === `undefined`) return;
 
@@ -96,9 +110,19 @@ export const remarkSup: Plugin<[], Root> = () => {
 
     if (!closingNode) return;
 
-    const beforeChildren = findAllBefore(parent, openingNode) as PhrasingContent[];
-    const mainChildren = findAllBetween(parent, openingNode, closingNode) as PhrasingContent[];
-    const afterChildren = findAllAfter(parent, closingNode) as PhrasingContent[];
+    const beforeChildren = findAllBefore(
+      parent,
+      openingNode
+    ) as PhrasingContent[];
+    const mainChildren = findAllBetween(
+      parent,
+      openingNode,
+      closingNode
+    ) as PhrasingContent[];
+    const afterChildren = findAllAfter(
+      parent,
+      closingNode
+    ) as PhrasingContent[];
 
     const value = openingNode.value;
     const match = Array.from(value.matchAll(REGEX_STARTING_GLOBAL))[0];
@@ -128,7 +152,11 @@ export const remarkSup: Plugin<[], Root> = () => {
       afterChildren.unshift(u(`text`, value_.slice(mIndex_ + mLength_)));
     }
 
-    parent.children = [...beforeChildren, constructSuperscriptNode(mainChildren), ...afterChildren];
+    parent.children = [
+      ...beforeChildren,
+      constructSuperscriptNode(mainChildren),
+      ...afterChildren
+    ];
 
     return index;
   };

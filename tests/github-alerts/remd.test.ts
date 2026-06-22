@@ -1,13 +1,13 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { expect, test } from "vite-plus/test";
+import { describe, expect, test, it } from "vite-plus/test";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import {
   remarkGithubAlerts,
-  githubAlertsHastHandlers,
+  githubAlertsHastHandlers
 } from "../../packages/remd-github-alerts/src";
 import { parseCases, normalizeHtml } from "../utils/index.js";
 
@@ -30,10 +30,16 @@ const processorNoIcons = unified()
   .use(remarkRehype, { handlers: githubAlertsHastHandlers })
   .use(rehypeStringify, { allowDangerousHtml: true });
 
-test.each(mainCases)("github-alerts (remark): $name", ({ input }) => {
-  expect(normalizeHtml(String(processor.processSync(input)))).toMatchSnapshot();
-});
+describe("github-alerts/remd", () => {
+  it.each(mainCases)("github-alerts (remark): $name", ({ input }) => {
+    expect(
+      normalizeHtml(String(processor.processSync(input)))
+    ).toMatchSnapshot();
+  });
 
-test("github-alerts (remark): no icons", () => {
-  expect(normalizeHtml(String(processorNoIcons.processSync(noIconsCase.input)))).toMatchSnapshot();
+  it("github-alerts (remark): no icons", () => {
+    expect(
+      normalizeHtml(String(processorNoIcons.processSync(noIconsCase.input)))
+    ).toMatchSnapshot();
+  });
 });

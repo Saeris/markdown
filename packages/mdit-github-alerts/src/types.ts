@@ -46,7 +46,7 @@ export const ALERT_ALIASES: Record<string, AlertType> = {
   bug: "bug",
   example: "example",
   quote: "quote",
-  cite: "quote",
+  cite: "quote"
 };
 
 export const DEFAULT_TITLE: Record<AlertType, string> = {
@@ -64,7 +64,7 @@ export const DEFAULT_TITLE: Record<AlertType, string> = {
   danger: "Danger",
   bug: "Bug",
   example: "Example",
-  quote: "Quote",
+  quote: "Quote"
 };
 
 export interface AlertOptions {

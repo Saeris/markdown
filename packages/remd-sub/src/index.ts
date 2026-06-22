@@ -39,10 +39,14 @@ export const remarkSub: Plugin<[], Root> = () => {
   const constructSubscriptNode = (children: PhrasingContent[]): Subscript => ({
     type: `subscript`,
     children,
-    data: { hName: `sub` },
+    data: { hName: `sub` }
   });
 
-  const visitorFirst: Visitor<Text, Parent> = (node, index, parent): VisitorResult => {
+  const visitorFirst: Visitor<Text, Parent> = (
+    node,
+    index,
+    parent
+  ): VisitorResult => {
     /* v8 ignore next */
     if (!parent || typeof index === `undefined`) return;
 
@@ -70,7 +74,9 @@ export const remarkSub: Plugin<[], Root> = () => {
         children.push(u(`text`, value.substring(textPartIndex, mIndex)));
       }
 
-      children.push(constructSubscriptNode([{ type: `text`, value: subscriptText.trim() }]));
+      children.push(
+        constructSubscriptNode([{ type: `text`, value: subscriptText.trim() }])
+      );
 
       tempValue = value.slice(mIndex + mLength);
     }
@@ -82,7 +88,11 @@ export const remarkSub: Plugin<[], Root> = () => {
     if (children.length) parent.children.splice(index, 1, ...children);
   };
 
-  const visitorSecond: Visitor<Text, Parent> = (node, index, parent): VisitorResult => {
+  const visitorSecond: Visitor<Text, Parent> = (
+    node,
+    index,
+    parent
+  ): VisitorResult => {
     /* v8 ignore next */
     if (!parent || typeof index === `undefined`) return;
 
@@ -96,9 +106,19 @@ export const remarkSub: Plugin<[], Root> = () => {
 
     if (!closingNode) return;
 
-    const beforeChildren = findAllBefore(parent, openingNode) as PhrasingContent[];
-    const mainChildren = findAllBetween(parent, openingNode, closingNode) as PhrasingContent[];
-    const afterChildren = findAllAfter(parent, closingNode) as PhrasingContent[];
+    const beforeChildren = findAllBefore(
+      parent,
+      openingNode
+    ) as PhrasingContent[];
+    const mainChildren = findAllBetween(
+      parent,
+      openingNode,
+      closingNode
+    ) as PhrasingContent[];
+    const afterChildren = findAllAfter(
+      parent,
+      closingNode
+    ) as PhrasingContent[];
 
     const value = openingNode.value;
     const match = Array.from(value.matchAll(REGEX_STARTING_GLOBAL))[0];
@@ -128,7 +148,11 @@ export const remarkSub: Plugin<[], Root> = () => {
       afterChildren.unshift(u(`text`, value_.slice(mIndex_ + mLength_)));
     }
 
-    parent.children = [...beforeChildren, constructSubscriptNode(mainChildren), ...afterChildren];
+    parent.children = [
+      ...beforeChildren,
+      constructSubscriptNode(mainChildren),
+      ...afterChildren
+    ];
 
     return index;
   };

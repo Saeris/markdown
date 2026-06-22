@@ -1,4 +1,4 @@
-import { expect, test } from "vite-plus/test";
+import { describe, expect, it } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -7,7 +7,7 @@ import rehypeStringify from "rehype-stringify";
 import { githubAlerts } from "../../packages/mdit-github-alerts/src";
 import {
   remarkGithubAlerts,
-  githubAlertsHastHandlers,
+  githubAlertsHastHandlers
 } from "../../packages/remd-github-alerts/src";
 import { normalizeHtml } from "../utils/index.js";
 import type { AlertOptions } from "../../packages/mdit-github-alerts/src";
@@ -23,123 +23,128 @@ const remd = (options: AlertOptions | undefined, src: string) =>
         .use(remarkGithubAlerts, options)
         .use(remarkRehype, { handlers: githubAlertsHastHandlers })
         .use(rehypeStringify, { allowDangerousHtml: true })
-        .processSync(src),
-    ),
+        .processSync(src)
+    )
   );
 
 const note = "> [!NOTE]\n> Body text.\n";
 const custom = "> [!CUSTOM]\n> Body text.\n";
 
-// ── types ─────────────────────────────────────────────────────────────────────
+// â”€â”€ types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-test("types: custom type keyword resolves to canonical", () => {
-  const opts: AlertOptions = { types: { custom: "custom" } };
-  expect(mdit(opts, custom)).toContain('data-alert="custom"');
-  expect(remd(opts, custom)).toContain('data-alert="custom"');
-});
+describe("github-alerts/options", () => {
+  it("types: custom type keyword resolves to canonical", () => {
+    const opts: AlertOptions = { types: { custom: "custom" } };
+    expect(mdit(opts, custom)).toContain('data-alert="custom"');
+    expect(remd(opts, custom)).toContain('data-alert="custom"');
+  });
 
-test("types: custom alias maps to existing canonical", () => {
-  const opts: AlertOptions = { types: { mycustom: "note" } };
-  const src = "> [!MYCUSTOM]\n> Body text.\n";
-  expect(mdit(opts, src)).toContain('data-alert="note"');
-  expect(remd(opts, src)).toContain('data-alert="note"');
-});
+  it("types: custom alias maps to existing canonical", () => {
+    const opts: AlertOptions = { types: { mycustom: "note" } };
+    const src = "> [!MYCUSTOM]\n> Body text.\n";
+    expect(mdit(opts, src)).toContain('data-alert="note"');
+    expect(remd(opts, src)).toContain('data-alert="note"');
+  });
 
-test("types: built-in aliases still work alongside custom types", () => {
-  const opts: AlertOptions = { types: { custom: "custom" } };
-  expect(mdit(opts, note)).toContain('data-alert="note"');
-  expect(remd(opts, note)).toContain('data-alert="note"');
-});
+  it("types: built-in aliases still work alongside custom types", () => {
+    const opts: AlertOptions = { types: { custom: "custom" } };
+    expect(mdit(opts, note)).toContain('data-alert="note"');
+    expect(remd(opts, note)).toContain('data-alert="note"');
+  });
 
-test("types: custom type title auto-capitalised from keyword", () => {
-  const opts: AlertOptions = { types: { custom: "custom" } };
-  expect(mdit(opts, custom)).toContain("Custom");
-  expect(remd(opts, custom)).toContain("Custom");
-});
+  it("types: custom type title auto-capitalised from keyword", () => {
+    const opts: AlertOptions = { types: { custom: "custom" } };
+    expect(mdit(opts, custom)).toContain("Custom");
+    expect(remd(opts, custom)).toContain("Custom");
+  });
 
-// ── titles ────────────────────────────────────────────────────────────────────
+  // â”€â”€ titles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-test("titles: overrides default title text", () => {
-  const opts: AlertOptions = { titles: { note: "Hinweis" } };
-  expect(mdit(opts, note)).toContain("Hinweis");
-  expect(remd(opts, note)).toContain("Hinweis");
-});
+  it("titles: overrides default title text", () => {
+    const opts: AlertOptions = { titles: { note: "Hinweis" } };
+    expect(mdit(opts, note)).toContain("Hinweis");
+    expect(remd(opts, note)).toContain("Hinweis");
+  });
 
-test("titles: override does not bleed into title element text", () => {
-  const opts: AlertOptions = { titles: { note: "Hinweis" } };
-  expect(mdit(opts, note)).not.toContain(">Note<");
-  expect(remd(opts, note)).not.toContain(">Note<");
-});
+  it("titles: override does not bleed into title element text", () => {
+    const opts: AlertOptions = { titles: { note: "Hinweis" } };
+    expect(mdit(opts, note)).not.toContain(">Note<");
+    expect(remd(opts, note)).not.toContain(">Note<");
+  });
 
-test("titles: override appears in aria-label", () => {
-  const opts: AlertOptions = { titles: { note: "Hinweis" } };
-  expect(mdit(opts, note)).toContain('aria-label="Hinweis"');
-  expect(remd(opts, note)).toContain('aria-label="Hinweis"');
-});
+  it("titles: override appears in aria-label", () => {
+    const opts: AlertOptions = { titles: { note: "Hinweis" } };
+    expect(mdit(opts, note)).toContain('aria-label="Hinweis"');
+    expect(remd(opts, note)).toContain('aria-label="Hinweis"');
+  });
 
-test("titles: untouched types keep their default title", () => {
-  const opts: AlertOptions = { titles: { note: "Hinweis" } };
-  const tip = "> [!TIP]\n> Body.\n";
-  expect(mdit(opts, tip)).toContain("Tip");
-  expect(remd(opts, tip)).toContain("Tip");
-});
+  it("titles: untouched types keep their default title", () => {
+    const opts: AlertOptions = { titles: { note: "Hinweis" } };
+    const tip = "> [!TIP]\n> Body.\n";
+    expect(mdit(opts, tip)).toContain("Tip");
+    expect(remd(opts, tip)).toContain("Tip");
+  });
 
-test("types + titles: custom type with explicit title override", () => {
-  const opts = { types: { custom: "custom" }, titles: { custom: "Custom Alert" } } as never;
-  expect(mdit(opts, custom)).toContain('data-alert="custom"');
-  expect(mdit(opts, custom)).toContain("Custom Alert");
-  expect(remd(opts, custom)).toContain('data-alert="custom"');
-  expect(remd(opts, custom)).toContain("Custom Alert");
-});
+  it("types + titles: custom type with explicit title override", () => {
+    const opts = {
+      types: { custom: "custom" },
+      titles: { custom: "Custom Alert" }
+    } as never;
+    expect(mdit(opts, custom)).toContain('data-alert="custom"');
+    expect(mdit(opts, custom)).toContain("Custom Alert");
+    expect(remd(opts, custom)).toContain('data-alert="custom"');
+    expect(remd(opts, custom)).toContain("Custom Alert");
+  });
 
-// ── matchCaseInsensitive ──────────────────────────────────────────────────────
+  // â”€â”€ matchCaseInsensitive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-test("matchCaseInsensitive false: exact-case keyword matches", () => {
-  const opts: AlertOptions = { matchCaseInsensitive: false };
-  const lower = "> [!note]\n> Body.\n";
-  expect(mdit(opts, lower)).toContain('data-alert="note"');
-  expect(remd(opts, lower)).toContain('data-alert="note"');
-});
+  it("matchCaseInsensitive false: exact-case keyword matches", () => {
+    const opts: AlertOptions = { matchCaseInsensitive: false };
+    const lower = "> [!note]\n> Body.\n";
+    expect(mdit(opts, lower)).toContain('data-alert="note"');
+    expect(remd(opts, lower)).toContain('data-alert="note"');
+  });
 
-test("matchCaseInsensitive false: wrong-case keyword passes through", () => {
-  const opts: AlertOptions = { matchCaseInsensitive: false };
-  expect(mdit(opts, note)).toContain("<blockquote>");
-  expect(mdit(opts, note)).not.toContain("data-alert");
-  expect(remd(opts, note)).toContain("<blockquote>");
-  expect(remd(opts, note)).not.toContain("data-alert");
-});
+  it("matchCaseInsensitive false: wrong-case keyword passes through", () => {
+    const opts: AlertOptions = { matchCaseInsensitive: false };
+    expect(mdit(opts, note)).toContain("<blockquote>");
+    expect(mdit(opts, note)).not.toContain("data-alert");
+    expect(remd(opts, note)).toContain("<blockquote>");
+    expect(remd(opts, note)).not.toContain("data-alert");
+  });
 
-// ── icons ─────────────────────────────────────────────────────────────────────
+  // â”€â”€ icons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-test("icons false: no svg in output", () => {
-  const opts: AlertOptions = { icons: false };
-  expect(mdit(opts, note)).not.toContain("<svg");
-  expect(remd(opts, note)).not.toContain("<svg");
-});
+  it("icons false: no svg in output", () => {
+    const opts: AlertOptions = { icons: false };
+    expect(mdit(opts, note)).not.toContain("<svg");
+    expect(remd(opts, note)).not.toContain("<svg");
+  });
 
-test("icons false: title text still present", () => {
-  const opts: AlertOptions = { icons: false };
-  expect(mdit(opts, note)).toContain("Note");
-  expect(remd(opts, note)).toContain("Note");
-});
+  it("icons false: title text still present", () => {
+    const opts: AlertOptions = { icons: false };
+    expect(mdit(opts, note)).toContain("Note");
+    expect(remd(opts, note)).toContain("Note");
+  });
 
-test("icons true (default): svg present", () => {
-  expect(mdit(undefined, note)).toContain("<svg");
-  expect(remd(undefined, note)).toContain("<svg");
-});
+  it("icons true (default): svg present", () => {
+    expect(mdit(undefined, note)).toContain("<svg");
+    expect(remd(undefined, note)).toContain("<svg");
+  });
 
-// ── containerClass ────────────────────────────────────────────────────────────
+  // â”€â”€ containerClass â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-test("containerClass: custom class on container", () => {
-  const opts: AlertOptions = { containerClass: "callout" };
-  expect(mdit(opts, note)).toContain('class="callout"');
-  expect(mdit(opts, note)).not.toContain("markdown-alert");
-  expect(remd(opts, note)).toContain('class="callout"');
-  expect(remd(opts, note)).not.toContain("markdown-alert");
-});
+  it("containerClass: custom class on container", () => {
+    const opts: AlertOptions = { containerClass: "callout" };
+    expect(mdit(opts, note)).toContain('class="callout"');
+    expect(mdit(opts, note)).not.toContain("markdown-alert");
+    expect(remd(opts, note)).toContain('class="callout"');
+    expect(remd(opts, note)).not.toContain("markdown-alert");
+  });
 
-test("containerClass: title element uses custom prefix", () => {
-  const opts: AlertOptions = { containerClass: "callout" };
-  expect(mdit(opts, note)).toContain('class="callout-title"');
-  expect(remd(opts, note)).toContain('class="callout-title"');
+  it("containerClass: title element uses custom prefix", () => {
+    const opts: AlertOptions = { containerClass: "callout" };
+    expect(mdit(opts, note)).toContain('class="callout-title"');
+    expect(remd(opts, note)).toContain('class="callout-title"');
+  });
 });

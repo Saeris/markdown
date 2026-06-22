@@ -32,27 +32,32 @@ export interface TestResult {
 }
 
 const matches = (test: unknown, actual: unknown): boolean => {
-  if (typeof test === "function") return (test as (v: unknown) => boolean)(actual);
+  if (typeof test === "function")
+    return (test as (v: unknown) => boolean)(actual);
   return test === actual;
 };
 
 const testChild = (
   child: Token,
-  childTest: Omit<RuleTest, "shift" | "position">,
+  childTest: Omit<RuleTest, "shift" | "position">
 ): { match: boolean; range: DelimiterRange | null } => {
   let range: DelimiterRange | null = null;
 
   if (childTest.type !== undefined && !matches(childTest.type, child.type)) {
     return { match: false, range: null };
   }
-  if (childTest.nesting !== undefined && !matches(childTest.nesting, child.nesting)) {
+  if (
+    childTest.nesting !== undefined &&
+    !matches(childTest.nesting, child.nesting)
+  ) {
     return { match: false, range: null };
   }
   if (childTest.tag !== undefined && child.tag !== childTest.tag) {
     return { match: false, range: null };
   }
   if (childTest.content !== undefined) {
-    if (!matches(childTest.content, child.content)) return { match: false, range: null };
+    if (!matches(childTest.content, child.content))
+      return { match: false, range: null };
   }
   if (childTest.attrChecker) {
     range = childTest.attrChecker(child.content, childTest.attrPos ?? "only");
@@ -62,10 +67,15 @@ const testChild = (
   return { match: true, range };
 };
 
-export const testRule = (tokens: Token[], index: number, test: RuleTest): TestResult => {
+export const testRule = (
+  tokens: Token[],
+  index: number,
+  test: RuleTest
+): TestResult => {
   let tokenIndex: number;
   if (test.position !== undefined) {
-    tokenIndex = test.position < 0 ? tokens.length + test.position : test.position;
+    tokenIndex =
+      test.position < 0 ? tokens.length + test.position : test.position;
   } else {
     tokenIndex = index + (test.shift ?? 0);
   }

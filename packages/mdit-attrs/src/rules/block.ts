@@ -1,9 +1,18 @@
 import type { DelimiterConfig } from "../types.js";
-import { addAttrs, getDelimiterChecker, getMatchingOpeningToken } from "../helper/index.js";
+import {
+  addAttrs,
+  getDelimiterChecker,
+  getMatchingOpeningToken
+} from "../helper/index.js";
 import type { AttrRule } from "./types.js";
 
 // Token types that should not be treated as attr targets
-const SKIP_TYPES = new Set(["code_inline", "math_inline", "fence", "code_block"]);
+const SKIP_TYPES = new Set([
+  "code_inline",
+  "math_inline",
+  "fence",
+  "code_block"
+]);
 
 export const createBlockRule = (options: DelimiterConfig): AttrRule => {
   const check = getDelimiterChecker(options.left, options.right);
@@ -18,15 +27,15 @@ export const createBlockRule = (options: DelimiterConfig): AttrRule => {
           {
             index: -1,
             type: (t: string) => !SKIP_TYPES.has(t),
-            content: (content: string) => check(content.trim(), "end") !== null,
-          },
-        ],
-      },
+            content: (content: string) => check(content.trim(), "end") !== null
+          }
+        ]
+      }
     ],
     transform(tokens, index) {
-      const inline = tokens[index]!;
+      const inline = tokens[index];
       const children = inline.children!;
-      const lastChild = children[children.length - 1]!;
+      const lastChild = children[children.length - 1];
 
       const content = lastChild.content.trimEnd();
       const range = check(content, "end")!;
@@ -39,7 +48,7 @@ export const createBlockRule = (options: DelimiterConfig): AttrRule => {
       // First: find the _close token that closes the block containing this inline
       // by walking forward from the inline's position
       let closeIdx = index + 1;
-      while (closeIdx < tokens.length && tokens[closeIdx]!.nesting !== -1) {
+      while (closeIdx < tokens.length && tokens[closeIdx].nesting !== -1) {
         closeIdx++;
       }
 
@@ -60,6 +69,6 @@ export const createBlockRule = (options: DelimiterConfig): AttrRule => {
       if (lastChild.content === "" && children.length > 1) {
         children.pop();
       }
-    },
+    }
   };
 };

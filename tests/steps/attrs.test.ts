@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vite-plus/test";
+import { expect, it, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -22,20 +22,20 @@ const remd = (src: string) =>
         .use(remarkAttrs)
         .use(remarkRehype, { handlers: stepsHastHandlers as never })
         .use(rehypeStringify)
-        .processSync(src),
-    ),
+        .processSync(src)
+    )
   );
 
 describe("steps + attrs: class on step container via paragraph attrs", () => {
   const input = "@1. Only step\n>  Body here.";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="markdown-steps"');
     expect(result).toContain('class="markdown-steps-item"');
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-steps"');
     expect(result).toContain('class="markdown-steps-item"');
@@ -47,8 +47,9 @@ describe("steps + attrs: attrs on heading before step block", () => {
   const expected =
     '<h2 class="section">Setup</h2><ol class="markdown-steps"><li class="markdown-steps-item" data-step="1"><p class="markdown-steps-title">First step</p><div class="markdown-steps-body"><p>Content.</p></div></li></ol>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });
 
 describe("steps + attrs: attrs on paragraph after step block", () => {
@@ -56,13 +57,13 @@ describe("steps + attrs: attrs on paragraph after step block", () => {
   const expectedStepClass = 'class="markdown-steps"';
   const expectedParaClass = 'class="note"';
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain(expectedStepClass);
     expect(result).toContain(expectedParaClass);
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain(expectedStepClass);
     expect(result).toContain(expectedParaClass);
@@ -72,13 +73,13 @@ describe("steps + attrs: attrs on paragraph after step block", () => {
 describe("steps + attrs: attrs on code fence inside step body", () => {
   const input = "@1. Install\n>\n>  ```ts {.example}\n>  const x = 1;\n>  ```";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="markdown-steps-item"');
     expect(result).toContain("<code");
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-steps-item"');
     expect(result).toContain("<code");
@@ -89,14 +90,14 @@ describe("steps + attrs: step block and attrs coexist without interference", () 
   const input =
     "Some *emphasized* text. {.intro}\n\n@1. Step one\n>  Body.\n@1. Step two\n\nAnother paragraph. {.outro}";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="intro"');
     expect(result).toContain('class="markdown-steps"');
     expect(result).toContain('class="outro"');
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('class="intro"');
     expect(result).toContain('class="markdown-steps"');
@@ -110,14 +111,14 @@ describe("steps + attrs: attr in step title applies to <li>", () => {
   // remd: stepsItem visitor applies hProperties to the node; buildListHast merges them
   const input = "@1. Step one {.complete}\n>  Some content.";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="markdown-steps-item complete"');
     expect(result).toContain('data-step="1"');
     expect(result).not.toContain("{.complete}");
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-steps-item complete"');
     expect(result).toContain('data-step="1"');
@@ -131,14 +132,14 @@ describe("steps + attrs: standalone attr paragraph after step list applies to <o
   // remd: stepsList sibling visitor applies hProperties; buildListHast merges them
   const input = "@1. Step one\n>  Some content.\n\n{#instructions}";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('id="instructions"');
     expect(result).toContain('class="markdown-steps"');
     expect(result).not.toContain("<p>{#instructions}</p>");
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('id="instructions"');
     expect(result).toContain('class="markdown-steps"');
@@ -147,9 +148,10 @@ describe("steps + attrs: standalone attr paragraph after step list applies to <o
 });
 
 describe("steps + attrs: multiple step items each with class", () => {
-  const input = "@1. Done {.complete}\n>  Body.\n@1. In progress {.active}\n>  Body.";
+  const input =
+    "@1. Done {.complete}\n>  Body.\n@1. In progress {.active}\n>  Body.";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="markdown-steps-item complete"');
     expect(result).toContain('class="markdown-steps-item active"');
@@ -157,7 +159,7 @@ describe("steps + attrs: multiple step items each with class", () => {
     expect(result).toContain('data-step="2"');
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-steps-item complete"');
     expect(result).toContain('class="markdown-steps-item active"');
@@ -171,7 +173,7 @@ describe("steps + attrs: attrs on standard ordered list adjacent to step block a
   const input =
     "@1. A step\n>  Step body.\n\n{#step-list}\n\n1. List item one\n2. List item two\n\n{.my-list}";
 
-  test("markdown-it", () => {
+  it("markdown-it", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="markdown-steps"');
     expect(result).toContain('id="step-list"');
@@ -179,7 +181,7 @@ describe("steps + attrs: attrs on standard ordered list adjacent to step block a
     expect(result).not.toMatch(/class="markdown-steps my-list"/);
   });
 
-  test("remark", () => {
+  it("remark", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-steps"');
     expect(result).toContain('id="step-list"');

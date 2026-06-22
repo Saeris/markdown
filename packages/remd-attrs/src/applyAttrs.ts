@@ -9,7 +9,7 @@ export const applyAttrs = (
   node: AttrNode,
   content: string,
   range: DelimiterRange,
-  allowed: (string | RegExp)[],
+  allowed: Array<string | RegExp>
 ): void => {
   const attrs: Attr[] = getAttrs(content, range, allowed);
   if (attrs.length === 0) return;

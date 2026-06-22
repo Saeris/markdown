@@ -11,7 +11,7 @@ export type AttrRuleName =
 export interface DelimiterConfig {
   left: string;
   right: string;
-  allowed: (string | RegExp)[];
+  allowed: Array<string | RegExp>;
 }
 
 export interface AttrsOptions extends Partial<DelimiterConfig> {

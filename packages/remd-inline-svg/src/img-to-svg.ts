@@ -4,11 +4,19 @@ import type { Root } from "hast";
 import type { Node, Parent } from "unist";
 import { VFile } from "vfile";
 import type { SvgCache } from "./cache.js";
-import { type GroupedImageNodes, type SvgNode, isSvgNode } from "./image-node.js";
+import {
+  type GroupedImageNodes,
+  type SvgNode,
+  isSvgNode
+} from "./image-node.js";
 import { hash } from "./hash.js";
 import type { Options } from "./options.js";
 
-const parseSVG = (filePath: string, svgCache: SvgCache, processor: Processor<Root>): SvgNode => {
+const parseSVG = (
+  filePath: string,
+  svgCache: SvgCache,
+  processor: Processor<Root>
+): SvgNode => {
   const file = new VFile({ value: svgCache.get(filePath), path: filePath });
   const rootNode = processor.parse(file) as Parent;
 
@@ -18,14 +26,18 @@ const parseSVG = (filePath: string, svgCache: SvgCache, processor: Processor<Roo
     }
   }
 
-  throw new Error(`Error parsing SVG image: ${filePath}\nUnable to find the root <svg> element.`);
+  throw new Error(
+    `Error parsing SVG image: ${filePath}\nUnable to find the root <svg> element.`
+  );
 };
 
 const getInjectionParent = (tree: Root): Parent => {
   for (const child of tree.children) {
     const node = child as unknown as Record<string, unknown>;
     if (node.type === `element` && node.tagName === `html`) {
-      for (const htmlChild of (node.children as Record<string, unknown>[]) ?? []) {
+      for (const htmlChild of (node.children as Array<
+        Record<string, unknown>
+      >) ?? []) {
         if (htmlChild.type === `element` && htmlChild.tagName === `body`) {
           return htmlChild as unknown as Parent;
         }
@@ -36,7 +48,7 @@ const getInjectionParent = (tree: Root): Parent => {
 };
 
 const buildSpriteContainer = (
-  symbols: Array<{ id: string; svgNode: SvgNode }>,
+  symbols: Array<{ id: string; svgNode: SvgNode }>
 ): Record<string, unknown> => ({
   type: `element`,
   tagName: `svg`,
@@ -50,19 +62,22 @@ const buildSpriteContainer = (
         type: `element`,
         tagName: `symbol`,
         properties: { id, viewBox: svgNode.properties?.viewBox },
-        children: svgNode.children ?? [],
-      })),
-    },
-  ],
+        children: svgNode.children ?? []
+      }))
+    }
+  ]
 });
 
 export const imgToSVG = (
   groupedNodes: GroupedImageNodes,
   svgCache: SvgCache,
   tree: Root,
-  options: Options,
+  options: Options
 ): void => {
-  const processor = unified().use(rehypeParse, { fragment: true, space: `svg` });
+  const processor = unified().use(rehypeParse, {
+    fragment: true,
+    space: `svg`
+  });
   const spriteSymbols: Array<{ id: string; svgNode: SvgNode }> = [];
 
   for (const [filePath, imgNodes] of groupedNodes) {
@@ -77,10 +92,8 @@ export const imgToSVG = (
         const svgProps = { ...svgNode.properties };
         delete svgProps.id;
         const imgProps = {
-          ...((imgNode as unknown as Record<string, unknown>).properties as Record<
-            string,
-            unknown
-          >),
+          ...((imgNode as unknown as Record<string, unknown>)
+            .properties as Record<string, unknown>)
         };
         delete imgProps.src;
         const wrapperProps = { ...svgProps, ...imgProps };
@@ -94,25 +107,30 @@ export const imgToSVG = (
               type: `element`,
               tagName: `use`,
               properties: { href: `#${spriteId}` },
-              children: [],
-            },
-          ],
+              children: []
+            }
+          ]
         });
       }
     } else {
       for (const imgNode of imgNodes) {
         const properties = {
           ...svgNode.properties,
-          ...(imgNode as unknown as { properties: Record<string, unknown> }).properties,
+          ...(imgNode as unknown as { properties: Record<string, unknown> })
+            .properties
         };
         delete properties.src;
-        Object.assign(imgNode as unknown as Node, svgNode as unknown as Node, { properties });
+        Object.assign(imgNode as unknown as Node, svgNode as unknown as Node, {
+          properties
+        });
       }
     }
   }
 
   if (spriteSymbols.length > 0) {
     const injectionParent = getInjectionParent(tree);
-    injectionParent.children.unshift(buildSpriteContainer(spriteSymbols) as unknown as Node);
+    injectionParent.children.unshift(
+      buildSpriteContainer(spriteSymbols) as unknown as Node
+    );
   }
 };

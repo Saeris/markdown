@@ -15,26 +15,26 @@ export const createHrRule = (options: DelimiterConfig): AttrRule => {
           {
             index: 0,
             type: "text",
-            content: (content: string) => check(content.trim(), "only") !== null,
-          },
-        ],
+            content: (content: string) => check(content.trim(), "only") !== null
+          }
+        ]
       },
       {
         shift: -2,
-        type: "hr",
-      },
+        type: "hr"
+      }
     ],
     transform(tokens, index) {
-      const inline = tokens[index]!;
-      const textChild = inline.children![0]!;
+      const inline = tokens[index];
+      const textChild = inline.children![0];
       const content = textChild.content.trim();
       const range = check(content, "only")!;
 
-      const hr = tokens[index - 2]!;
+      const hr = tokens[index - 2];
       addAttrs(hr, content, range, options.allowed);
 
       // Remove paragraph_open + inline + paragraph_close
       tokens.splice(index - 1, 3);
-    },
+    }
   };
 };

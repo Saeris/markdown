@@ -9,6 +9,6 @@ export interface AttrRule {
     tokens: Token[],
     index: number,
     position: number,
-    range: DelimiterRange,
+    range: DelimiterRange
   ): boolean | void;
 }

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { expect, test } from "vite-plus/test";
+import { describe, expect, test, it } from "vite-plus/test";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
@@ -15,14 +15,23 @@ const read = (path: string) => readFileSync(join(dir, path), "utf8");
 
 const cmCases = parseFixture(
   read("fixtures/ruby-commonmark.md"),
-  read("expected/ruby-commonmark.html"),
+  read("expected/ruby-commonmark.html")
 );
 
-const gfmCases = parseFixture(read("fixtures/ruby-gfm.md"), read("expected/ruby-gfm.html"));
+const gfmCases = parseFixture(
+  read("fixtures/ruby-gfm.md"),
+  read("expected/ruby-gfm.html")
+);
 
-const remdCases = parseFixture(read("fixtures/ruby-remd.md"), read("expected/ruby-remd.html"));
+const remdCases = parseFixture(
+  read("fixtures/ruby-remd.md"),
+  read("expected/ruby-remd.html")
+);
 
-const htmlCases = parseFixture(read("fixtures/ruby-html.md"), read("expected/ruby-html.html"));
+const htmlCases = parseFixture(
+  read("fixtures/ruby-html.md"),
+  read("expected/ruby-html.html")
+);
 
 const cmProcessor = unified()
   .use(remarkParse)
@@ -43,18 +52,31 @@ const htmlProcessor = unified()
   .use(remarkRehype, { allowDangerousHtml: true })
   .use(rehypeStringify, { allowDangerousHtml: true });
 
-test.each(cmCases)("ruby (remark): $name", ({ input, expected }) => {
-  expect(normalizeHtml(String(cmProcessor.processSync(input)))).toBe(expected);
-});
+describe("ruby/remd", () => {
+  it.each(cmCases)("ruby (remark): $name", ({ input, expected }) => {
+    expect(normalizeHtml(String(cmProcessor.processSync(input)))).toBe(
+      expected
+    );
+  });
 
-test.each(gfmCases)("ruby (remark) gfm: $name", ({ input, expected }) => {
-  expect(normalizeHtml(String(gfmProcessor.processSync(input)))).toBe(expected);
-});
+  it.each(gfmCases)("ruby (remark) gfm: $name", ({ input, expected }) => {
+    expect(normalizeHtml(String(gfmProcessor.processSync(input)))).toBe(
+      expected
+    );
+  });
 
-test.each(remdCases)("ruby (remark) strikethrough: $name", ({ input, expected }) => {
-  expect(normalizeHtml(String(gfmProcessor.processSync(input)))).toBe(expected);
-});
+  it.each(remdCases)(
+    "ruby (remark) strikethrough: $name",
+    ({ input, expected }) => {
+      expect(normalizeHtml(String(gfmProcessor.processSync(input)))).toBe(
+        expected
+      );
+    }
+  );
 
-test.each(htmlCases)("ruby (remark) html: $name", ({ input, expected }) => {
-  expect(normalizeHtml(String(htmlProcessor.processSync(input)))).toBe(expected);
+  it.each(htmlCases)("ruby (remark) html: $name", ({ input, expected }) => {
+    expect(normalizeHtml(String(htmlProcessor.processSync(input)))).toBe(
+      expected
+    );
+  });
 });

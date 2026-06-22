@@ -23,7 +23,7 @@ export interface TabsItemNode {
   label: PhrasingContent[];
   labelText: string; // plain-text version for aria-label and data-tab
   open: boolean;
-  children: (BlockContent | DefinitionContent | TabsListNode)[];
+  children: Array<BlockContent | DefinitionContent | TabsListNode>;
   data?: {
     attrsRole?: string;
     attrsTitle?: PhrasingContent[];

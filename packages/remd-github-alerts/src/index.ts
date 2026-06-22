@@ -27,13 +27,15 @@ interface AlertData {
 
 type AlertNode = Blockquote & { data: AlertData };
 
-export const remarkGithubAlerts: Plugin<[AlertOptions?], Root> = (options = {}) => {
+export const remarkGithubAlerts: Plugin<[AlertOptions?], Root> = (
+  options = {}
+) => {
   const {
     types: extraTypes = {},
     titles: customTitles = {},
     matchCaseInsensitive = true,
     icons: showIcons = true,
-    containerClass = "markdown-alert",
+    containerClass = "markdown-alert"
   } = options;
 
   const aliasMap: Record<string, string> = { ...ALERT_ALIASES, ...extraTypes };
@@ -45,7 +47,8 @@ export const remarkGithubAlerts: Plugin<[AlertOptions?], Root> = (options = {}) 
   const titleFor = (type: string) =>
     titles[type] ?? DEFAULT_TITLE[type as AlertType] ?? capitalize(type);
 
-  const iconFor = (type: string) => (showIcons ? (ICONS[type as AlertType] ?? "") : "");
+  const iconFor = (type: string) =>
+    showIcons ? (ICONS[type as AlertType] ?? "") : "";
 
   return (tree) => {
     visit(tree, "blockquote", (node: Blockquote) => {
@@ -55,12 +58,12 @@ export const remarkGithubAlerts: Plugin<[AlertOptions?], Root> = (options = {}) 
       const firstText = firstChild.children[0];
       if (firstText?.type !== "text") return;
 
-      const firstLine = firstText.value.split("\n")[0]!;
+      const firstLine = firstText.value.split("\n")[0];
       const match = ALERT_RE.exec(firstLine.trim());
       if (!match) return;
 
       const [, keyword, foldMarker, customTitle] = match;
-      const type = resolve(keyword!);
+      const type = resolve(keyword);
       if (!type) return;
 
       const isFoldable = foldMarker === "+" || foldMarker === "-";
@@ -79,13 +82,13 @@ export const remarkGithubAlerts: Plugin<[AlertOptions?], Root> = (options = {}) 
         hProperties: {
           class: containerClass,
           "data-alert": type,
-          ...(foldMarker === "+" ? { open: true } : {}),
+          ...(foldMarker === "+" ? { open: true } : {})
         },
         alertType: type,
         alertTitle: title,
         alertFoldable: isFoldable,
         alertIcon: iconFor(type),
-        attrsRole: "container",
+        attrsRole: "container"
       };
     });
   };
@@ -99,7 +102,7 @@ const svgToHast = (svgString: string): Element | null => {
     type: "element",
     tagName: "span",
     properties: { "aria-hidden": true },
-    children: [{ type: "raw", value: svgString } as unknown as ElementContent],
+    children: [{ type: "raw", value: svgString } as unknown as ElementContent]
   };
 };
 
@@ -107,14 +110,17 @@ const buildTitleElement = (
   tag: "p" | "summary",
   alertTitle: string,
   alertIcon: string,
-  containerClass: string,
+  containerClass: string
 ): Element => {
   const icon = svgToHast(alertIcon);
   return {
     type: "element",
     tagName: tag,
     properties: { class: `${containerClass}-title`, "aria-label": alertTitle },
-    children: [...(icon ? [icon] : []), { type: "text", value: alertTitle }] as ElementContent[],
+    children: [
+      ...(icon ? [icon] : []),
+      { type: "text", value: alertTitle }
+    ] as ElementContent[]
   };
 };
 
@@ -130,24 +136,35 @@ export const githubAlertsHastHandlers = {
         type: "element",
         tagName: "blockquote",
         properties: {},
-        children: state.all(node),
+        children: state.all(node)
       };
       state.patch(node, result);
       return result;
     }
 
-    const containerClass = (data.hProperties.class as string) ?? "markdown-alert";
+    const containerClass =
+      (data.hProperties.class as string) ?? "markdown-alert";
     const titleTag = data.alertFoldable ? "summary" : "p";
-    const titleEl = buildTitleElement(titleTag, data.alertTitle, data.alertIcon, containerClass);
+    const titleEl = buildTitleElement(
+      titleTag,
+      data.alertTitle,
+      data.alertIcon,
+      containerClass
+    );
     const bodyChildren = state.all(node);
 
     const result: Element = {
       type: "element",
       tagName: data.hName,
       properties: data.hProperties,
-      children: [nl, titleEl, ...bodyChildren.flatMap((child) => [nl, child]), nl],
+      children: [
+        nl,
+        titleEl,
+        ...bodyChildren.flatMap((child) => [nl, child]),
+        nl
+      ]
     };
     state.patch(node, result);
     return result;
-  },
+  }
 } as const;

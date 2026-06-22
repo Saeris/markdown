@@ -2,7 +2,10 @@ import type { DelimiterRange } from "../types.js";
 
 type DelimiterPosition = "start" | "end" | "only";
 
-export type DelimiterChecker = (str: string, pos: DelimiterPosition) => DelimiterRange | null;
+export type DelimiterChecker = (
+  str: string,
+  pos: DelimiterPosition
+) => DelimiterRange | null;
 
 /**
  * Returns a function that checks whether `str` contains a valid attribute
@@ -13,7 +16,10 @@ export type DelimiterChecker = (str: string, pos: DelimiterPosition) => Delimite
  * A valid block must contain at least one character (i.e. `{}` is invalid),
  * and the outer delimiters must not be repeated (i.e. `{{}}` is invalid).
  */
-export const getDelimiterChecker = (left: string, right: string): DelimiterChecker => {
+export const getDelimiterChecker = (
+  left: string,
+  right: string
+): DelimiterChecker => {
   const ll = left.length;
   const rl = right.length;
   const minLen = ll + 1 + rl;

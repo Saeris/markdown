@@ -1,5 +1,5 @@
 import type { PluginWithOptions } from "markdown-it";
-import StateBlock from "markdown-it/lib/rules_block/state_block.mjs";
+import type StateBlock from "markdown-it/lib/rules_block/state_block.mjs";
 import type { StepsOptions } from "./types.js";
 
 export type { StepsOptions };
@@ -25,27 +25,32 @@ interface StepsBlock {
   currentDepth: number;
 }
 
-const parseStepHeader = (line: string): { depth: number; number: number; title: string } | null => {
+const parseStepHeader = (
+  line: string
+): { depth: number; number: number; title: string } | null => {
   const m = STEP_HEADER_RE.exec(line);
   if (!m) return null;
-  return { depth: m[1]!.length, number: parseInt(m[2]!, 10), title: m[3]! };
+  return { depth: m[1].length, number: parseInt(m[2], 10), title: m[3] };
 };
 
-const stripContinuation = (line: string): string => line.replace(CONTINUATION_RE, "");
+const stripContinuation = (line: string): string =>
+  line.replace(CONTINUATION_RE, "");
 
 export const steps: PluginWithOptions<StepsOptions> = (md, options = {}) => {
   const { containerClass = "markdown-steps" } = options;
 
-  md.block.ruler.before("blockquote", "steps", stepsRule, { alt: ["paragraph", "reference"] });
+  md.block.ruler.before("blockquote", "steps", stepsRule, {
+    alt: ["paragraph", "reference"]
+  });
 
   function stepsRule(
     state: StateBlock,
     startLine: number,
     endLine: number,
-    silent: boolean,
+    silent: boolean
   ): boolean {
-    const pos = state.bMarks[startLine]! + state.tShift[startLine]!;
-    const max = state.eMarks[startLine]!;
+    const pos = state.bMarks[startLine] + state.tShift[startLine];
+    const max = state.eMarks[startLine];
     const lineText = state.src.slice(pos, max);
 
     // Must start with a step header
@@ -60,7 +65,7 @@ export const steps: PluginWithOptions<StepsOptions> = (md, options = {}) => {
     const block: StepsBlock = {
       frames: [],
       counters: new Map(),
-      currentDepth: 0,
+      currentDepth: 0
     };
 
     let currentFrame: StepFrame | null = null;
@@ -72,8 +77,8 @@ export const steps: PluginWithOptions<StepsOptions> = (md, options = {}) => {
     };
 
     while (nextLine < endLine) {
-      const linePos = state.bMarks[nextLine]! + state.tShift[nextLine]!;
-      const lineMax = state.eMarks[nextLine]!;
+      const linePos = state.bMarks[nextLine] + state.tShift[nextLine];
+      const lineMax = state.eMarks[nextLine];
       const line = state.src.slice(linePos, lineMax);
 
       const header = parseStepHeader(line);
@@ -84,7 +89,8 @@ export const steps: PluginWithOptions<StepsOptions> = (md, options = {}) => {
         if (depth > block.currentDepth + 1) break;
 
         // Validate: going deeper is only +1
-        if (depth > block.currentDepth && depth !== block.currentDepth + 1) break;
+        if (depth > block.currentDepth && depth !== block.currentDepth + 1)
+          break;
 
         // Reset counters for all depths deeper than this one
         for (const k of block.counters.keys()) {
@@ -113,11 +119,12 @@ export const steps: PluginWithOptions<StepsOptions> = (md, options = {}) => {
             // End of input — block terminates here
             break;
           }
-          const peekPos = state.bMarks[peek]! + state.tShift[peek]!;
-          const peekMax = state.eMarks[peek]!;
+          const peekPos = state.bMarks[peek] + state.tShift[peek];
+          const peekMax = state.eMarks[peek];
           const peekLine = state.src.slice(peekPos, peekMax);
           const isContinuation =
-            CONTINUATION_RE.test(peekLine) || parseStepHeader(peekLine) !== null;
+            CONTINUATION_RE.test(peekLine) ||
+            parseStepHeader(peekLine) !== null;
           if (!isContinuation) break;
           // Blank line is part of the body
           currentFrame.bodyLines.push("");
@@ -143,7 +150,13 @@ export const steps: PluginWithOptions<StepsOptions> = (md, options = {}) => {
     state.line = nextLine;
 
     // Emit tokens
-    emitStepsTokens(state, block.frames, startLine, nextLine - 1, containerClass);
+    emitStepsTokens(
+      state,
+      block.frames,
+      startLine,
+      nextLine - 1,
+      containerClass
+    );
 
     return true;
   }
@@ -153,7 +166,7 @@ export const steps: PluginWithOptions<StepsOptions> = (md, options = {}) => {
     frames: StepFrame[],
     startLine: number,
     endLine: number,
-    containerClass: string,
+    containerClass: string
   ): void {
     emitFrames(state, frames, 0, containerClass, startLine, endLine);
   }
@@ -164,14 +177,14 @@ export const steps: PluginWithOptions<StepsOptions> = (md, options = {}) => {
     parentDepth: number,
     containerClass: string,
     mapStart?: number,
-    mapEnd?: number,
+    mapEnd?: number
   ): void {
     const targetDepth = parentDepth + 1;
 
     // Collect frames at this depth level in order, grouped by parent
     let i = 0;
     while (i < frames.length) {
-      const frame = frames[i]!;
+      const frame = frames[i];
       if (frame.depth !== targetDepth) {
         i++;
         continue;
@@ -181,22 +194,26 @@ export const steps: PluginWithOptions<StepsOptions> = (md, options = {}) => {
       const group: StepFrame[] = [];
       let j = i;
       while (j < frames.length) {
-        if (frames[j]!.depth < targetDepth) break;
-        group.push(frames[j]!);
+        if (frames[j].depth < targetDepth) break;
+        group.push(frames[j]);
         j++;
       }
 
       // Emit <ol> — top-level list gets containerClass, nested lists get containerClass-list
       const olOpen = state.push("steps_list_open", "ol", 1);
-      olOpen.attrSet("class", targetDepth === 1 ? containerClass : `${containerClass}-list`);
-      if (mapStart !== undefined && mapEnd !== undefined) olOpen.map = [mapStart, mapEnd];
+      olOpen.attrSet(
+        "class",
+        targetDepth === 1 ? containerClass : `${containerClass}-list`
+      );
+      if (mapStart !== undefined && mapEnd !== undefined)
+        olOpen.map = [mapStart, mapEnd];
       olOpen.block = true;
       olOpen.meta = { attrsRole: "container" };
 
       // Emit each <li> at targetDepth within group
       let k = 0;
       while (k < group.length) {
-        const f = group[k]!;
+        const f = group[k];
         if (f.depth !== targetDepth) {
           k++;
           continue;
@@ -237,7 +254,7 @@ export const steps: PluginWithOptions<StepsOptions> = (md, options = {}) => {
             bodyContent,
             state.md,
             state.env,
-            state.tokens,
+            state.tokens
           );
           childState.md.block.tokenize(childState, 0, childState.lineMax);
 
@@ -251,7 +268,8 @@ export const steps: PluginWithOptions<StepsOptions> = (md, options = {}) => {
         // They appear between this item (k) and the next targetDepth item
         const childStart = k + 1;
         let childEnd = childStart;
-        while (childEnd < group.length && group[childEnd]!.depth > targetDepth) childEnd++;
+        while (childEnd < group.length && group[childEnd].depth > targetDepth)
+          childEnd++;
         const children = group.slice(childStart, childEnd);
 
         if (children.length > 0) {

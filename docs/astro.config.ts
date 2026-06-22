@@ -1,9 +1,15 @@
 import { defineConfig, fontProviders } from "astro/config";
 import { remarkAbbr } from "@saeris/remd-abbr";
 import { remarkAttrs } from "@saeris/remd-attrs";
-import { remarkDefinitionList, defListHastHandlers } from "@saeris/remd-definition-list";
+import {
+  remarkDefinitionList,
+  defListHastHandlers
+} from "@saeris/remd-definition-list";
 import { remarkDel } from "@saeris/remd-del";
-import { remarkGithubAlerts, githubAlertsHastHandlers } from "@saeris/remd-github-alerts";
+import {
+  remarkGithubAlerts,
+  githubAlertsHastHandlers
+} from "@saeris/remd-github-alerts";
 import { remarkIns } from "@saeris/remd-ins";
 import { remarkKbd } from "@saeris/remd-kbd";
 import { remarkMark } from "@saeris/remd-mark";
@@ -24,7 +30,7 @@ export default defineConfig({
       weights: ["200 900"],
       styles: ["normal"],
       subsets: ["latin"],
-      fallbacks: ["system-ui", "-apple-system", "sans-serif"],
+      fallbacks: ["system-ui", "-apple-system", "sans-serif"]
     },
     {
       provider: fontProviders.fontsource(),
@@ -33,7 +39,7 @@ export default defineConfig({
       weights: [400, 600],
       styles: ["normal"],
       subsets: ["latin"],
-      fallbacks: ["ui-monospace", "monospace"],
+      fallbacks: ["ui-monospace", "monospace"]
     },
     {
       provider: fontProviders.fontsource(),
@@ -42,7 +48,7 @@ export default defineConfig({
       weights: [400],
       styles: ["normal"],
       subsets: ["latin"],
-      fallbacks: ["ui-monospace", "monospace"],
+      fallbacks: ["ui-monospace", "monospace"]
     },
     {
       provider: fontProviders.fontsource(),
@@ -51,7 +57,7 @@ export default defineConfig({
       weights: [400],
       styles: ["normal"],
       subsets: ["latin"],
-      fallbacks: ["ui-monospace", "monospace"],
+      fallbacks: ["ui-monospace", "monospace"]
     },
     {
       provider: fontProviders.fontsource(),
@@ -60,7 +66,7 @@ export default defineConfig({
       weights: [400],
       styles: ["normal"],
       subsets: ["latin"],
-      fallbacks: ["ui-monospace", "monospace"],
+      fallbacks: ["ui-monospace", "monospace"]
     },
     {
       provider: fontProviders.fontsource(),
@@ -69,8 +75,8 @@ export default defineConfig({
       weights: [400],
       styles: ["normal"],
       subsets: ["latin"],
-      fallbacks: ["ui-monospace", "monospace"],
-    },
+      fallbacks: ["ui-monospace", "monospace"]
+    }
   ],
   integrations: [],
   markdown: {
@@ -88,7 +94,7 @@ export default defineConfig({
       remarkSteps,
       remarkSub,
       remarkSup,
-      remarkTabs,
+      remarkTabs
     ],
     rehypePlugins: [rehypeInlineSvg, rehypeUnwrapImages],
     remarkRehype: {
@@ -96,8 +102,8 @@ export default defineConfig({
         ...defListHastHandlers,
         ...githubAlertsHastHandlers,
         ...stepsHastHandlers,
-        ...tabsHastHandlers,
-      },
-    },
-  },
+        ...tabsHastHandlers
+      }
+    }
+  }
 });

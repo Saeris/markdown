@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { expect, test } from "vite-plus/test";
+import { describe, expect, test, it } from "vite-plus/test";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
@@ -14,10 +14,13 @@ const read = (path: string) => readFileSync(join(dir, path), "utf8");
 
 const cmCases = parseFixture(
   read("fixtures/abbr-commonmark.md"),
-  read("expected/abbr-commonmark.html"),
+  read("expected/abbr-commonmark.html")
 );
 
-const gfmCases = parseFixture(read("fixtures/abbr-gfm.md"), read("expected/abbr-gfm.html"));
+const gfmCases = parseFixture(
+  read("fixtures/abbr-gfm.md"),
+  read("expected/abbr-gfm.html")
+);
 
 const cmProcessor = unified()
   .use(remarkParse)
@@ -32,10 +35,16 @@ const gfmProcessor = unified()
   .use(remarkRehype)
   .use(rehypeStringify);
 
-test.each(cmCases)("abbr (remark): $name", ({ input, expected }) => {
-  expect(normalizeHtml(String(cmProcessor.processSync(input)))).toBe(expected);
-});
+describe("abbr/remd", () => {
+  it.each(cmCases)("abbr (remark): $name", ({ input, expected }) => {
+    expect(normalizeHtml(String(cmProcessor.processSync(input)))).toBe(
+      expected
+    );
+  });
 
-test.each(gfmCases)("abbr (remark) gfm: $name", ({ input, expected }) => {
-  expect(normalizeHtml(String(gfmProcessor.processSync(input)))).toBe(expected);
+  it.each(gfmCases)("abbr (remark) gfm: $name", ({ input, expected }) => {
+    expect(normalizeHtml(String(gfmProcessor.processSync(input)))).toBe(
+      expected
+    );
+  });
 });

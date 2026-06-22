@@ -10,7 +10,7 @@ export const unwrapImages: PluginSimple = (md) => {
     let i = 0;
 
     while (i < state.tokens.length) {
-      const open = state.tokens[i]!;
+      const open = state.tokens[i];
       const inline = state.tokens[i + 1];
       const close = state.tokens[i + 2];
 

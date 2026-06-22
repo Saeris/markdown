@@ -8,7 +8,7 @@ export const tokenTypes = {
   defListDescriptionMarker: "defListDescriptionMarker",
   defListDescriptionPrefix: "defListDescriptionPrefix",
   defListDescriptionPrefixWhitespace: "defListDescriptionPrefixWhitespace",
-  defListDescription: "defListDescription",
+  defListDescription: "defListDescription"
 } as const;
 
 export type TokenType = (typeof tokenTypes)[keyof typeof tokenTypes];
@@ -47,7 +47,11 @@ export interface DefinitionList extends Parent {
 
 export interface DefinitionTerm extends Parent {
   type: "defListTerm";
-  data?: { attrsRole?: string; attrsTitle?: PhrasingContent[]; hProperties?: Properties };
+  data?: {
+    attrsRole?: string;
+    attrsTitle?: PhrasingContent[];
+    hProperties?: Properties;
+  };
 }
 
 export interface DefinitionDescription extends Parent {
@@ -68,7 +72,7 @@ declare module "mdast" {
   }
 }
 
-export const clonePoint = <T extends object>(p: T): T => ({ ...p }) as T;
+export const clonePoint = <T extends object>(p: T): T => ({ ...p });
 
 export type FlowToken = Token & {
   _tokenizer?: {

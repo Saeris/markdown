@@ -5,7 +5,11 @@ import type { ElementContent, Properties } from "hast";
 import type { State } from "mdast-util-to-hast";
 import { defList } from "./syntax.js";
 import { defListFromMarkdown } from "./from-markdown.js";
-import type { DefinitionDescription, DefinitionList, DefinitionTerm } from "./types.js";
+import type {
+  DefinitionDescription,
+  DefinitionList,
+  DefinitionTerm
+} from "./types.js";
 
 export type { DefinitionList, DefinitionTerm, DefinitionDescription };
 
@@ -44,33 +48,48 @@ const mergeHProperties = (base: Properties, extra?: Properties): Properties => {
 const defList2hast = (state: State, node: DefinitionList): ElementContent => {
   const items = state.all(node);
   const children: ElementContent[] =
-    items.length > 0 ? [...items.flatMap((item) => [newline(), item]), newline()] : [];
-  const properties = mergeHProperties({}, node.data?.hProperties as Properties | undefined);
-  const result: ElementContent = { type: "element", tagName: "dl", properties, children };
-  state.patch(node, result);
-  return result;
-};
-
-const defListTerm2hast = (state: State, node: DefinitionTerm): ElementContent => {
-  const properties = mergeHProperties({}, node.data?.hProperties as Properties | undefined);
+    items.length > 0
+      ? [...items.flatMap((item) => [newline(), item]), newline()]
+      : [];
+  const properties = mergeHProperties({}, node.data?.hProperties);
   const result: ElementContent = {
     type: "element",
-    tagName: "dt",
+    tagName: "dl",
     properties,
-    children: state.all(node),
+    children
   };
   state.patch(node, result);
   return result;
 };
 
-const defListDescription2hast = (state: State, node: DefinitionDescription): ElementContent => {
+const defListTerm2hast = (
+  state: State,
+  node: DefinitionTerm
+): ElementContent => {
+  const properties = mergeHProperties({}, node.data?.hProperties);
+  const result: ElementContent = {
+    type: "element",
+    tagName: "dt",
+    properties,
+    children: state.all(node)
+  };
+  state.patch(node, result);
+  return result;
+};
+
+const defListDescription2hast = (
+  state: State,
+  node: DefinitionDescription
+): ElementContent => {
   const rawChildren = state.all(node);
   const children: ElementContent[] = [];
   let lastChildUnwrapped = false;
 
   for (let i = 0; i < rawChildren.length; i++) {
     const child = rawChildren[i];
-    const isP = child.type === "element" && (child as { tagName?: string }).tagName === "p";
+    const isP =
+      child.type === "element" &&
+      (child as { tagName?: string }).tagName === "p";
     const unwrap = !node.spread && isP;
     if (!unwrap || i !== 0) children.push(newline());
     if (unwrap) {
@@ -83,8 +102,13 @@ const defListDescription2hast = (state: State, node: DefinitionDescription): Ele
 
   if (!lastChildUnwrapped && children.length > 0) children.push(newline());
 
-  const properties = mergeHProperties({}, node.data?.hProperties as Properties | undefined);
-  const result: ElementContent = { type: "element", tagName: "dd", properties, children };
+  const properties = mergeHProperties({}, node.data?.hProperties);
+  const result: ElementContent = {
+    type: "element",
+    tagName: "dd",
+    properties,
+    children
+  };
   state.patch(node, result);
   return result;
 };
@@ -92,5 +116,5 @@ const defListDescription2hast = (state: State, node: DefinitionDescription): Ele
 export const defListHastHandlers = {
   defList: defList2hast,
   defListTerm: defListTerm2hast,
-  defListDescription: defListDescription2hast,
+  defListDescription: defListDescription2hast
 } as const;

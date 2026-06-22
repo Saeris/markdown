@@ -1,5 +1,5 @@
 import type { PluginWithOptions } from "markdown-it";
-import StateBlock from "markdown-it/lib/rules_block/state_block.mjs";
+import type StateBlock from "markdown-it/lib/rules_block/state_block.mjs";
 import type { TabFrame, TabsBlock, TabsOptions } from "./types.js";
 import {
   parseTabHeader,
@@ -7,7 +7,7 @@ import {
   stripAttrs,
   groupId,
   blockId,
-  CONTINUATION_RE,
+  CONTINUATION_RE
 } from "./utils.js";
 
 export type { TabsOptions };
@@ -15,16 +15,18 @@ export type { TabsOptions };
 export const tabs: PluginWithOptions<TabsOptions> = (md, options = {}) => {
   const { containerClass = "markdown-tabs" } = options;
 
-  md.block.ruler.before("blockquote", "tabs", tabsRule, { alt: ["paragraph", "reference"] });
+  md.block.ruler.before("blockquote", "tabs", tabsRule, {
+    alt: ["paragraph", "reference"]
+  });
 
   function tabsRule(
     state: StateBlock,
     startLine: number,
     endLine: number,
-    silent: boolean,
+    silent: boolean
   ): boolean {
-    const pos = state.bMarks[startLine]! + state.tShift[startLine]!;
-    const max = state.eMarks[startLine]!;
+    const pos = state.bMarks[startLine] + state.tShift[startLine];
+    const max = state.eMarks[startLine];
     const lineText = state.src.slice(pos, max);
 
     // Must start with a depth-1 tab header
@@ -44,8 +46,8 @@ export const tabs: PluginWithOptions<TabsOptions> = (md, options = {}) => {
     };
 
     while (nextLine < endLine) {
-      const linePos = state.bMarks[nextLine]! + state.tShift[nextLine]!;
-      const lineMax = state.eMarks[nextLine]!;
+      const linePos = state.bMarks[nextLine] + state.tShift[nextLine];
+      const lineMax = state.eMarks[nextLine];
       const line = state.src.slice(linePos, lineMax);
 
       const header = parseTabHeader(line);
@@ -57,7 +59,12 @@ export const tabs: PluginWithOptions<TabsOptions> = (md, options = {}) => {
 
         flushFrame();
         block.currentDepth = depth;
-        currentFrame = { depth, label: header.label, open: header.open, bodyLines: [] };
+        currentFrame = {
+          depth,
+          label: header.label,
+          open: header.open,
+          bodyLines: []
+        };
         nextLine++;
         continue;
       }
@@ -90,7 +97,13 @@ export const tabs: PluginWithOptions<TabsOptions> = (md, options = {}) => {
 
     state.line = nextLine;
 
-    emitTabsTokens(state, block.frames, startLine, nextLine - 1, containerClass);
+    emitTabsTokens(
+      state,
+      block.frames,
+      startLine,
+      nextLine - 1,
+      containerClass
+    );
 
     return true;
   }
@@ -100,7 +113,7 @@ export const tabs: PluginWithOptions<TabsOptions> = (md, options = {}) => {
     frames: TabFrame[],
     startLine: number,
     endLine: number,
-    containerClass: string,
+    containerClass: string
   ): void {
     emitFrames(state, frames, 0, containerClass, startLine, endLine);
   }
@@ -111,13 +124,13 @@ export const tabs: PluginWithOptions<TabsOptions> = (md, options = {}) => {
     parentDepth: number,
     containerClass: string,
     mapStart?: number,
-    mapEnd?: number,
+    mapEnd?: number
   ): void {
     const targetDepth = parentDepth + 1;
 
     let i = 0;
     while (i < frames.length) {
-      const frame = frames[i]!;
+      const frame = frames[i];
       if (frame.depth !== targetDepth) {
         i++;
         continue;
@@ -127,24 +140,29 @@ export const tabs: PluginWithOptions<TabsOptions> = (md, options = {}) => {
       const group: TabFrame[] = [];
       let j = i;
       while (j < frames.length) {
-        if (frames[j]!.depth < targetDepth) break;
-        group.push(frames[j]!);
+        if (frames[j].depth < targetDepth) break;
+        group.push(frames[j]);
         j++;
       }
 
       // Compute ids from the labels at this depth level
-      const depthLabels = group.filter((f) => f.depth === targetDepth).map((f) => f.label);
+      const depthLabels = group
+        .filter((f) => f.depth === targetDepth)
+        .map((f) => f.label);
       const gId = groupId(depthLabels);
       const bId = blockId(mapStart ?? 0, gId);
 
       // Determine which tab is open: first explicit %+, else first tab
-      const explicitOpenIdx = group.findIndex((f) => f.depth === targetDepth && f.open);
+      const explicitOpenIdx = group.findIndex(
+        (f) => f.depth === targetDepth && f.open
+      );
 
       // Emit container <div>
       const divOpen = state.push("tabs_open", "div", 1);
       divOpen.attrSet("class", containerClass);
       divOpen.attrSet("data-tabs-group", gId);
-      if (mapStart !== undefined && mapEnd !== undefined) divOpen.map = [mapStart, mapEnd];
+      if (mapStart !== undefined && mapEnd !== undefined)
+        divOpen.map = [mapStart, mapEnd];
       divOpen.block = true;
       divOpen.meta = { attrsRole: "container" };
 
@@ -156,12 +174,13 @@ export const tabs: PluginWithOptions<TabsOptions> = (md, options = {}) => {
       let labelK = 0;
       let labelIdx = 0;
       while (labelK < group.length) {
-        const f = group[labelK]!;
+        const f = group[labelK];
         if (f.depth !== targetDepth) {
           labelK++;
           continue;
         }
-        const isOpen = explicitOpenIdx >= 0 ? labelK === explicitOpenIdx : labelIdx === 0;
+        const isOpen =
+          explicitOpenIdx >= 0 ? labelK === explicitOpenIdx : labelIdx === 0;
         const inputId = `${bId}-${labelIdx}`;
 
         // <input type="radio">
@@ -187,7 +206,8 @@ export const tabs: PluginWithOptions<TabsOptions> = (md, options = {}) => {
         // Find child frames for this tab (needed later for panels)
         const childStart = labelK + 1;
         let childEnd = childStart;
-        while (childEnd < group.length && group[childEnd]!.depth > targetDepth) childEnd++;
+        while (childEnd < group.length && group[childEnd].depth > targetDepth)
+          childEnd++;
 
         labelIdx++;
         labelK = childEnd;
@@ -202,18 +222,21 @@ export const tabs: PluginWithOptions<TabsOptions> = (md, options = {}) => {
 
       let panelK = 0;
       while (panelK < group.length) {
-        const f = group[panelK]!;
+        const f = group[panelK];
         if (f.depth !== targetDepth) {
           panelK++;
           continue;
         }
 
-        const labelPlain = stripAttrs(md.renderInline(f.label).replace(/<[^>]+>/g, ""));
+        const labelPlain = stripAttrs(
+          md.renderInline(f.label).replace(/<[^>]+>/g, "")
+        );
 
         // Find child frames
         const childStart = panelK + 1;
         let childEnd = childStart;
-        while (childEnd < group.length && group[childEnd]!.depth > targetDepth) childEnd++;
+        while (childEnd < group.length && group[childEnd].depth > targetDepth)
+          childEnd++;
         const children = group.slice(childStart, childEnd);
 
         // <section>
@@ -233,7 +256,7 @@ export const tabs: PluginWithOptions<TabsOptions> = (md, options = {}) => {
             bodyContent,
             state.md,
             state.env,
-            state.tokens,
+            state.tokens
           );
           childState.md.block.tokenize(childState, 0, childState.lineMax);
 

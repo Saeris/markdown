@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vite-plus/test";
+import { expect, it, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -22,11 +22,11 @@ const remd = (src: string) =>
         .use(remarkSteps)
         .use(remarkTabs)
         .use(remarkRehype, {
-          handlers: { ...stepsHastHandlers, ...tabsHastHandlers } as never,
+          handlers: { ...stepsHastHandlers, ...tabsHastHandlers } as never
         })
         .use(rehypeStringify, { allowDangerousHtml: true })
-        .processSync(src),
-    ),
+        .processSync(src)
+    )
   );
 
 // ── Flat steps inside a tab body ──────────────────────────────────────────────
@@ -48,14 +48,14 @@ describe("tabs + steps: flat steps inside a single tab body", () => {
 % Reference
 > See the full API docs.`;
 
-  test("remark: tab structure renders", () => {
+  it("remark: tab structure renders", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-tabs"');
     expect(result).toContain('aria-label="Quick start"');
     expect(result).toContain('aria-label="Reference"');
   });
 
-  test("remark: steps render inside the tab body", () => {
+  it("remark: steps render inside the tab body", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-steps"');
     expect(result).toContain('data-step="1"');
@@ -63,19 +63,19 @@ describe("tabs + steps: flat steps inside a single tab body", () => {
     expect(result).toContain('data-step="3"');
   });
 
-  test("remark: code fences inside steps inside tab render", () => {
+  it("remark: code fences inside steps inside tab render", () => {
     const result = remd(input);
     expect(result).toContain("git clone");
     expect(result).toContain("npm install");
     expect(result).toContain("npm run dev");
   });
 
-  test("markdown-it: tab structure renders", () => {
+  it("markdown-it: tab structure renders", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="markdown-tabs"');
   });
 
-  test("markdown-it: steps render inside the tab body", () => {
+  it("markdown-it: steps render inside the tab body", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="markdown-steps"');
     expect(result).toContain('data-step="1"');
@@ -106,26 +106,26 @@ describe("tabs + steps: multiple tabs each containing steps", () => {
 > > winget install OpenJS.NodeJS
 > > \`\`\``;
 
-  test("remark: both tabs render", () => {
+  it("remark: both tabs render", () => {
     const result = remd(input);
     expect(result).toContain('aria-label="macOS"');
     expect(result).toContain('aria-label="Windows"');
   });
 
-  test("remark: steps render inside each tab", () => {
+  it("remark: steps render inside each tab", () => {
     const result = remd(input);
     // Two independent step lists — data-step="1" and data-step="2" appear in each
     expect(result.match(/data-step="1"/g)?.length).toBeGreaterThanOrEqual(2);
     expect(result.match(/data-step="2"/g)?.length).toBeGreaterThanOrEqual(2);
   });
 
-  test("remark: content does not bleed between tab panels", () => {
+  it("remark: content does not bleed between tab panels", () => {
     const result = remd(input);
     expect(result).toContain("brew install node");
     expect(result).toContain("winget install OpenJS.NodeJS");
   });
 
-  test("markdown-it: both tabs and their steps render", () => {
+  it("markdown-it: both tabs and their steps render", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="markdown-tabs"');
     expect(result).toContain('class="markdown-steps"');
@@ -154,14 +154,14 @@ describe("tabs + steps: nested steps inside a tab body", () => {
 % Skip ahead
 > Jump to the advanced guide.`;
 
-  test("remark: tab renders", () => {
+  it("remark: tab renders", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-tabs"');
     expect(result).toContain('aria-label="Setup"');
     expect(result).toContain('aria-label="Skip ahead"');
   });
 
-  test("remark: top-level and nested steps render inside the tab body", () => {
+  it("remark: top-level and nested steps render inside the tab body", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-steps"');
     expect(result).toContain('class="markdown-steps-list"');
@@ -169,14 +169,14 @@ describe("tabs + steps: nested steps inside a tab body", () => {
     expect(result).toContain('data-step="2"');
   });
 
-  test("remark: nested step content renders", () => {
+  it("remark: nested step content renders", () => {
     const result = remd(input);
     expect(result).toContain("mkdir my-project");
     expect(result).toContain("git init");
     expect(result).toContain("npm install");
   });
 
-  test("markdown-it: nested steps inside tab render", () => {
+  it("markdown-it: nested steps inside tab render", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="markdown-tabs"');
     expect(result).toContain('class="markdown-steps"');
@@ -200,20 +200,20 @@ describe("tabs + steps: Demo/Code tab pair wrapping steps syntax", () => {
 > > Do the second thing.
 > \`\`\`\``;
 
-  test("remark: Demo and Code tabs both render", () => {
+  it("remark: Demo and Code tabs both render", () => {
     const result = remd(input);
     expect(result).toContain('aria-label="Demo"');
     expect(result).toContain('aria-label="Code"');
   });
 
-  test("remark: steps render inside the Demo tab", () => {
+  it("remark: steps render inside the Demo tab", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-steps"');
     expect(result).toContain('data-step="1"');
     expect(result).toContain('data-step="2"');
   });
 
-  test("remark: Code tab contains a code fence, not a step list", () => {
+  it("remark: Code tab contains a code fence, not a step list", () => {
     const result = remd(input);
     expect(result).toContain("<code");
     expect(result).toContain("@1.");
@@ -241,20 +241,20 @@ describe("tabs + steps: nested tabs alongside steps within the same tab body", (
 % Overview
 > A brief intro paragraph.`;
 
-  test("remark: outer tab structure renders", () => {
+  it("remark: outer tab structure renders", () => {
     const result = remd(input);
     expect(result).toContain('aria-label="Guide"');
     expect(result).toContain('aria-label="Overview"');
   });
 
-  test("remark: steps render inside the Guide tab", () => {
+  it("remark: steps render inside the Guide tab", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-steps"');
     expect(result).toContain('data-step="1"');
     expect(result).toContain('data-step="2"');
   });
 
-  test("remark: nested tabs render inside the step body", () => {
+  it("remark: nested tabs render inside the step body", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-tabs"');
     expect(result).toContain('aria-label="React"');
@@ -276,14 +276,14 @@ describe("tabs + steps: steps and tabs adjacent at the root level", () => {
 > % CJS
 > > Require with \`require\`.`;
 
-  test("remark: both render independently", () => {
+  it("remark: both render independently", () => {
     const result = remd(input);
     expect(result).toContain('class="markdown-steps"');
     expect(result).toContain('class="markdown-tabs"');
     expect(result).not.toContain('class="markdown-steps markdown-tabs"');
   });
 
-  test("markdown-it: both render independently", () => {
+  it("markdown-it: both render independently", () => {
     const result = normalizeHtml(md.render(input));
     expect(result).toContain('class="markdown-steps"');
     expect(result).toContain('class="markdown-tabs"');

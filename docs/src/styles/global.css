@@ -39,7 +39,9 @@
     border-right: 1px solid var(--color-border);
     background-color: var(--color-sidebar-bg);
     transform: translateX(0);
-    transition: transform 0.25s ease, width 0.25s ease;
+    transition:
+      transform 0.25s ease,
+      width 0.25s ease;
   }
 
   /* ── Content area ────────────────────────────────────────────── */

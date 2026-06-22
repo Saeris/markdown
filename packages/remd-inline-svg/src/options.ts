@@ -20,5 +20,5 @@ export const applyDefaults = (config: Partial<Options> = {}): Options => ({
   maxTotalSize: config.maxTotalSize ?? 10000,
   optimize: config.optimize ?? true,
   deduplication: config.deduplication ?? false,
-  cacheEfficiency: config.cacheEfficiency ?? ((): void => {}),
+  cacheEfficiency: config.cacheEfficiency ?? ((): void => {})
 });

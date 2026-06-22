@@ -37,16 +37,17 @@ export const remarkAbbr: Plugin<[], Root> = () => {
     visit(tree, "paragraph", (node, index, parent) => {
       /* v8 ignore next */
       if (!parent || typeof index === "undefined") return;
-      if (node.children.length !== 1 || node.children[0]!.type !== "text") return;
+      if (node.children.length !== 1 || node.children[0].type !== "text")
+        return;
 
-      const text = (node.children[0] as Text).value;
+      const text = node.children[0].value;
       const lines = text.split("\n");
       const defLines: Array<[string, string]> = [];
 
       for (const line of lines) {
         const match = DEFINITION_RE.exec(line);
         if (!match) return;
-        defLines.push([match[1]!, match[2]!.trim()]);
+        defLines.push([match[1], match[2].trim()]);
       }
 
       for (const [abbr, title] of defLines) {
@@ -78,14 +79,17 @@ export const remarkAbbr: Plugin<[], Root> = () => {
       let match: RegExpExecArray | null;
 
       while ((match = regex.exec(node.value)) !== null) {
-        const word = match[1]!;
+        const word = match[1];
         if (match.index > lastIndex) {
-          children.push({ type: "text", value: node.value.slice(lastIndex, match.index) });
+          children.push({
+            type: "text",
+            value: node.value.slice(lastIndex, match.index)
+          });
         }
         children.push({
           type: "abbr",
           children: [{ type: "text", value: word }],
-          data: { hName: "abbr", hProperties: { title: abbreviations[word]! } },
+          data: { hName: "abbr", hProperties: { title: abbreviations[word] } }
         });
         lastIndex = match.index + word.length;
       }
@@ -94,7 +98,7 @@ export const remarkAbbr: Plugin<[], Root> = () => {
         children.push({ type: "text", value: node.value.slice(lastIndex) });
       }
 
-      (parent as Parent).children.splice(index, 1, ...(children as PhrasingContent[]));
+      (parent as Parent).children.splice(index, 1, ...children);
       return [CONTINUE, index + children.length];
     });
   };
