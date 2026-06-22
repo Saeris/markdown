@@ -16,10 +16,10 @@
   },
   "dependencies": {
     "rehype-parse": "^9.0.1",
-    "svgo": "^4.0.1"
+    "svgo": "catalog:"
   },
   "devDependencies": {
-    "unified": "^11.0.5",
+    "unified": "catalog:",
     "vfile": "^6.0.3"
   },
   "peerDependencies": {

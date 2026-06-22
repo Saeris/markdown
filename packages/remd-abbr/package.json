@@ -15,11 +15,11 @@
     }
   },
   "dependencies": {
-    "unist-util-visit": "^5.1.0"
+    "unist-util-visit": "catalog:"
   },
   "devDependencies": {
-    "@types/mdast": "^4.0.4",
-    "unified": "^11.0.5"
+    "@types/mdast": "catalog:",
+    "unified": "catalog:"
   },
   "peerDependencies": {
     "unified": "^11.0.0"

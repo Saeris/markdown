@@ -1,5 +1,6 @@
 import { fileURLToPath } from "node:url";
 import { configDefaults, defineConfig } from "vite-plus";
+import { lint, fmt, mergeLint } from "@saeris/configs";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
 
@@ -9,27 +10,31 @@ export default defineConfig({
     tasks: {
       build: {
         command: "vp run -r build",
-        cache: true,
+        cache: true
       },
       dev: {
         command:
           "vp run --parallel --filter '@saeris/remd-*' --filter '@saeris/mdit-*' --filter '@saeris/markdown-docs' dev",
-        cache: false,
-      },
-    },
+        cache: false
+      }
+    }
   },
   fmt: {
+    ...fmt,
     ignorePatterns: [
       "templates/**",
       "tests/**/fixtures/**",
       "tests/**/expected/**",
-      "docs/public/plugins/**",
-    ],
+      "docs/public/**/*.md"
+    ]
   },
-  lint: { ignorePatterns: ["templates/**"], options: { typeAware: true, typeCheck: true } },
+  lint: mergeLint(lint, {
+    ignorePatterns: ["templates/**", "docs/public/**/*.md"],
+    options: { typeAware: true, typeCheck: true }
+  }),
   test: {
     root,
     include: ["tests/**/*.test.ts"],
-    exclude: [...configDefaults.exclude, "docs/**"],
-  },
+    exclude: [...configDefaults.exclude, "docs/**"]
+  }
 });

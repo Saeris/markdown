@@ -15,14 +15,14 @@
     }
   },
   "dependencies": {
-    "mdast-util-from-markdown": "^2.0.2",
-    "micromark-util-character": "^2.1.0",
-    "unist-util-visit": "^5.1.0"
+    "mdast-util-from-markdown": "catalog:",
+    "micromark-util-character": "catalog:",
+    "unist-util-visit": "catalog:"
   },
   "devDependencies": {
-    "@types/mdast": "^4.0.4",
-    "micromark-util-types": "^2.0.1",
-    "unified": "^11.0.5"
+    "@types/mdast": "catalog:",
+    "micromark-util-types": "catalog:",
+    "unified": "catalog:"
   },
   "peerDependencies": {
     "unified": "^11.0.0"
