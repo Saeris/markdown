@@ -16,7 +16,7 @@ const resolveSvgPath = (
   src: string,
   currentDocument: unknown
 ): string | null => {
-  const decoded = decodeURIComponent(String(src));
+  const decoded = decodeURIComponent(src);
   if (isExternalUrl(decoded)) return null;
   try {
     const currentFile = fileURLToPath(String(currentDocument));

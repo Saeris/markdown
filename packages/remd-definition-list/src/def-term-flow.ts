@@ -80,6 +80,7 @@ function getSubtokensForDefTerm(termFlowToken: FlowToken): {
       continue;
     }
 
+    // oxlint-disable-next-line typescript/switch-exhaustiveness-check
     switch (tmpToken.type) {
       case "paragraph":
         if (pEnterIndex == null && tmpEvent[0] === "enter") pEnterIndex = i;

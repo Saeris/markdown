@@ -10,6 +10,7 @@ import type {
   RootContent
 } from "mdast";
 import type { Element, ElementContent, Properties } from "hast";
+import type { Parent } from "unist";
 import type { State } from "mdast-util-to-hast";
 import type { TabsOptions, TabsListNode, TabsItemNode } from "./types.js";
 import { parseTabHeader, stripAttrs, groupId, blockId } from "./utils.js";
@@ -220,12 +221,17 @@ const splitBlockquote = (bq: Blockquote, explicit: boolean): BQSegment[] => {
         const cloned = JSON.parse(JSON.stringify(child)) as
           | BlockContent
           | DefinitionContent;
-        // Navigate to the deepest last child and replace the paragraph
-        let target: any = cloned;
+        // Navigate to the deepest last child and replace the paragraph.
+        // Tree walking through heterogeneous mdast Parent shapes — no narrow
+        // type fits all the intermediate nodes we descend through.
+        interface ParentLike {
+          children: ParentLike[];
+        }
+        let target: ParentLike = cloned as unknown as ParentLike;
         for (let pi = 1; pi < extracted.path.length; pi++) {
           target = target.children[target.children.length - 1];
         }
-        const deepestParent = target;
+        const deepestParent = target as unknown as Parent;
         if (extracted.truncatedPara) {
           deepestParent.children[deepestParent.children.length - 1] =
             extracted.truncatedPara;

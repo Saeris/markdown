@@ -10,5 +10,5 @@ export interface AttrRule {
     index: number,
     position: number,
     range: DelimiterRange
-  ): boolean | void;
+  ): boolean | undefined;
 }
