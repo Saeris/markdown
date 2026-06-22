@@ -149,7 +149,7 @@ function getSubtokensForDefTerm(termFlowToken: FlowToken): {
   }
 
   // splice in descending order so earlier indices stay valid
-  const descending = (a: number, b: number) => b - a;
+  const descending = (a: number, b: number): number => b - a;
   removedEventIndexes.sort(descending);
   for (const i of removedEventIndexes) {
     splice(flowEvents as Event[], i, 1, []);

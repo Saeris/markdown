@@ -40,7 +40,7 @@ export const tabs: PluginWithOptions<TabsOptions> = (md, options = {}) => {
     let currentFrame: TabFrame | null = null;
     let nextLine = startLine;
 
-    const flushFrame = () => {
+    const flushFrame = (): void => {
       if (currentFrame) block.frames.push(currentFrame);
       currentFrame = null;
     };

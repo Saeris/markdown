@@ -3,7 +3,7 @@ import type { AlertType } from "./types.js";
 // All icons are Lucide SVGs (lucide.dev), stroke="currentColor", 24×24 viewBox.
 // They inherit their color from the --_alert-color CSS variable via `color`.
 
-const icon = (path: string) =>
+const icon = (path: string): string =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
 
 export const ICONS: Record<AlertType, string> = {

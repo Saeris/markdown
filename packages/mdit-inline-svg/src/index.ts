@@ -190,9 +190,9 @@ export const inlineSvg = (md: MarkdownIt, config?: Partial<Options>): void => {
       opts: MarkdownIt["options"],
       _env: unknown,
       self: MarkdownIt["renderer"]
-    ) => self.renderToken(tokens, idx, opts));
+    ): string => self.renderToken(tokens, idx, opts));
 
-  md.renderer.rules.image = (tokens, idx, opts, env, self) => {
+  md.renderer.rules.image = (tokens, idx, opts, env, self): string => {
     const plan = planMap.get(env as object);
     const result = plan?.get(tokens[idx]);
     if (result === undefined || result === null) {

@@ -13,7 +13,8 @@ export { ALERT_ALIASES, DEFAULT_TITLE, ICONS };
 // Groups: 1=type keyword, 2=foldable marker (+/-), 3=custom title
 const ALERT_RE = /^\[!([^\]]+)\]([+-])?\s*(.*)?$/s;
 
-const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const capitalize = (s: string): string =>
+  s.charAt(0).toUpperCase() + s.slice(1);
 
 interface AlertData {
   hName: string;
@@ -41,13 +42,13 @@ export const remarkGithubAlerts: Plugin<[AlertOptions?], Root> = (
   const aliasMap: Record<string, string> = { ...ALERT_ALIASES, ...extraTypes };
   const titles = customTitles as Record<string, string>;
 
-  const resolve = (keyword: string) =>
+  const resolve = (keyword: string): string | undefined =>
     aliasMap[matchCaseInsensitive ? keyword.toLowerCase() : keyword];
 
-  const titleFor = (type: string) =>
+  const titleFor = (type: string): string =>
     titles[type] ?? DEFAULT_TITLE[type as AlertType] ?? capitalize(type);
 
-  const iconFor = (type: string) =>
+  const iconFor = (type: string): string =>
     showIcons ? (ICONS[type as AlertType] ?? "") : "";
 
   return (tree) => {

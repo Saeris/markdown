@@ -8,7 +8,7 @@ const SPACE = 32;
 const TAB = 9;
 const TAB_SIZE = 4;
 
-const expandTabStop = (offset: number) =>
+const expandTabStop = (offset: number): number =>
   offset + TAB_SIZE - (offset % TAB_SIZE);
 
 // Search `[:~][\n ]`, returns next pos after marker on success or -1 on fail.

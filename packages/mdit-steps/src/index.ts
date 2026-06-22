@@ -71,7 +71,7 @@ export const steps: PluginWithOptions<StepsOptions> = (md, options = {}) => {
     let currentFrame: StepFrame | null = null;
     let nextLine = startLine;
 
-    const flushFrame = () => {
+    const flushFrame = (): void => {
       if (currentFrame) block.frames.push(currentFrame);
       currentFrame = null;
     };

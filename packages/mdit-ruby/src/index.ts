@@ -43,7 +43,7 @@ function makeRule(rp: [string, string] | undefined) {
 
     if (baseText.length === 0 || rubyText.length === 0) return false;
 
-    const pushInline = (content: string) => {
+    const pushInline = (content: string): void => {
       const tokens: Token[] = [];
       state.md.inline.parse(content, state.md, state.env, tokens);
       for (const t of tokens) state.tokens.push(t);
@@ -71,9 +71,9 @@ export const ruby = (md: MarkdownIt, options: RubyOptions = {}): void => {
     Array.isArray(rp) && rp.length === 2 && rp[0] !== "" && rp[1] !== "";
 
   if (hasRp) {
-    md.renderer.rules["rp_open"] = (tokens, idx) =>
+    md.renderer.rules["rp_open"] = (tokens, idx): string =>
       `<rp>${tokens[idx].content}</rp>`;
-    md.renderer.rules["rp_close"] = (tokens, idx) =>
+    md.renderer.rules["rp_close"] = (tokens, idx): string =>
       `<rp>${tokens[idx].content}</rp>`;
   }
 
