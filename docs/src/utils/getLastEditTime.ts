@@ -14,7 +14,9 @@ export async function getLastEditTime(path: string): Promise<Date | null> {
 
   const res = await fetch(
     `https://api.github.com/repos/saeris/markdown/commits?${params}`,
-    { headers }
+    {
+      headers
+    }
   );
 
   if (!res.ok) return null;
