@@ -1,3 +1,5 @@
+// markdown-it core internals (lib.ucmicro) are typed loose; the regex source casts are reviewed.
+/* oxlint-disable typescript/no-unsafe-type-assertion */
 // Forked and modified from https://github.com/markdown-it/markdown-it-abbr/blob/master/index.mjs
 
 import type { PluginSimple } from "markdown-it";
@@ -16,10 +18,15 @@ interface AbbrStateCore extends StateCore {
 
 const ESCAPE_RE = /\\(.)/g;
 
-const abbrDefinition: RuleBlock = (state: AbbrStateBlock, startLine, _endLine, silent) => {
+const abbrDefinition: RuleBlock = (
+  state: AbbrStateBlock,
+  startLine,
+  _endLine,
+  silent
+) => {
   let labelEnd = -1;
-  let pos = state.bMarks[startLine]! + state.tShift[startLine]!;
-  const max = state.eMarks[startLine]!;
+  let pos = state.bMarks[startLine] + state.tShift[startLine];
+  const max = state.eMarks[startLine];
 
   if (
     pos + 2 >= max ||
@@ -41,10 +48,13 @@ const abbrDefinition: RuleBlock = (state: AbbrStateBlock, startLine, _endLine, s
     pos++;
   }
 
-  if (labelEnd < 0 || state.src.charCodeAt(labelEnd + 1) !== 58 /* : */) return false;
+  if (labelEnd < 0 || state.src.charCodeAt(labelEnd + 1) !== 58 /* : */)
+    return false;
   if (silent) return true;
 
-  const label = state.src.slice(labelStart, labelEnd).replaceAll(ESCAPE_RE, "$1");
+  const label = state.src
+    .slice(labelStart, labelEnd)
+    .replaceAll(ESCAPE_RE, "$1");
 
   pos = labelEnd + 2;
   const titleStart = state.skipSpaces(pos);
@@ -84,20 +94,20 @@ export const abbr: PluginSimple = (md) => {
     const regexpSimple = new RegExp(`(?:${abbreviationsRegExpText})`);
     const regExp = new RegExp(
       `(^|${WORDING_REGEXP_TEXT})(${abbreviationsRegExpText})($|${WORDING_REGEXP_TEXT})`,
-      "g",
+      "g"
     );
 
     const tokensLength = tokens.length;
 
     for (let i = 0; i < tokensLength; i++) {
-      const token = tokens[i]!;
+      const token = tokens[i];
 
       if (token.type !== "inline") continue;
 
       let children = token.children!;
 
       for (let index = children.length - 1; index >= 0; index--) {
-        const currentToken = children[index]!;
+        const currentToken = children[index];
 
         if (currentToken.type !== "text") continue;
 
@@ -113,14 +123,14 @@ export const abbr: PluginSimple = (md) => {
         while ((match = regExp.exec(text))) {
           const [, before, word, after] = match;
 
-          if (match.index > 0 || before!.length > 0) {
+          if (match.index > 0 || before.length > 0) {
             const textToken = new state.Token("text", "", 0);
-            textToken.content = text.slice(pos, match.index + before!.length);
+            textToken.content = text.slice(pos, match.index + before.length);
             nodes.push(textToken);
           }
 
           const abbrOpenToken = new state.Token("abbr_open", "abbr", 1);
-          abbrOpenToken.attrPush(["title", abbreviations[`_${word}`]!]);
+          abbrOpenToken.attrPush(["title", abbreviations[`_${word}`]]);
           nodes.push(abbrOpenToken);
 
           const textToken = new state.Token("text", "", 0);
@@ -130,7 +140,7 @@ export const abbr: PluginSimple = (md) => {
           const abbrCloseToken = new state.Token("abbr_close", "abbr", -1);
           nodes.push(abbrCloseToken);
 
-          regExp.lastIndex -= after!.length;
+          regExp.lastIndex -= after.length;
           pos = regExp.lastIndex;
         }
 
@@ -147,8 +157,8 @@ export const abbr: PluginSimple = (md) => {
     }
   };
 
-  md.block.ruler.before("reference", "abbr_definition", abbrDefinition as RuleBlock, {
-    alt: ["paragraph", "reference"],
+  md.block.ruler.before("reference", "abbr_definition", abbrDefinition, {
+    alt: ["paragraph", "reference"]
   });
-  md.core.ruler.after("linkify", "abbr_replace", abbrReplace as RuleCore);
+  md.core.ruler.after("linkify", "abbr_replace", abbrReplace);
 };

@@ -2,9 +2,15 @@ import type { DelimiterRange } from "./types.js";
 
 type DelimiterPosition = "start" | "end" | "only";
 
-export type DelimiterChecker = (str: string, pos: DelimiterPosition) => DelimiterRange | null;
+export type DelimiterChecker = (
+  str: string,
+  pos: DelimiterPosition
+) => DelimiterRange | null;
 
-export const getDelimiterChecker = (left: string, right: string): DelimiterChecker => {
+export const getDelimiterChecker = (
+  left: string,
+  right: string
+): DelimiterChecker => {
   const ll = left.length;
   const rl = right.length;
   const minLen = ll + 1 + rl;

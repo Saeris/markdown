@@ -34,7 +34,10 @@
     );
     --_tabs-label-color: var(--markdown-tabs-label-color, inherit);
     --_tabs-label-hover-color: var(--markdown-tabs-label-hover-color, inherit);
-    --_tabs-label-active-color: var(--markdown-tabs-label-active-color, var(--_tabs-accent));
+    --_tabs-label-active-color: var(
+      --markdown-tabs-label-active-color,
+      var(--_tabs-accent)
+    );
     --_tabs-radius: var(--markdown-tabs-radius, 0.375rem);
     --_tabs-strip-bg: var(--markdown-tabs-strip-bg, transparent);
     --_tabs-hover-bg: var(
@@ -321,7 +324,9 @@
   @supports (width: calc(1px * sibling-index())) {
     .markdown-tabs-labels > label.markdown-tabs-label {
       &:is(
-        .markdown-tabs:has(> .markdown-tabs-labels input:nth-of-type(sibling-index()):checked)
+        .markdown-tabs:has(
+            > .markdown-tabs-labels input:nth-of-type(sibling-index()):checked
+          )
           > .markdown-tabs-labels
           > *
       ) {
@@ -334,7 +339,9 @@
 
     .markdown-tabs-panels > .markdown-tabs-panel {
       &:is(
-        .markdown-tabs:has(> .markdown-tabs-labels input:nth-of-type(sibling-index()):checked)
+        .markdown-tabs:has(
+            > .markdown-tabs-labels input:nth-of-type(sibling-index()):checked
+          )
           > .markdown-tabs-panels
           > *
       ) {

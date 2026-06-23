@@ -6,7 +6,7 @@ export const addAttrs = (
   token: Token,
   content: string,
   range: DelimiterRange,
-  allowed: (string | RegExp)[],
+  allowed: Array<string | RegExp>
 ): void => {
   for (const [key, value] of getAttrs(content, range, allowed)) {
     if (key === "class" || key === "css-module") {

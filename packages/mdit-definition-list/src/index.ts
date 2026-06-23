@@ -8,7 +8,8 @@ const SPACE = 32;
 const TAB = 9;
 const TAB_SIZE = 4;
 
-const expandTabStop = (offset: number) => offset + TAB_SIZE - (offset % TAB_SIZE);
+const expandTabStop = (offset: number): number =>
+  offset + TAB_SIZE - (offset % TAB_SIZE);
 
 // Search `[:~][\n ]`, returns next pos after marker on success or -1 on fail.
 const checkAndSkipMarker = (state: StateBlock, line: number): number => {
@@ -41,7 +42,7 @@ const withStateIsolation = (
   contentStart: number,
   offset: number,
   endLine: number,
-  body: () => void,
+  body: () => void
 ): void => {
   const savedTight = state.tight;
   const savedDDIndent = state.ddIndent;
@@ -73,7 +74,10 @@ const markTightParagraphs = (state: StateBlock, index: number): void => {
   const level = state.level + 2;
 
   for (let i = index + 2, length = state.tokens.length - 2; i < length; i++) {
-    if (state.tokens[i].level === level && state.tokens[i].type === "paragraph_open") {
+    if (
+      state.tokens[i].level === level &&
+      state.tokens[i].type === "paragraph_open"
+    ) {
       state.tokens[i + 2].hidden = true;
       state.tokens[i].hidden = true;
       i += 2;
@@ -86,7 +90,10 @@ const dlRule: RuleBlock = (state, startLine, endLine, silent) => {
     // validation mode validates a dd block only, not a whole definition list
     if (state.ddIndent < 0) return false;
 
-    return checkAndSkipMarker(state, startLine) >= 0 && state.sCount[startLine] < state.blkIndent;
+    return (
+      checkAndSkipMarker(state, startLine) >= 0 &&
+      state.sCount[startLine] < state.blkIndent
+    );
   }
 
   let nextLine = startLine + 1;
@@ -142,7 +149,9 @@ const dlRule: RuleBlock = (state, startLine, endLine, silent) => {
     const inlineToken = state.push("inline", "", 0);
 
     inlineToken.map = [dtLine, dtLine];
-    inlineToken.content = state.getLines(dtLine, dtLine + 1, state.blkIndent, false).trim();
+    inlineToken.content = state
+      .getLines(dtLine, dtLine + 1, state.blkIndent, false)
+      .trim();
     inlineToken.children = [];
 
     state.push("dt_close", "dt", -1);
@@ -156,7 +165,9 @@ const dlRule: RuleBlock = (state, startLine, endLine, silent) => {
       let pos = contentStart;
       const max = state.eMarks[ddLine];
       let offset =
-        state.sCount[ddLine] + contentStart - (state.bMarks[ddLine] + state.tShift[ddLine]);
+        state.sCount[ddLine] +
+        contentStart -
+        (state.bMarks[ddLine] + state.tShift[ddLine]);
 
       while (pos < max) {
         const ch = state.src.charCodeAt(pos);
@@ -230,6 +241,6 @@ const dlRule: RuleBlock = (state, startLine, endLine, silent) => {
 
 export const dl: PluginSimple = (md) => {
   md.block.ruler.before("paragraph", "dl", dlRule, {
-    alt: ["paragraph", "reference", "blockquote"],
+    alt: ["paragraph", "reference", "blockquote"]
   });
 };

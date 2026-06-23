@@ -154,8 +154,12 @@ one (no depth jumps). A `%%%` block may only appear inside a `%%` panel.
 
 ```html
 <details class="markdown-tabs-item" name="{block-id}" data-tab="{slug}">
-  <summary class="markdown-tabs-label" aria-label="{label text}">{label inline content}</summary>
-  <section class="markdown-tabs-panel" aria-label="{label text}">{panel block content}</section>
+  <summary class="markdown-tabs-label" aria-label="{label text}">
+    {label inline content}
+  </summary>
+  <section class="markdown-tabs-panel" aria-label="{label text}">
+    {panel block content}
+  </section>
 </details>
 ```
 

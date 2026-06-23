@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vite-plus/test";
+import { expect, it, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -23,38 +23,43 @@ const remd = (src: string) =>
         .use(remarkAttrs)
         .use(remarkRehype)
         .use(rehypeStringify)
-        .processSync(src),
-    ),
+        .processSync(src)
+    )
   );
 
 describe("kbd + attrs: kbd inline with class attr", () => {
   const input = "[[Ctrl]]{.key}";
   const expected = '<p><kbd class="key">Ctrl</kbd></p>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });
 
 describe("kbd + attrs: kbd inline with id attr", () => {
   const input = "[[Enter]]{#enter-key}";
   const expected = '<p><kbd id="enter-key">Enter</kbd></p>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });
 
 describe("kbd + attrs: kbd with heading attrs", () => {
   const input = "## Shortcuts {.shortcuts}\n\nPress [[Ctrl]].";
-  const expected = '<h2 class="shortcuts">Shortcuts</h2><p>Press <kbd>Ctrl</kbd>.</p>';
+  const expected =
+    '<h2 class="shortcuts">Shortcuts</h2><p>Press <kbd>Ctrl</kbd>.</p>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });
 
 describe("kbd + attrs: kbd and block attrs coexist", () => {
   const input = "Press [[Ctrl]] to copy text. {.tip}";
   const expected = '<p class="tip">Press <kbd>Ctrl</kbd> to copy text.</p>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });

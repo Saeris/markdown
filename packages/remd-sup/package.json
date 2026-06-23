@@ -10,21 +10,22 @@
   "type": "module",
   "exports": {
     ".": {
+      "development": "./src/index.ts",
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     }
   },
   "dependencies": {
-    "unist-builder": "^4.0.0",
-    "unist-util-find-after": "^5.0.0",
-    "unist-util-find-all-after": "^5.0.0",
-    "unist-util-find-all-before": "^5.0.0",
-    "unist-util-find-between-all": "^1.1.6",
-    "unist-util-visit": "^5.1.0"
+    "unist-builder": "catalog:",
+    "unist-util-find-after": "catalog:",
+    "unist-util-find-all-after": "catalog:",
+    "unist-util-find-all-before": "catalog:",
+    "unist-util-find-between-all": "catalog:",
+    "unist-util-visit": "catalog:"
   },
   "devDependencies": {
-    "@types/mdast": "^4.0.4",
-    "unified": "^11.0.5"
+    "@types/mdast": "catalog:",
+    "unified": "catalog:"
   },
   "peerDependencies": {
     "unified": "^11.0.0"

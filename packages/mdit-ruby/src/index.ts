@@ -9,7 +9,7 @@ export interface RubyOptions {
 }
 
 function makeRule(rp: [string, string] | undefined) {
-  const hasRp = Array.isArray(rp) && rp.length === 2 && rp[0] !== "" && rp[1] !== "";
+  const hasRp = Array.isArray(rp) && rp[0] !== "" && rp[1] !== "";
 
   return (state: StateInline, silent: boolean): boolean => {
     if (silent) return false;
@@ -42,7 +42,7 @@ function makeRule(rp: [string, string] | undefined) {
 
     if (baseText.length === 0 || rubyText.length === 0) return false;
 
-    const pushInline = (content: string) => {
+    const pushInline = (content: string): void => {
       const tokens: Token[] = [];
       state.md.inline.parse(content, state.md, state.env, tokens);
       for (const t of tokens) state.tokens.push(t);
@@ -51,11 +51,11 @@ function makeRule(rp: [string, string] | undefined) {
     state.push("ruby_open", "ruby", 1).markup = "{";
 
     pushInline(baseText);
-    if (hasRp) state.push("rp_open", "rp", 0).content = rp![0]!;
+    if (hasRp) state.push("rp_open", "rp", 0).content = rp[0]!;
     state.push("rt_open", "rt", 1);
     pushInline(rubyText);
     state.push("rt_close", "rt", -1);
-    if (hasRp) state.push("rp_close", "rp", 0).content = rp![1]!;
+    if (hasRp) state.push("rp_close", "rp", 0).content = rp[1]!;
 
     state.push("ruby_close", "ruby", -1).markup = "}";
 
@@ -66,11 +66,13 @@ function makeRule(rp: [string, string] | undefined) {
 
 export const ruby = (md: MarkdownIt, options: RubyOptions = {}): void => {
   const { rp } = options;
-  const hasRp = Array.isArray(rp) && rp.length === 2 && rp[0] !== "" && rp[1] !== "";
+  const hasRp = Array.isArray(rp) && rp[0] !== "" && rp[1] !== "";
 
   if (hasRp) {
-    md.renderer.rules["rp_open"] = (tokens, idx) => `<rp>${tokens[idx]!.content}</rp>`;
-    md.renderer.rules["rp_close"] = (tokens, idx) => `<rp>${tokens[idx]!.content}</rp>`;
+    md.renderer.rules["rp_open"] = (tokens, idx): string =>
+      `<rp>${tokens[idx].content}</rp>`;
+    md.renderer.rules["rp_close"] = (tokens, idx): string =>
+      `<rp>${tokens[idx].content}</rp>`;
   }
 
   md.inline.ruler.before("text", "ruby", makeRule(rp));

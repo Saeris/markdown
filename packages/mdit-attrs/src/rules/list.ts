@@ -17,33 +17,33 @@ export const createListRules = (options: DelimiterConfig): AttrRule[] => {
           {
             index: -1,
             type: (t: string) => t !== "code_inline",
-            content: (content: string) => check(content.trim(), "end") !== null,
-          },
-        ],
+            content: (content: string) => check(content.trim(), "end") !== null
+          }
+        ]
       },
       {
         shift: -1,
-        type: "paragraph_open",
+        type: "paragraph_open"
       },
       {
         shift: -2,
-        type: "list_item_open",
-      },
+        type: "list_item_open"
+      }
     ],
     transform(tokens, index) {
-      const inline = tokens[index]!;
+      const inline = tokens[index];
       const children = inline.children!;
-      const lastChild = children[children.length - 1]!;
+      const lastChild = children[children.length - 1];
       const content = lastChild.content.trimEnd();
       const range = check(content, "end")!;
 
-      const listItemOpen = tokens[index - 2]!;
+      const listItemOpen = tokens[index - 2];
       addAttrs(listItemOpen, content, range, options.allowed);
 
       const attrStart = content.lastIndexOf(options.left, range[0] - 1);
       lastChild.content = content.slice(0, attrStart).trimEnd();
       if (lastChild.content === "" && children.length > 1) children.pop();
-    },
+    }
   };
 
   // Rule 1b (generic): attrs at end of a custom item title inline
@@ -60,33 +60,33 @@ export const createListRules = (options: DelimiterConfig): AttrRule[] => {
           {
             index: -1,
             type: (t: string) => t !== "code_inline",
-            content: (content: string) => check(content.trim(), "end") !== null,
-          },
-        ],
+            content: (content: string) => check(content.trim(), "end") !== null
+          }
+        ]
       },
       {
         shift: -1,
-        meta: (m) => m?.attrsItemTitle === true,
+        meta: (m) => m?.attrsItemTitle === true
       },
       {
         shift: -2,
-        meta: (m) => m?.attrsRole === "containerItem",
-      },
+        meta: (m) => m?.attrsRole === "containerItem"
+      }
     ],
     transform(tokens, index) {
-      const inline = tokens[index]!;
+      const inline = tokens[index];
       const children = inline.children!;
-      const lastChild = children[children.length - 1]!;
+      const lastChild = children[children.length - 1];
       const content = lastChild.content.trimEnd();
       const range = check(content, "end")!;
 
-      const itemOpen = tokens[index - 2]!;
+      const itemOpen = tokens[index - 2];
       addAttrs(itemOpen, content, range, options.allowed);
 
       const attrStart = content.lastIndexOf(options.left, range[0] - 1);
       lastChild.content = content.slice(0, attrStart).trimEnd();
       if (lastChild.content === "" && children.length > 1) children.pop();
-    },
+    }
   };
 
   // Rule 1c (direct): attrs at end of a custom item inline where the open token
@@ -102,29 +102,30 @@ export const createListRules = (options: DelimiterConfig): AttrRule[] => {
           {
             index: -1,
             type: (t: string) => t !== "code_inline",
-            content: (content: string) => check(content.trim(), "end") !== null,
-          },
-        ],
+            content: (content: string) => check(content.trim(), "end") !== null
+          }
+        ]
       },
       {
         shift: -1,
-        meta: (m) => m?.attrsItemTitle === true && m?.attrsRole === "containerItem",
-      },
+        meta: (m: Record<string, unknown> | null) =>
+          m?.attrsItemTitle === true && m.attrsRole === "containerItem"
+      }
     ],
     transform(tokens, index) {
-      const inline = tokens[index]!;
+      const inline = tokens[index];
       const children = inline.children!;
-      const lastChild = children[children.length - 1]!;
+      const lastChild = children[children.length - 1];
       const content = lastChild.content.trimEnd();
       const range = check(content, "end")!;
 
-      const itemOpen = tokens[index - 1]!;
+      const itemOpen = tokens[index - 1];
       addAttrs(itemOpen, content, range, options.allowed);
 
       const attrStart = content.lastIndexOf(options.left, range[0] - 1);
       lastChild.content = content.slice(0, attrStart).trimEnd();
       if (lastChild.content === "" && children.length > 1) children.pop();
-    },
+    }
   };
 
   // Rule 2: attrs on own paragraph after bullet/ordered list close → apply to list
@@ -139,34 +140,35 @@ export const createListRules = (options: DelimiterConfig): AttrRule[] => {
           {
             index: 0,
             type: "text",
-            content: (content: string) => check(content.trim(), "only") !== null,
-          },
-        ],
+            content: (content: string) => check(content.trim(), "only") !== null
+          }
+        ]
       },
       {
         shift: -1,
-        type: "paragraph_open",
+        type: "paragraph_open"
       },
       {
         shift: -2,
-        type: (t: string) => t === "bullet_list_close" || t === "ordered_list_close",
-      },
+        type: (t: string) =>
+          t === "bullet_list_close" || t === "ordered_list_close"
+      }
     ],
     transform(tokens, index) {
-      const inline = tokens[index]!;
+      const inline = tokens[index];
       const children = inline.children!;
-      const textChild = children[0]!;
+      const textChild = children[0];
       const content = textChild.content.trim();
       const range = check(content, "only")!;
 
       // Find the matching list_open for the close token at index-2
-      const closeToken = tokens[index - 2]!;
+      const closeToken = tokens[index - 2];
       const openType = closeToken.type.replace("_close", "_open");
 
       let depth = 1;
       let listOpenIdx = -1;
       for (let i = index - 3; i >= 0; i--) {
-        const t = tokens[i]!;
+        const t = tokens[i];
         if (t.type === closeToken.type) depth++;
         else if (t.type === openType) {
           depth--;
@@ -178,11 +180,11 @@ export const createListRules = (options: DelimiterConfig): AttrRule[] => {
       }
 
       if (listOpenIdx === -1) return;
-      addAttrs(tokens[listOpenIdx]!, content, range, options.allowed);
+      addAttrs(tokens[listOpenIdx], content, range, options.allowed);
 
       // Remove paragraph_open + inline + paragraph_close
       tokens.splice(index - 1, 3);
-    },
+    }
   };
 
   // Rule 2b (generic): attrs on own paragraph after a custom container close → apply to container open
@@ -198,35 +200,35 @@ export const createListRules = (options: DelimiterConfig): AttrRule[] => {
           {
             index: 0,
             type: "text",
-            content: (content: string) => check(content.trim(), "only") !== null,
-          },
-        ],
+            content: (content: string) => check(content.trim(), "only") !== null
+          }
+        ]
       },
       {
         shift: -1,
-        type: "paragraph_open",
+        type: "paragraph_open"
       },
       {
         shift: -2,
         type: (t: string) => t.endsWith("_close"),
-        meta: (m) => m?.attrsRole === "container",
-      },
+        meta: (m) => m?.attrsRole === "container"
+      }
     ],
     transform(tokens, index) {
-      const inline = tokens[index]!;
+      const inline = tokens[index];
       const children = inline.children!;
-      const textChild = children[0]!;
+      const textChild = children[0];
       const content = textChild.content.trim();
       const range = check(content, "only")!;
 
       // Walk back to find the matching open token (same type with _open suffix)
-      const closeToken = tokens[index - 2]!;
+      const closeToken = tokens[index - 2];
       const openType = closeToken.type.replace("_close", "_open");
 
       let depth = 1;
       let listOpenIdx = -1;
       for (let i = index - 3; i >= 0; i--) {
-        const t = tokens[i]!;
+        const t = tokens[i];
         if (t.type === closeToken.type) depth++;
         else if (t.type === openType) {
           depth--;
@@ -238,12 +240,18 @@ export const createListRules = (options: DelimiterConfig): AttrRule[] => {
       }
 
       if (listOpenIdx === -1) return;
-      addAttrs(tokens[listOpenIdx]!, content, range, options.allowed);
+      addAttrs(tokens[listOpenIdx], content, range, options.allowed);
 
       // Remove paragraph_open + inline + paragraph_close
       tokens.splice(index - 1, 3);
-    },
+    }
   };
 
-  return [listItemEnd, customItemEnd, customItemEndDirect, listAttr, customListAttr];
+  return [
+    listItemEnd,
+    customItemEnd,
+    customItemEndDirect,
+    listAttr,
+    customListAttr
+  ];
 };

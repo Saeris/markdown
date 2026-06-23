@@ -216,8 +216,8 @@ export default defineConfig({
   pack: {
     entry: "src/index.ts",
     deps: { neverBundle: ["markdown-it"] },
-    dts: true,
-  },
+    dts: true
+  }
 });
 ```
 
@@ -249,8 +249,8 @@ export default defineConfig({
   pack: {
     entry: "src/index.ts",
     deps: { neverBundle: ["unified"], onlyBundle: false },
-    dts: true,
-  },
+    dts: true
+  }
 });
 ```
 
@@ -291,8 +291,8 @@ export default defineConfig({
     entry: "src/index.ts",
     deps: { neverBundle: [] }, // bundle everything
     dts: false,
-    format: "cjs", // VSCode extension host requirement
-  },
+    format: "cjs" // VSCode extension host requirement
+  }
 });
 ```
 
@@ -410,8 +410,8 @@ import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   test: {
-    include: ["**/*.test.ts"],
-  },
+    include: ["**/*.test.ts"]
+  }
 });
 ```
 

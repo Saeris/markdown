@@ -1,7 +1,7 @@
 import type MDit from "markdown-it";
 import type {
   default as StateInline,
-  Delimiter,
+  Delimiter
 } from "markdown-it/lib/rules_inline/state_inline.mjs";
 import type Token from "markdown-it/lib/token.mjs";
 
@@ -47,7 +47,7 @@ export function del(md: MDit): void {
         token: state.tokens.length - 1,
         end: -1,
         open: scanned.can_open,
-        close: scanned.can_close,
+        close: scanned.can_close
       });
     }
 

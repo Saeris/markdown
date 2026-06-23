@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { expect, test } from "vite-plus/test";
+import { describe, expect, it } from "vite-plus/test";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
@@ -23,10 +23,12 @@ const process = (src: string) =>
         .use(remarkTabs)
         .use(remarkRehype, { handlers: tabsHastHandlers as never })
         .use(rehypeStringify, { allowDangerousHtml: true })
-        .processSync(src),
-    ),
+        .processSync(src)
+    )
   );
 
-test.each(cases)("tabs (remark): $name", ({ input }) => {
-  expect(process(input)).toMatchSnapshot();
+describe("tabs/remd", () => {
+  it.each(cases)("tabs (remark): $name", ({ input }) => {
+    expect(process(input)).toMatchSnapshot();
+  });
 });

@@ -47,5 +47,6 @@ export const rehypeUnwrapImages: Plugin<[], Root> = () => (tree) => {
       parent.children.splice(index, 1, ...node.children);
       return [SKIP, index];
     }
+    return;
   });
 };

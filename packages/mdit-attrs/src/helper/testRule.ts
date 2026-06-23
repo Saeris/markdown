@@ -1,3 +1,5 @@
+// Token.meta is typed `any` by markdown-it; casts bridge to our richer rule-test predicates.
+/* oxlint-disable typescript/no-unsafe-type-assertion */
 import type Token from "markdown-it/lib/token.mjs";
 import type { DelimiterRange } from "../types.js";
 import type { DelimiterChecker } from "./getDelimiterChecker.js";
@@ -32,27 +34,32 @@ export interface TestResult {
 }
 
 const matches = (test: unknown, actual: unknown): boolean => {
-  if (typeof test === "function") return (test as (v: unknown) => boolean)(actual);
+  if (typeof test === "function")
+    return (test as (v: unknown) => boolean)(actual);
   return test === actual;
 };
 
 const testChild = (
   child: Token,
-  childTest: Omit<RuleTest, "shift" | "position">,
+  childTest: Omit<RuleTest, "shift" | "position">
 ): { match: boolean; range: DelimiterRange | null } => {
   let range: DelimiterRange | null = null;
 
   if (childTest.type !== undefined && !matches(childTest.type, child.type)) {
     return { match: false, range: null };
   }
-  if (childTest.nesting !== undefined && !matches(childTest.nesting, child.nesting)) {
+  if (
+    childTest.nesting !== undefined &&
+    !matches(childTest.nesting, child.nesting)
+  ) {
     return { match: false, range: null };
   }
   if (childTest.tag !== undefined && child.tag !== childTest.tag) {
     return { match: false, range: null };
   }
   if (childTest.content !== undefined) {
-    if (!matches(childTest.content, child.content)) return { match: false, range: null };
+    if (!matches(childTest.content, child.content))
+      return { match: false, range: null };
   }
   if (childTest.attrChecker) {
     range = childTest.attrChecker(child.content, childTest.attrPos ?? "only");
@@ -62,15 +69,21 @@ const testChild = (
   return { match: true, range };
 };
 
-export const testRule = (tokens: Token[], index: number, test: RuleTest): TestResult => {
+export const testRule = (
+  tokens: Token[],
+  index: number,
+  test: RuleTest
+): TestResult => {
   let tokenIndex: number;
   if (test.position !== undefined) {
-    tokenIndex = test.position < 0 ? tokens.length + test.position : test.position;
+    tokenIndex =
+      test.position < 0 ? tokens.length + test.position : test.position;
   } else {
     tokenIndex = index + (test.shift ?? 0);
   }
 
   const token = tokens[tokenIndex];
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
   if (!token) return { match: false, position: null, range: null };
 
   let range: DelimiterRange | null = null;
@@ -110,6 +123,7 @@ export const testRule = (tokens: Token[], index: number, test: RuleTest): TestRe
 
       if (idx >= 0) {
         const child = children[idx];
+        // oxlint-disable-next-line typescript/no-unnecessary-condition
         if (!child) return { match: false, position: null, range: null };
         const result = testChild(child, childTest);
         if (!result.match) return { match: false, position: null, range: null };

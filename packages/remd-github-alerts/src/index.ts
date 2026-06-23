@@ -1,3 +1,9 @@
+// AlertType cast and the AlertNode subtype bridging across the
+// remark visitor and rehype hast handler require casts the public
+// mdast types cannot carry through. Defensive optional chains on
+// array[i] accesses are also kept (noUncheckedIndexedAccess off).
+/* oxlint-disable typescript/no-unsafe-type-assertion */
+/* oxlint-disable typescript/no-unnecessary-condition */
 import { visit } from "unist-util-visit";
 import type { Plugin } from "unified";
 import type { Root, Blockquote } from "mdast";
@@ -13,7 +19,8 @@ export { ALERT_ALIASES, DEFAULT_TITLE, ICONS };
 // Groups: 1=type keyword, 2=foldable marker (+/-), 3=custom title
 const ALERT_RE = /^\[!([^\]]+)\]([+-])?\s*(.*)?$/s;
 
-const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const capitalize = (s: string): string =>
+  s.charAt(0).toUpperCase() + s.slice(1);
 
 interface AlertData {
   hName: string;
@@ -27,25 +34,32 @@ interface AlertData {
 
 type AlertNode = Blockquote & { data: AlertData };
 
-export const remarkGithubAlerts: Plugin<[AlertOptions?], Root> = (options = {}) => {
+export const remarkGithubAlerts: Plugin<[AlertOptions?], Root> = (
+  options = {}
+) => {
   const {
     types: extraTypes = {},
     titles: customTitles = {},
     matchCaseInsensitive = true,
     icons: showIcons = true,
-    containerClass = "markdown-alert",
+    containerClass = "markdown-alert"
   } = options;
 
   const aliasMap: Record<string, string> = { ...ALERT_ALIASES, ...extraTypes };
-  const titles = customTitles as Record<string, string>;
+  const titles: Partial<Record<AlertType, string>> = customTitles;
 
-  const resolve = (keyword: string) =>
+  const resolve = (keyword: string): string | undefined =>
     aliasMap[matchCaseInsensitive ? keyword.toLowerCase() : keyword];
 
-  const titleFor = (type: string) =>
-    titles[type] ?? DEFAULT_TITLE[type as AlertType] ?? capitalize(type);
+  // `type` may be a user-defined alert type from `options.types` that
+  // isn't in DEFAULT_TITLE; capitalize the keyword as a last resort.
+  const titleFor = (type: string): string =>
+    titles[type as AlertType] ??
+    DEFAULT_TITLE[type as AlertType] ??
+    capitalize(type);
 
-  const iconFor = (type: string) => (showIcons ? (ICONS[type as AlertType] ?? "") : "");
+  const iconFor = (type: string): string =>
+    showIcons ? ICONS[type as AlertType] : "";
 
   return (tree) => {
     visit(tree, "blockquote", (node: Blockquote) => {
@@ -55,12 +69,12 @@ export const remarkGithubAlerts: Plugin<[AlertOptions?], Root> = (options = {}) 
       const firstText = firstChild.children[0];
       if (firstText?.type !== "text") return;
 
-      const firstLine = firstText.value.split("\n")[0]!;
+      const firstLine = firstText.value.split("\n")[0];
       const match = ALERT_RE.exec(firstLine.trim());
       if (!match) return;
 
       const [, keyword, foldMarker, customTitle] = match;
-      const type = resolve(keyword!);
+      const type = resolve(keyword);
       if (!type) return;
 
       const isFoldable = foldMarker === "+" || foldMarker === "-";
@@ -79,13 +93,13 @@ export const remarkGithubAlerts: Plugin<[AlertOptions?], Root> = (options = {}) 
         hProperties: {
           class: containerClass,
           "data-alert": type,
-          ...(foldMarker === "+" ? { open: true } : {}),
+          ...(foldMarker === "+" ? { open: true } : {})
         },
         alertType: type,
         alertTitle: title,
         alertFoldable: isFoldable,
         alertIcon: iconFor(type),
-        attrsRole: "container",
+        attrsRole: "container"
       };
     });
   };
@@ -99,7 +113,7 @@ const svgToHast = (svgString: string): Element | null => {
     type: "element",
     tagName: "span",
     properties: { "aria-hidden": true },
-    children: [{ type: "raw", value: svgString } as unknown as ElementContent],
+    children: [{ type: "raw", value: svgString } as unknown as ElementContent]
   };
 };
 
@@ -107,14 +121,17 @@ const buildTitleElement = (
   tag: "p" | "summary",
   alertTitle: string,
   alertIcon: string,
-  containerClass: string,
+  containerClass: string
 ): Element => {
   const icon = svgToHast(alertIcon);
   return {
     type: "element",
     tagName: tag,
     properties: { class: `${containerClass}-title`, "aria-label": alertTitle },
-    children: [...(icon ? [icon] : []), { type: "text", value: alertTitle }] as ElementContent[],
+    children: [
+      ...(icon ? [icon] : []),
+      { type: "text", value: alertTitle }
+    ] as ElementContent[]
   };
 };
 
@@ -122,7 +139,7 @@ const nl: ElementContent = { type: "text", value: "\n" };
 
 export const githubAlertsHastHandlers = {
   blockquote(state: State, node: Blockquote): ElementContent {
-    const data = (node as AlertNode).data;
+    const data = (node as Partial<AlertNode>).data;
 
     // Non-alert blockquotes fall through to the default handler
     if (!data?.alertType) {
@@ -130,24 +147,37 @@ export const githubAlertsHastHandlers = {
         type: "element",
         tagName: "blockquote",
         properties: {},
-        children: state.all(node),
+        children: state.all(node)
       };
       state.patch(node, result);
       return result;
     }
 
-    const containerClass = (data.hProperties.class as string) ?? "markdown-alert";
+    const containerClass =
+      typeof data.hProperties.class === "string"
+        ? data.hProperties.class
+        : "markdown-alert";
     const titleTag = data.alertFoldable ? "summary" : "p";
-    const titleEl = buildTitleElement(titleTag, data.alertTitle, data.alertIcon, containerClass);
+    const titleEl = buildTitleElement(
+      titleTag,
+      data.alertTitle,
+      data.alertIcon,
+      containerClass
+    );
     const bodyChildren = state.all(node);
 
     const result: Element = {
       type: "element",
       tagName: data.hName,
       properties: data.hProperties,
-      children: [nl, titleEl, ...bodyChildren.flatMap((child) => [nl, child]), nl],
+      children: [
+        nl,
+        titleEl,
+        ...bodyChildren.flatMap((child) => [nl, child]),
+        nl
+      ]
     };
     state.patch(node, result);
     return result;
-  },
+  }
 } as const;

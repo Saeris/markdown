@@ -14,10 +14,11 @@ export interface ParsedTabHeader {
 export const parseTabHeader = (line: string): ParsedTabHeader | null => {
   const m = TAB_HEADER_RE.exec(line);
   if (!m) return null;
-  return { depth: m[1]!.length, open: m[2] === "+", label: m[3]! };
+  return { depth: m[1].length, open: m[2] === "+", label: m[3] };
 };
 
-export const stripContinuation = (line: string): string => line.replace(CONTINUATION_RE, "");
+export const stripContinuation = (line: string): string =>
+  line.replace(CONTINUATION_RE, "");
 
 // djb2 hash — returns an unsigned 32-bit integer
 const djb2 = (str: string): number => {
@@ -30,7 +31,8 @@ const djb2 = (str: string): number => {
 
 // Strip a trailing attrs block like {.class #id} from plain label text.
 // Tabs strips this before setting aria-label so attrs-consumed markers don't leak.
-export const stripAttrs = (text: string): string => text.replace(/\s*\{[^}]*\}\s*$/, "").trimEnd();
+export const stripAttrs = (text: string): string =>
+  text.replace(/\s*\{[^}]*\}\s*$/, "").trimEnd();
 
 export const slugify = (text: string): string =>
   text

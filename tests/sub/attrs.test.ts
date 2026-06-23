@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vite-plus/test";
+import { expect, it, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -23,30 +23,34 @@ const remd = (src: string) =>
         .use(remarkAttrs)
         .use(remarkRehype)
         .use(rehypeStringify)
-        .processSync(src),
-    ),
+        .processSync(src)
+    )
   );
 
 describe("sub + attrs: sub inline with block attr on paragraph", () => {
   const input = "H~2~O molecule. {.chemical}";
   const expected = '<p class="chemical">H<sub>2</sub>O molecule.</p>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });
 
 describe("sub + attrs: sub with heading attrs", () => {
   const input = "## Formulas {.formulas}\n\nH~2~O";
   const expected = '<h2 class="formulas">Formulas</h2><p>H<sub>2</sub>O</p>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });
 
 describe("sub + attrs: sub and block attrs coexist", () => {
   const input = "Water is H~2~O and CO~2~. {.chemistry}";
-  const expected = '<p class="chemistry">Water is H<sub>2</sub>O and CO<sub>2</sub>.</p>';
+  const expected =
+    '<p class="chemistry">Water is H<sub>2</sub>O and CO<sub>2</sub>.</p>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });

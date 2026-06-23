@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vite-plus/test";
+import { expect, it, describe } from "vite-plus/test";
 import MarkdownIt from "markdown-it";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -23,38 +23,44 @@ const remd = (src: string) =>
         .use(remarkAttrs)
         .use(remarkRehype)
         .use(rehypeStringify)
-        .processSync(src),
-    ),
+        .processSync(src)
+    )
   );
 
 describe("mark + attrs: mark inline with class attr", () => {
   const input = "==highlighted=={.highlight}";
   const expected = '<p><mark class="highlight">highlighted</mark></p>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });
 
 describe("mark + attrs: mark inline with id attr", () => {
   const input = "==important=={#key-point}";
   const expected = '<p><mark id="key-point">important</mark></p>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });
 
 describe("mark + attrs: mark with heading attrs", () => {
   const input = "## Key Terms {.terms}\n\n==highlighted== text.";
-  const expected = '<h2 class="terms">Key Terms</h2><p><mark>highlighted</mark> text.</p>';
+  const expected =
+    '<h2 class="terms">Key Terms</h2><p><mark>highlighted</mark> text.</p>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });
 
 describe("mark + attrs: mark and block attrs coexist", () => {
   const input = "See ==important== note here. {.callout}";
-  const expected = '<p class="callout">See <mark>important</mark> note here.</p>';
+  const expected =
+    '<p class="callout">See <mark>important</mark> note here.</p>';
 
-  test("markdown-it", () => expect(normalizeHtml(md.render(input))).toBe(expected));
-  test("remark", () => expect(remd(input)).toBe(expected));
+  it("markdown-it", () =>
+    expect(normalizeHtml(md.render(input))).toBe(expected));
+  it("remark", () => expect(remd(input)).toBe(expected));
 });

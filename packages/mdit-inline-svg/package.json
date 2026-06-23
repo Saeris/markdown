@@ -10,16 +10,17 @@
   "type": "module",
   "exports": {
     ".": {
+      "development": "./src/index.ts",
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     }
   },
   "dependencies": {
-    "svgo": "^4.0.1"
+    "svgo": "catalog:"
   },
   "devDependencies": {
-    "@types/markdown-it": "^14.1.2",
-    "markdown-it": "^14.1.1"
+    "@types/markdown-it": "catalog:",
+    "markdown-it": "catalog:"
   },
   "peerDependencies": {
     "markdown-it": "^14.0.0"

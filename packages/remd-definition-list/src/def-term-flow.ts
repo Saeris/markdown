@@ -1,3 +1,7 @@
+// Token surgery against micromark's Event/Token structures; the internal
+// types it exposes deliberately preserve flexibility that this file
+// narrows by cast.
+/* oxlint-disable typescript/no-unsafe-type-assertion */
 import { splice } from "micromark-util-chunked";
 import type { Event, Token, TokenizeContext } from "micromark-util-types";
 import { tokenTypes, clonePoint } from "./types.js";
@@ -36,14 +40,18 @@ export function analyzeDefTermFlow(flowToken: FlowToken): {
     }
   }
 
-  if (paraEnterIndex != null && paraExitIndex != null && paraStartOffset != null) {
+  if (
+    paraEnterIndex != null &&
+    paraExitIndex != null &&
+    paraStartOffset != null
+  ) {
     return {
       flowEvents,
       paragraph: {
         enterIndex: paraEnterIndex,
         exitIndex: paraExitIndex,
-        startOffset: paraStartOffset,
-      },
+        startOffset: paraStartOffset
+      }
     };
   }
   return { flowEvents };
@@ -76,6 +84,7 @@ function getSubtokensForDefTerm(termFlowToken: FlowToken): {
       continue;
     }
 
+    // oxlint-disable-next-line typescript/switch-exhaustiveness-check
     switch (tmpToken.type) {
       case "paragraph":
         if (pEnterIndex == null && tmpEvent[0] === "enter") pEnterIndex = i;
@@ -99,17 +108,23 @@ function getSubtokensForDefTerm(termFlowToken: FlowToken): {
               chunkToken.previous.next = undefined;
               chunkToken.previous = undefined;
             }
-            if (chunkToken.next && termFlowToken.end.offset < chunkToken.next.end.offset) {
+            if (
+              chunkToken.next &&
+              termFlowToken.end.offset < chunkToken.next.end.offset
+            ) {
               chunkToken.next.previous = undefined;
               chunkToken.next = undefined;
             }
           }
-          if (pEnterIndex == null && pExitIndex == null) trailingChildEvents.unshift(tmpEvent);
-          else if (pEnterIndex == null && pExitIndex != null) termChildEvents.unshift(tmpEvent);
+          if (pEnterIndex == null && pExitIndex == null)
+            trailingChildEvents.unshift(tmpEvent);
+          else if (pEnterIndex == null && pExitIndex != null)
+            termChildEvents.unshift(tmpEvent);
           else leadingChildEvents.unshift(tmpEvent);
           removedEventIndexes.push(i);
         } else {
-          if (pEnterIndex == null && pExitIndex != null) paragraphEvents.unshift(tmpEvent);
+          if (pEnterIndex == null && pExitIndex != null)
+            paragraphEvents.unshift(tmpEvent);
           if (contentEnterIndex == null && contentExitIndex != null)
             contentEvents.unshift(tmpEvent);
         }
@@ -121,7 +136,7 @@ function getSubtokensForDefTerm(termFlowToken: FlowToken): {
   if (pExitIndex != null) {
     if (paragraphEvents.length >= 1) {
       flowEvents[pExitIndex][1].end = clonePoint(
-        paragraphEvents[paragraphEvents.length - 1][1].end,
+        paragraphEvents[paragraphEvents.length - 1][1].end
       );
     } else if (pEnterIndex != null) {
       removedEventIndexes.push(pEnterIndex, pExitIndex);
@@ -131,7 +146,7 @@ function getSubtokensForDefTerm(termFlowToken: FlowToken): {
   if (contentExitIndex != null) {
     if (contentEvents.length >= 1) {
       flowEvents[contentExitIndex][1].end = clonePoint(
-        contentEvents[contentEvents.length - 1][1].end,
+        contentEvents[contentEvents.length - 1][1].end
       );
     } else if (contentEnterIndex != null) {
       removedEventIndexes.push(contentEnterIndex, contentExitIndex);
@@ -139,7 +154,7 @@ function getSubtokensForDefTerm(termFlowToken: FlowToken): {
   }
 
   // splice in descending order so earlier indices stay valid
-  const descending = (a: number, b: number) => b - a;
+  const descending = (a: number, b: number): number => b - a;
   removedEventIndexes.sort(descending);
   for (const i of removedEventIndexes) {
     splice(flowEvents as Event[], i, 1, []);
@@ -151,7 +166,7 @@ function getSubtokensForDefTerm(termFlowToken: FlowToken): {
 export function subtokenizeDefTerm(
   events: EventTuple[],
   flowEnterIndex: number,
-  flowExitIndex: number | undefined,
+  flowExitIndex: number | undefined
 ): EventTuple[] {
   const termFlowToken = events[flowEnterIndex][1] as FlowToken;
 
@@ -169,7 +184,7 @@ export function subtokenizeDefTerm(
     const termToken: Token = {
       type: tokenTypes.defListTerm,
       start: clonePoint(termFlowToken.start),
-      end: clonePoint(termFlowToken.end),
+      end: clonePoint(termFlowToken.end)
     };
     childEvents.push(["enter", termToken, context]);
     childEvents.push(...subtokens.leadingChildEvents);

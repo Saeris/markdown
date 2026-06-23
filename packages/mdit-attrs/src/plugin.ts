@@ -1,12 +1,11 @@
 import type { PluginWithOptions } from "markdown-it";
-import type { AttrsOptions } from "./types.js";
+import type { AttrsOptions, DelimiterRange } from "./types.js";
 import { createRules } from "./rules/index.js";
 import { testRule } from "./helper/index.js";
-import type { DelimiterRange } from "./types.js";
 
 export const attrs: PluginWithOptions<AttrsOptions> = (
   md,
-  { left = "{", right = "}", allowed = [], rule = "all" } = {},
+  { left = "{", right = "}", allowed = [], rule = "all" } = {}
 ) => {
   const rules = createRules({ left, right, allowed, rule });
 
@@ -15,7 +14,7 @@ export const attrs: PluginWithOptions<AttrsOptions> = (
 
     for (let index = 0; index < tokens.length; index++) {
       for (let ruleIndex = 0; ruleIndex < rules.length; ruleIndex++) {
-        const pattern = rules[ruleIndex]!;
+        const pattern = rules[ruleIndex];
         let position: number | null = null;
         let range: DelimiterRange | null = null;
 
@@ -31,7 +30,8 @@ export const attrs: PluginWithOptions<AttrsOptions> = (
 
           if (
             modified !== false &&
-            (pattern.name === "inline attributes" || pattern.name === "inline nesting self-close")
+            (pattern.name === "inline attributes" ||
+              pattern.name === "inline nesting self-close")
           ) {
             ruleIndex--;
           }

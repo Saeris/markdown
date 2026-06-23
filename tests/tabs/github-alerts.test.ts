@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vite-plus/test";
+import { expect, it, describe } from "vite-plus/test";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
@@ -7,7 +7,7 @@ import rehypeStringify from "rehype-stringify";
 import { remarkTabs, tabsHastHandlers } from "../../packages/remd-tabs/src";
 import {
   remarkGithubAlerts,
-  githubAlertsHastHandlers,
+  githubAlertsHastHandlers
 } from "../../packages/remd-github-alerts/src";
 import { normalizeHtml } from "../utils/index.js";
 
@@ -20,11 +20,14 @@ const remd = (src: string) =>
         .use(remarkGithubAlerts)
         .use(remarkTabs)
         .use(remarkRehype, {
-          handlers: { ...githubAlertsHastHandlers, ...tabsHastHandlers } as never,
+          handlers: {
+            ...githubAlertsHastHandlers,
+            ...tabsHastHandlers
+          } as never
         })
         .use(rehypeStringify, { allowDangerousHtml: true })
-        .processSync(src),
-    ),
+        .processSync(src)
+    )
   );
 
 // A blank `>` line before `% Code` is required to prevent lazy continuation
@@ -62,20 +65,20 @@ const allAlertsInput = `% Demo
 > \`\`\`\``;
 
 describe("tabs + github-alerts: alert inside tab body renders as alert", () => {
-  test("remark: produces two tab labels", () => {
+  it("remark: produces two tab labels", () => {
     const result = remd(singleAlertInput);
     expect(result).toContain('class="markdown-tabs"');
     expect(result).toContain('aria-label="Demo"');
     expect(result).toContain('aria-label="Code"');
   });
 
-  test("remark: alert inside Demo tab renders with correct class", () => {
+  it("remark: alert inside Demo tab renders with correct class", () => {
     const result = remd(singleAlertInput);
     expect(result).toContain('data-alert="note"');
     expect(result).toContain("markdown-alert");
   });
 
-  test("remark: Code tab renders a code fence, not an alert", () => {
+  it("remark: Code tab renders a code fence, not an alert", () => {
     const result = remd(singleAlertInput);
     expect(result).toContain("<code");
     expect(result).toContain("[!NOTE]");
@@ -83,7 +86,7 @@ describe("tabs + github-alerts: alert inside tab body renders as alert", () => {
     expect(result).not.toContain("% Code</p>");
   });
 
-  test("remark: % Code is not absorbed into the alert body", () => {
+  it("remark: % Code is not absorbed into the alert body", () => {
     const result = remd(singleAlertInput);
     // Without the blank `>` separator, `% Code` ends up inside the alert paragraph
     expect(result).not.toContain("% Code</p>");
@@ -92,7 +95,7 @@ describe("tabs + github-alerts: alert inside tab body renders as alert", () => {
 });
 
 describe("tabs + github-alerts: all five alert types inside tab body", () => {
-  test("remark: all alert types render correctly inside Demo tab", () => {
+  it("remark: all alert types render correctly inside Demo tab", () => {
     const result = remd(allAlertsInput);
     expect(result).toContain('data-alert="note"');
     expect(result).toContain('data-alert="tip"');
@@ -101,7 +104,7 @@ describe("tabs + github-alerts: all five alert types inside tab body", () => {
     expect(result).toContain('data-alert="caution"');
   });
 
-  test("remark: Code tab contains a code fence", () => {
+  it("remark: Code tab contains a code fence", () => {
     const result = remd(allAlertsInput);
     expect(result).toContain("<code");
     expect(result).toContain("[!NOTE]");
@@ -117,7 +120,7 @@ describe("tabs + github-alerts: alert alongside tabs does not break tab structur
 % Tab Two
 > Content for tab two.`;
 
-  test("remark: standalone alert and tabs both render", () => {
+  it("remark: standalone alert and tabs both render", () => {
     const result = remd(input);
     expect(result).toContain('data-alert="note"');
     expect(result).toContain('class="markdown-tabs"');
@@ -140,7 +143,7 @@ describe("tabs + github-alerts: foldable alert inside tab body", () => {
 > > This tip is open by default.
 > \`\`\`\``;
 
-  test("remark: foldable alerts render as details elements inside tab body", () => {
+  it("remark: foldable alerts render as details elements inside tab body", () => {
     const result = remd(input);
     expect(result).toContain('data-alert="tip"');
     expect(result).toContain('data-alert="warning"');
@@ -159,7 +162,7 @@ describe("tabs + github-alerts: custom title alert inside tab body", () => {
 > > This alert uses a custom title.
 > \`\`\`\``;
 
-  test("remark: custom title renders in alert", () => {
+  it("remark: custom title renders in alert", () => {
     const result = remd(input);
     expect(result).toContain('data-alert="note"');
     expect(result).toContain("Custom Title");

@@ -11,18 +11,19 @@
   "type": "module",
   "exports": {
     ".": {
+      "development": "./src/index.ts",
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     },
     "./*.css": "./dist/*.css"
   },
   "dependencies": {
-    "unist-util-visit": "^5.1.0"
+    "unist-util-visit": "catalog:"
   },
   "devDependencies": {
-    "@types/hast": "^3.0.4",
-    "@types/mdast": "^4.0.4",
-    "unified": "^11.0.5"
+    "@types/hast": "catalog:",
+    "@types/mdast": "catalog:",
+    "unified": "catalog:"
   },
   "peerDependencies": {
     "unified": "^11.0.0"

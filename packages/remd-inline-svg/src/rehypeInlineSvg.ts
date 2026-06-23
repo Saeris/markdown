@@ -4,7 +4,11 @@ import type { Node, Parent } from "unist";
 import type { Root } from "hast";
 import type { VFile } from "vfile";
 import { SvgCache } from "./cache.js";
-import { type GroupedImageNodes, type ImageNode, isImageNode } from "./image-node.js";
+import {
+  type GroupedImageNodes,
+  type ImageNode,
+  isImageNode
+} from "./image-node.js";
 import { imgToSVG } from "./img-to-svg.js";
 import { applyDefaults, type Options } from "./options.js";
 
@@ -22,7 +26,7 @@ const findSvgNodes = (node: Node | Parent): ImageNode[] => {
   }
 
   if (`children` in node) {
-    for (const child of (node as Parent).children) {
+    for (const child of node.children) {
       imgNodes.push(...findSvgNodes(child));
     }
   }
@@ -30,11 +34,17 @@ const findSvgNodes = (node: Node | Parent): ImageNode[] => {
   return imgNodes;
 };
 
-const groupSvgNodes = (imgNodes: ImageNode[], htmlFile: VFile): GroupedImageNodes => {
+const groupSvgNodes = (
+  imgNodes: ImageNode[],
+  htmlFile: VFile
+): GroupedImageNodes => {
   const groupedNodes: GroupedImageNodes = new Map();
 
   for (const imgNode of imgNodes) {
-    const imagePath = resolve(htmlFile.dirname!, decodeURI(imgNode.properties.src));
+    const imagePath = resolve(
+      htmlFile.dirname!,
+      decodeURI(imgNode.properties.src)
+    );
     const group = groupedNodes.get(imagePath);
     if (!group) {
       groupedNodes.set(imagePath, [imgNode]);
@@ -49,7 +59,7 @@ const groupSvgNodes = (imgNodes: ImageNode[], htmlFile: VFile): GroupedImageNode
 const filterSvgNodes = (
   groupedNodes: GroupedImageNodes,
   svgCache: SvgCache,
-  options: Options,
+  options: Options
 ): GroupedImageNodes => {
   const filteredNodes: GroupedImageNodes = new Map();
 
@@ -68,7 +78,9 @@ const filterSvgNodes = (
   return filteredNodes;
 };
 
-export const rehypeInlineSvg = (config?: Partial<Options>): Transformer<Root, Root> => {
+export const rehypeInlineSvg = (
+  config?: Partial<Options>
+): Transformer<Root, Root> => {
   const options = applyDefaults(config);
   const svgCache = new SvgCache();
   let hits = 0,
@@ -76,7 +88,9 @@ export const rehypeInlineSvg = (config?: Partial<Options>): Transformer<Root, Ro
 
   return async (tree: Root, file: VFile): Promise<Root> => {
     if (!file.path) {
-      throw new Error(`Cannot inline SVG images because the path of the HTML file is unknown`);
+      throw new Error(
+        `Cannot inline SVG images because the path of the HTML file is unknown`
+      );
     }
 
     const imgNodes = findSvgNodes(tree);

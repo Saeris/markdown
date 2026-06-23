@@ -1,5 +1,8 @@
 // Forked and modified from https://github.com/fabon-f/remark-denden-ruby
 
+// Tokenizer + fromMarkdown handlers + mdast post-processing all live here;
+// bridging the three layers requires casts the per-layer types can't infer.
+/* oxlint-disable typescript/no-unsafe-type-assertion */
 import { visit } from "unist-util-visit";
 import { fromMarkdown } from "mdast-util-from-markdown";
 import { markdownLineEnding } from "micromark-util-character";
@@ -12,7 +15,7 @@ import type {
   State,
   Effects,
   Code,
-  TokenizeContext,
+  TokenizeContext
 } from "micromark-util-types";
 import type { Extension as FromMarkdownExtension } from "mdast-util-from-markdown";
 
@@ -59,7 +62,7 @@ interface Rt {
 
 interface Ruby {
   type: "ruby";
-  children: (PhrasingContent | Rt | Rp)[];
+  children: Array<PhrasingContent | Rt | Rp>;
   data: RubyData;
 }
 
@@ -75,7 +78,12 @@ declare module "mdast" {
 
 // ---- Micromark extension ----
 
-function tokenizeRuby(this: TokenizeContext, effects: Effects, ok: State, nok: State): State {
+function tokenizeRuby(
+  this: TokenizeContext,
+  effects: Effects,
+  ok: State,
+  nok: State
+): State {
   return start;
 
   function start(code: Code): State | undefined {
@@ -88,7 +96,12 @@ function tokenizeRuby(this: TokenizeContext, effects: Effects, ok: State, nok: S
   }
 
   function beforeBase(code: Code): State | undefined {
-    if (code === null || markdownLineEnding(code) || code === 124 /* | */ || code === 125 /* } */) {
+    if (
+      code === null ||
+      markdownLineEnding(code) ||
+      code === 124 /* | */ ||
+      code === 125 /* } */
+    ) {
       return nok(code);
     }
     effects.enter("rubyBaseData");
@@ -136,11 +149,11 @@ function tokenizeRuby(this: TokenizeContext, effects: Effects, ok: State, nok: S
 
 const rubyConstruct: Construct = {
   name: "ruby",
-  tokenize: tokenizeRuby,
+  tokenize: tokenizeRuby
 };
 
 const rubyMicromarkExtension: MicromarkExtension = {
-  text: { 123: rubyConstruct },
+  text: { 123: rubyConstruct }
 };
 
 // ---- fromMarkdown extension ----
@@ -156,35 +169,41 @@ const rubyFromMarkdownExtension: FromMarkdownExtension = {
         {
           type: "ruby",
           children: [],
-          data: { hName: "ruby", rawBase: "", rawReading: "" },
+          data: { hName: "ruby", rawBase: "", rawReading: "" }
         } as unknown as Nodes,
-        token,
+        token
       );
-    },
+    }
   },
   exit: {
     rubyBaseData(token) {
-      const node = this.stack[this.stack.length - 1] as unknown as RubyInProgress;
+      const node = this.stack[
+        this.stack.length - 1
+      ] as unknown as RubyInProgress;
       node.data.rawBase = this.sliceSerialize(token);
     },
     rubyReadingData(token) {
-      const node = this.stack[this.stack.length - 1] as unknown as RubyInProgress;
+      const node = this.stack[
+        this.stack.length - 1
+      ] as unknown as RubyInProgress;
       node.data.rawReading = this.sliceSerialize(token);
     },
     ruby(token) {
       this.exit(token);
-    },
-  },
+    }
+  }
 };
 
 // ---- Plugin ----
 
-export const remarkRuby: Plugin<[RubyOptions?], Root> = function (options = {}) {
+export const remarkRuby: Plugin<[RubyOptions?], Root> = function (
+  options = {}
+) {
   const { rp } = options;
-  const hasRp = Array.isArray(rp) && rp.length === 2 && rp[0] !== "" && rp[1] !== "";
+  const hasRp = Array.isArray(rp) && rp[0] !== "" && rp[1] !== "";
 
   // oxlint-disable-next-line typescript/no-explicit-any
-  const data = this.data() as Record<string, any[]>;
+  const data = this.data() as Partial<Record<string, any[]>>;
   (data.micromarkExtensions ??= []).push(rubyMicromarkExtension);
   (data.fromMarkdownExtensions ??= []).push(rubyFromMarkdownExtension);
 
@@ -194,22 +213,24 @@ export const remarkRuby: Plugin<[RubyOptions?], Root> = function (options = {}) 
     if (!text) return [];
     const tree = fromMarkdown(text, {
       extensions: data.micromarkExtensions,
-      mdastExtensions: data.fromMarkdownExtensions,
+      mdastExtensions: data.fromMarkdownExtensions
     });
     const para = tree.children[0] as Paragraph | undefined;
-    return para?.type === "paragraph" ? para.children : [{ type: "text", value: text }];
+    return para?.type === "paragraph"
+      ? para.children
+      : [{ type: "text", value: text }];
   }
 
   const makeRt = (children: PhrasingContent[]): Rt => ({
     type: "rt",
     children,
-    data: { hName: "rt" },
+    data: { hName: "rt" }
   });
 
   const makeRp = (text: string): Rp => ({
     type: "rp",
     children: [{ type: "text", value: text }],
-    data: { hName: "rp" },
+    data: { hName: "rp" }
   });
 
   const transformer: Transformer<Root> = (tree) => {
@@ -226,9 +247,9 @@ export const remarkRuby: Plugin<[RubyOptions?], Root> = function (options = {}) 
 
       node.children = [
         ...baseChildren,
-        ...(hasRp ? [makeRp(rp![0]!)] : []),
+        ...(hasRp ? [makeRp(rp[0])] : []),
         makeRt(readingChildren),
-        ...(hasRp ? [makeRp(rp![1]!)] : []),
+        ...(hasRp ? [makeRp(rp[1])] : [])
       ];
 
       delete raw.rawBase;

@@ -10,17 +10,19 @@ export const createFenceRule = (options: DelimiterConfig): AttrRule => {
     tests: [
       {
         shift: 0,
-        type: "fence",
-      },
+        type: "fence"
+      }
     ],
     transform(tokens, index) {
-      const token = tokens[index]!;
+      const token = tokens[index];
       const info = token.info.trim();
       const range = check(info, "end") ?? check(info, "only");
       if (!range) return;
       addAttrs(token, info, range, options.allowed);
       // Strip the attr block from the info string, preserving the language tag
-      token.info = info.slice(0, info.lastIndexOf(options.left, range[0] - 1)).trimEnd();
-    },
+      token.info = info
+        .slice(0, info.lastIndexOf(options.left, range[0] - 1))
+        .trimEnd();
+    }
   };
 };

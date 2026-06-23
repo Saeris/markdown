@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vite-plus/test";
+import { expect, it, describe } from "vite-plus/test";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
@@ -7,7 +7,7 @@ import rehypeStringify from "rehype-stringify";
 import { remarkTabs, tabsHastHandlers } from "../../packages/remd-tabs/src";
 import {
   remarkDefinitionList,
-  defListHastHandlers,
+  defListHastHandlers
 } from "../../packages/remd-definition-list/src";
 import { normalizeHtml } from "../utils/index.js";
 
@@ -20,11 +20,11 @@ const remd = (src: string) =>
         .use(remarkDefinitionList)
         .use(remarkTabs)
         .use(remarkRehype, {
-          handlers: { ...defListHastHandlers, ...tabsHastHandlers } as never,
+          handlers: { ...defListHastHandlers, ...tabsHastHandlers } as never
         })
         .use(rehypeStringify, { allowDangerousHtml: true })
-        .processSync(src),
-    ),
+        .processSync(src)
+    )
   );
 
 describe("tabs + definition-list", () => {
@@ -40,27 +40,27 @@ describe("tabs + definition-list", () => {
 > : Also a technology company.
 > \`\`\`\``;
 
-    test("remark: Demo and Code are sibling tabs", () => {
+    it("remark: Demo and Code are sibling tabs", () => {
       const html = remd(src);
-      const labels = [...html.matchAll(/class="markdown-tabs-label"[^>]*>([^<]+)</g)].map(
-        (m) => m[1],
-      );
+      const labels = [
+        ...html.matchAll(/class="markdown-tabs-label"[^>]*>([^<]+)</g)
+      ].map((m) => m[1]);
       expect(labels).toEqual(["Demo", "Code"]);
     });
 
-    test("remark: Demo panel contains a definition list", () => {
+    it("remark: Demo panel contains a definition list", () => {
       const html = remd(src);
       const demoPanel =
-        html.match(/<section[^>]*aria-label="Demo">.*?<\/section>/s)?.[0] ?? "";
+        /<section[^>]*aria-label="Demo">.*?<\/section>/s.exec(html)?.[0] ?? "";
       expect(demoPanel).toContain("<dl>");
       expect(demoPanel).toContain("<dt>");
       expect(demoPanel).toContain("<dd>");
     });
 
-    test("remark: Code panel contains a code fence, not a definition list", () => {
+    it("remark: Code panel contains a code fence, not a definition list", () => {
       const html = remd(src);
       const codePanel =
-        html.match(/<section[^>]*aria-label="Code">.*?<\/section>/s)?.[0] ?? "";
+        /<section[^>]*aria-label="Code">.*?<\/section>/s.exec(html)?.[0] ?? "";
       expect(codePanel).toContain("<pre>");
       expect(codePanel).not.toContain("<dl>");
     });
@@ -78,18 +78,18 @@ describe("tabs + definition-list", () => {
 > : Protocols for transferring data on the web.
 > \`\`\`\``;
 
-    test("remark: Demo and Code are sibling tabs", () => {
+    it("remark: Demo and Code are sibling tabs", () => {
       const html = remd(src);
-      const labels = [...html.matchAll(/class="markdown-tabs-label"[^>]*>([^<]+)</g)].map(
-        (m) => m[1],
-      );
+      const labels = [
+        ...html.matchAll(/class="markdown-tabs-label"[^>]*>([^<]+)</g)
+      ].map((m) => m[1]);
       expect(labels).toEqual(["Demo", "Code"]);
     });
 
-    test("remark: % Code is not absorbed into the definition list body", () => {
+    it("remark: % Code is not absorbed into the definition list body", () => {
       const html = remd(src);
       const demoPanel =
-        html.match(/<section[^>]*aria-label="Demo">.*?<\/section>/s)?.[0] ?? "";
+        /<section[^>]*aria-label="Demo">.*?<\/section>/s.exec(html)?.[0] ?? "";
       expect(demoPanel).not.toContain("% Code");
     });
   });

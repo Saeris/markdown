@@ -1,3 +1,10 @@
+// This plugin performs heavy tree-rewriting across mdast/hast/unist types
+// that don't unify cleanly; type assertions bridging those boundaries are
+// reviewed and intentional, so the rule is disabled file-wide rather than
+// per-cast. Defensive optional chains on array[i] accesses are also kept
+// because TS doesn't model index access as fallible.
+/* oxlint-disable typescript/no-unsafe-type-assertion */
+/* oxlint-disable typescript/no-unnecessary-condition */
 import { visit } from "unist-util-visit";
 import type { Plugin } from "unified";
 import type {
@@ -6,7 +13,7 @@ import type {
   Blockquote,
   PhrasingContent,
   BlockContent,
-  DefinitionContent,
+  DefinitionContent
 } from "mdast";
 import type { Element, ElementContent, Properties } from "hast";
 import type { State } from "mdast-util-to-hast";
@@ -32,8 +39,12 @@ interface StepsItemNode {
   depth: number;
   number: number;
   title: PhrasingContent[];
-  children: (BlockContent | DefinitionContent | StepsListNode)[];
-  data?: { attrsRole?: string; attrsTitle?: PhrasingContent[]; hProperties?: Properties };
+  children: Array<BlockContent | DefinitionContent | StepsListNode>;
+  data?: {
+    attrsRole?: string;
+    attrsTitle?: PhrasingContent[];
+    hProperties?: Properties;
+  };
 }
 
 // ── Parser helpers ────────────────────────────────────────────────────────────
@@ -47,7 +58,7 @@ interface ParsedHeader {
 const parseHeaderPrefix = (text: string): ParsedHeader | null => {
   const m = STEP_HEADER_RE.exec(text);
   if (!m) return null;
-  return { depth: m[1]!.length, number: parseInt(m[2]!, 10), rest: m[3]! };
+  return { depth: m[1].length, number: parseInt(m[2], 10), rest: m[3] };
 };
 
 // ── Raw step types ────────────────────────────────────────────────────────────
@@ -56,7 +67,7 @@ interface RawStep {
   depth: number;
   number: number;
   titleNodes: PhrasingContent[];
-  body: (BlockContent | DefinitionContent)[];
+  body: Array<BlockContent | DefinitionContent>;
 }
 
 // ── Paragraph line splitting ──────────────────────────────────────────────────
@@ -70,7 +81,7 @@ const paraToLines = (para: Paragraph): PhrasingContent[][] => {
       const parts = child.value.split("\n");
       for (let p = 0; p < parts.length; p++) {
         if (p > 0) segs.push(null);
-        if (parts[p] !== "") segs.push({ type: "text", value: parts[p]! });
+        if (parts[p] !== "") segs.push({ type: "text", value: parts[p] });
       }
     } else if (child.type === "break") {
       segs.push(null);
@@ -82,7 +93,7 @@ const paraToLines = (para: Paragraph): PhrasingContent[][] => {
   const lines: PhrasingContent[][] = [[]];
   for (const seg of segs) {
     if (seg === null) lines.push([]);
-    else lines[lines.length - 1]!.push(seg);
+    else lines[lines.length - 1].push(seg);
   }
   return lines;
 };
@@ -98,7 +109,7 @@ const extractHeaderPara = (
   para: Paragraph,
   counters: Map<number, number>,
   requireDepthOne = true,
-  prevDepth = 0,
+  prevDepth = 0
 ): RawStep[] | null => {
   const lines = paraToLines(para);
   const steps: RawStep[] = [];
@@ -106,7 +117,7 @@ const extractHeaderPara = (
 
   for (const lineSegs of lines) {
     const first = lineSegs[0];
-    if (!first || first.type !== "text") break;
+    if (first?.type !== "text") break;
 
     const header = parseHeaderPrefix(first.value);
     if (!header) break;
@@ -136,14 +147,14 @@ const extractHeaderPara = (
 // blockquote. We split that blockquote on any embedded @N. step header lines.
 interface BQSegment {
   header: Omit<RawStep, "body"> | null; // null = pre-header content (goes to previous step)
-  body: (BlockContent | DefinitionContent)[];
+  body: Array<BlockContent | DefinitionContent>;
 }
 
 const buildParagraph = (lines: PhrasingContent[][]): Paragraph | null => {
   const children: PhrasingContent[] = [];
   for (let i = 0; i < lines.length; i++) {
     if (i > 0) children.push({ type: "text", value: "\n" });
-    children.push(...lines[i]!);
+    children.push(...lines[i]);
   }
   if (children.length === 0) return null;
   return { type: "paragraph", children };
@@ -152,7 +163,7 @@ const buildParagraph = (lines: PhrasingContent[][]): Paragraph | null => {
 const splitBlockquote = (
   bq: Blockquote,
   counters: Map<number, number>,
-  currentDepth: number,
+  currentDepth: number
 ): BQSegment[] => {
   const segments: BQSegment[] = [];
   let currentSegment: BQSegment = { header: null, body: [] };
@@ -163,7 +174,7 @@ const splitBlockquote = (
       continue;
     }
 
-    const lines = paraToLines(child as Paragraph);
+    const lines = paraToLines(child);
     let bodyLines: PhrasingContent[][] = [];
 
     for (const lineSegs of lines) {
@@ -181,7 +192,8 @@ const splitBlockquote = (
           segments.push(currentSegment);
 
           // Update counter tracking
-          for (const k of counters.keys()) if (k > header.depth) counters.delete(k);
+          for (const k of counters.keys())
+            if (k > header.depth) counters.delete(k);
           const number = (counters.get(header.depth) ?? 0) + 1;
           counters.set(header.depth, number);
           currentDepth = header.depth;
@@ -192,7 +204,7 @@ const splitBlockquote = (
 
           currentSegment = {
             header: { depth: header.depth, number, titleNodes },
-            body: [],
+            body: []
           };
           continue;
         }
@@ -216,23 +228,27 @@ const buildTree = (
   steps: RawStep[],
   targetDepth: number,
   start: number,
-  end: number,
+  end: number
 ): StepsListNode => {
   const items: StepsItemNode[] = [];
   let i = start;
 
   while (i < end) {
-    const s = steps[i]!;
+    const s = steps[i];
     if (s.depth !== targetDepth) {
       i++;
       continue;
     }
 
     let childEnd = i + 1;
-    while (childEnd < end && steps[childEnd]!.depth > targetDepth) childEnd++;
+    while (childEnd < end && steps[childEnd].depth > targetDepth) childEnd++;
 
-    const bodyChildren: StepsItemNode["children"] = [...s.body] as StepsItemNode["children"];
-    const hasDeeper = steps.slice(i + 1, childEnd).some((ss) => ss.depth === targetDepth + 1);
+    const bodyChildren: StepsItemNode["children"] = [
+      ...s.body
+    ] as StepsItemNode["children"];
+    const hasDeeper = steps
+      .slice(i + 1, childEnd)
+      .some((ss) => ss.depth === targetDepth + 1);
     if (hasDeeper) {
       const nested = buildTree(steps, targetDepth + 1, i + 1, childEnd);
       bodyChildren.push(nested);
@@ -244,7 +260,7 @@ const buildTree = (
       number: s.number,
       title: s.titleNodes,
       children: bodyChildren,
-      data: { attrsRole: "containerItem", attrsTitle: s.titleNodes },
+      data: { attrsRole: "containerItem", attrsTitle: s.titleNodes }
     });
 
     i = childEnd;
@@ -254,7 +270,7 @@ const buildTree = (
     type: "stepsList",
     depth: targetDepth,
     children: items,
-    data: { attrsRole: "container" },
+    data: { attrsRole: "container" }
   };
 };
 
@@ -263,38 +279,38 @@ const buildTree = (
 // Process all step groups found in a children array in-place.
 // Used at root level and recursively inside any parent node's children.
 const processStepsInChildren = (
-  children: (BlockContent | DefinitionContent | Root["children"][number])[],
-  containerClass: string,
+  children: Array<BlockContent | DefinitionContent | Root["children"][number]>,
+  containerClass: string
 ): void => {
   const newChildren: typeof children = [];
   let i = 0;
 
   while (i < children.length) {
-    const node = children[i]!;
+    const node = children[i];
 
     if (node.type === "paragraph") {
       const counters = new Map<number, number>();
-      const headerSteps = extractHeaderPara(node as Paragraph, counters);
+      const headerSteps = extractHeaderPara(node, counters);
 
       if (headerSteps && headerSteps.length > 0) {
         const rawSteps: RawStep[] = [...headerSteps];
         let j = i + 1;
         let currentStepIdx = rawSteps.length - 1;
-        let currentDepth = rawSteps[rawSteps.length - 1]!.depth;
+        let currentDepth = rawSteps[rawSteps.length - 1].depth;
 
         while (j < children.length) {
-          const sibling = children[j]!;
+          const sibling = children[j];
 
           if (sibling.type === "blockquote") {
-            const segments = splitBlockquote(sibling as Blockquote, counters, currentDepth);
+            const segments = splitBlockquote(sibling, counters, currentDepth);
 
             const firstSeg = segments[0];
             if (firstSeg?.header === null) {
-              rawSteps[currentStepIdx]!.body.push(...firstSeg.body);
+              rawSteps[currentStepIdx].body.push(...firstSeg.body);
             }
 
             for (let s = 1; s < segments.length; s++) {
-              const seg = segments[s]!;
+              const seg = segments[s];
               if (seg.header) {
                 rawSteps.push({ ...seg.header, body: seg.body });
                 currentStepIdx = rawSteps.length - 1;
@@ -304,12 +320,17 @@ const processStepsInChildren = (
 
             j++;
           } else if (sibling.type === "paragraph") {
-            const prevDepth = rawSteps[rawSteps.length - 1]!.depth;
-            const contHeaders = extractHeaderPara(sibling as Paragraph, counters, false, prevDepth);
+            const prevDepth = rawSteps[rawSteps.length - 1].depth;
+            const contHeaders = extractHeaderPara(
+              sibling,
+              counters,
+              false,
+              prevDepth
+            );
             if (contHeaders && contHeaders.length > 0) {
               rawSteps.push(...contHeaders);
               currentStepIdx = rawSteps.length - 1;
-              currentDepth = rawSteps[rawSteps.length - 1]!.depth;
+              currentDepth = rawSteps[rawSteps.length - 1].depth;
               j++;
               continue;
             }
@@ -334,7 +355,9 @@ const processStepsInChildren = (
   children.splice(0, children.length, ...newChildren);
 };
 
-export const remarkSteps: Plugin<[StepsOptions?], Root> = function (options = {}) {
+export const remarkSteps: Plugin<[StepsOptions?], Root> = function (
+  options = {}
+) {
   const { containerClass = "markdown-steps" } = options;
 
   return (tree) => {
@@ -345,7 +368,9 @@ export const remarkSteps: Plugin<[StepsOptions?], Root> = function (options = {}
     // this handles steps nested inside tab bodies or other block containers.
     visit(tree, (node) => {
       if ("children" in node && node.type !== "root") {
-        const parent = node as { children: (BlockContent | DefinitionContent)[] };
+        const parent = node as {
+          children: Array<BlockContent | DefinitionContent>;
+        };
         if (parent.children.length > 0) {
           processStepsInChildren(parent.children, containerClass);
         }
@@ -356,7 +381,11 @@ export const remarkSteps: Plugin<[StepsOptions?], Root> = function (options = {}
 
 // ── HAST handlers ─────────────────────────────────────────────────────────────
 
-const buildListHast = (list: StepsListNode, containerClass: string, state: State): Element => {
+const buildListHast = (
+  list: StepsListNode,
+  containerClass: string,
+  state: State
+): Element => {
   const items: ElementContent[] = list.children.map((item) => {
     const liChildren: ElementContent[] = [];
 
@@ -367,16 +396,16 @@ const buildListHast = (list: StepsListNode, containerClass: string, state: State
         properties: { class: `${containerClass}-title` } as Properties,
         children: state.all({
           type: "paragraph",
-          children: item.title,
-        } as Parameters<typeof state.all>[0]),
+          children: item.title
+        } as Parameters<typeof state.all>[0])
       });
     }
 
     const bodyBlocks = item.children.filter(
-      (c) => (c as unknown as { type: string }).type !== "stepsList",
-    ) as (BlockContent | DefinitionContent)[];
+      (c) => (c as unknown as { type: string }).type !== "stepsList"
+    ) as Array<BlockContent | DefinitionContent>;
     const nestedLists = item.children.filter(
-      (c) => (c as unknown as { type: string }).type === "stepsList",
+      (c) => (c as unknown as { type: string }).type === "stepsList"
     ) as unknown as StepsListNode[];
 
     if (bodyBlocks.length > 0) {
@@ -386,8 +415,8 @@ const buildListHast = (list: StepsListNode, containerClass: string, state: State
         properties: { class: `${containerClass}-body` } as Properties,
         children: state.all({
           type: "root",
-          children: bodyBlocks,
-        } as Parameters<typeof state.all>[0]),
+          children: bodyBlocks
+        } as Parameters<typeof state.all>[0])
       });
     }
 
@@ -397,11 +426,12 @@ const buildListHast = (list: StepsListNode, containerClass: string, state: State
 
     const liProps: Properties = {
       class: `${containerClass}-item`,
-      "data-step": String(item.number),
+      "data-step": String(item.number)
     };
     if (item.data?.hProperties) {
       const { class: extraClass, ...rest } = item.data.hProperties;
-      if (extraClass) liProps.class = `${String(liProps.class)} ${String(extraClass)}`;
+      if (extraClass)
+        liProps.class = `${String(liProps.class)} ${String(extraClass)}`;
       Object.assign(liProps, rest);
     }
 
@@ -409,15 +439,17 @@ const buildListHast = (list: StepsListNode, containerClass: string, state: State
       type: "element",
       tagName: "li",
       properties: liProps,
-      children: liChildren,
+      children: liChildren
     } satisfies Element;
   });
 
-  const baseClass = list.depth === 1 ? containerClass : `${containerClass}-list`;
+  const baseClass =
+    list.depth === 1 ? containerClass : `${containerClass}-list`;
   const olProps: Properties = { class: baseClass };
   if (list.data?.hProperties) {
     const { class: extraClass, ...rest } = list.data.hProperties;
-    if (extraClass) olProps.class = `${String(olProps.class)} ${String(extraClass)}`;
+    if (extraClass)
+      olProps.class = `${String(olProps.class)} ${String(extraClass)}`;
     Object.assign(olProps, rest);
   }
 
@@ -425,7 +457,7 @@ const buildListHast = (list: StepsListNode, containerClass: string, state: State
     type: "element",
     tagName: "ol",
     properties: olProps,
-    children: items,
+    children: items
   };
 };
 
@@ -435,5 +467,5 @@ export const stepsHastHandlers = {
     const result = buildListHast(node, containerClass, state);
     state.patch(node as unknown as Parameters<typeof state.patch>[0], result);
     return result;
-  },
+  }
 } as const;

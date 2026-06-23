@@ -17,12 +17,14 @@ const ALL_RULE_NAMES: AttrRuleName[] = [
   "heading",
   "hr",
   "softbreak",
-  "block",
+  "block"
 ];
 
 const ALL_RULE_SET = new Set<string>(ALL_RULE_NAMES);
 
-export const createRules = (options: DelimiterConfig & Pick<AttrsOptions, "rule">): AttrRule[] => {
+export const createRules = (
+  options: DelimiterConfig & Pick<AttrsOptions, "rule">
+): AttrRule[] => {
   const { rule = "all" } = options;
 
   let enabled: Set<string>;
@@ -31,7 +33,7 @@ export const createRules = (options: DelimiterConfig & Pick<AttrsOptions, "rule"
   } else if (!rule || (Array.isArray(rule) && rule.length === 0)) {
     return [];
   } else {
-    enabled = new Set((rule as AttrRuleName[]).filter((r) => ALL_RULE_SET.has(r)));
+    enabled = new Set(rule.filter((r) => ALL_RULE_SET.has(r)));
   }
 
   const rules: AttrRule[] = [];
