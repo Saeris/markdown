@@ -1,6 +1,6 @@
-# @saeris/mdit-tabs
+# @mirrordown/mdit-tabs
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A markdown-it plugin for the `tabs` syntax extension.
 
@@ -78,20 +78,18 @@ Use `%%` for a second level of nesting inside a tab:
 > Node.js or any server runtime.
 ````
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/mdit-tabs
+npm install @mirrordown/mdit-tabs
 ```
 
 ### Standalone
 
 ```ts
 import MarkdownIt from "markdown-it";
-import { tabs } from "@saeris/mdit-tabs";
-import "@saeris/mdit-tabs/tabs.css";
+import { tabs } from "@mirrordown/mdit-tabs";
+import "@mirrordown/mdit-tabs/tabs.css";
 
 const md = new MarkdownIt().use(tabs);
 ```
@@ -101,8 +99,8 @@ const md = new MarkdownIt().use(tabs);
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { tabs } from "@saeris/mdit-tabs";
-import "@saeris/mdit-tabs/tabs.css";
+import { tabs } from "@mirrordown/mdit-tabs";
+import "@mirrordown/mdit-tabs/tabs.css";
 
 export default defineConfig({
   markdown: {
@@ -113,7 +111,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/tabs](https://saeris.github.io/markdown/guide/plugins/tabs)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

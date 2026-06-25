@@ -1,6 +1,6 @@
-# @saeris/mdit-kbd
+# @mirrordown/mdit-kbd
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A markdown-it plugin for the `kbd` syntax extension.
 
@@ -22,19 +22,17 @@ Press [[Enter]] to confirm.
 You can combine multiple keys: [[Ctrl]] + [[Shift]] + [[P]] opens the command palette.
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/mdit-kbd
+npm install @mirrordown/mdit-kbd
 ```
 
 ### Standalone
 
 ```ts
 import MarkdownIt from "markdown-it";
-import { kbd } from "@saeris/mdit-kbd";
+import { kbd } from "@mirrordown/mdit-kbd";
 
 const md = new MarkdownIt().use(kbd);
 ```
@@ -44,7 +42,7 @@ const md = new MarkdownIt().use(kbd);
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { kbd } from "@saeris/mdit-kbd";
+import { kbd } from "@mirrordown/mdit-kbd";
 
 export default defineConfig({
   markdown: {
@@ -55,7 +53,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/kbd](https://saeris.github.io/markdown/guide/plugins/kbd)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

@@ -1,5 +1,5 @@
 import type MarkdownIt from "markdown-it";
-import { githubAlerts } from "@saeris/mdit-github-alerts";
+import { githubAlerts } from "@mirrordown/mdit-github-alerts";
 
 export const activate = (): {
   extendMarkdownIt: (md: MarkdownIt) => MarkdownIt;

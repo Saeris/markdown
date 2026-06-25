@@ -1,6 +1,6 @@
-# @saeris/mdit-abbr
+# @mirrordown/mdit-abbr
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A markdown-it plugin for the `abbr` syntax extension.
 
@@ -23,19 +23,17 @@ _[CSS]: Cascading Style Sheets
 Write HTML and CSS as normal — they are automatically expanded with tooltips.
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/mdit-abbr
+npm install @mirrordown/mdit-abbr
 ```
 
 ### Standalone
 
 ```ts
 import MarkdownIt from "markdown-it";
-import { abbr } from "@saeris/mdit-abbr";
+import { abbr } from "@mirrordown/mdit-abbr";
 
 const md = new MarkdownIt().use(abbr);
 ```
@@ -45,7 +43,7 @@ const md = new MarkdownIt().use(abbr);
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { abbr } from "@saeris/mdit-abbr";
+import { abbr } from "@mirrordown/mdit-abbr";
 
 export default defineConfig({
   markdown: {
@@ -56,7 +54,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/abbr](https://saeris.github.io/markdown/guide/plugins/abbr)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

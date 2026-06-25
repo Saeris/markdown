@@ -1,5 +1,5 @@
 import type MarkdownIt from "markdown-it";
-import { ruby } from "@saeris/mdit-ruby";
+import { ruby } from "@mirrordown/mdit-ruby";
 
 export const activate = (): {
   extendMarkdownIt: (md: MarkdownIt) => MarkdownIt;

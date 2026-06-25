@@ -14,7 +14,7 @@ export default defineConfig({
       },
       dev: {
         command:
-          "vp run --parallel --filter '@saeris/remd-*' --filter '@saeris/mdit-*' --filter '@saeris/markdown-docs' dev",
+          "vp run --parallel --filter '@mirrordown/remd-*' --filter '@mirrordown/mdit-*' --filter '@mirrordown/markdown-docs' dev",
         cache: false
       }
     }

@@ -1,6 +1,6 @@
-# @saeris/remd-del
+# @mirrordown/remd-del
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A remark/rehype (unified) plugin for the `del` syntax extension.
 
@@ -22,12 +22,10 @@ Wrap text in double dashes to mark it as deleted:
 You can use it inline: the price was --$50-- $35.
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/remd-del
+npm install @mirrordown/remd-del
 ```
 
 ### Unified
@@ -37,7 +35,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { remarkDel } from "@saeris/remd-del";
+import { remarkDel } from "@mirrordown/remd-del";
 
 const processor = unified()
   .use(remarkParse)
@@ -51,7 +49,7 @@ const processor = unified()
 ```ts
 // astro.config.ts
 import { defineConfig } from "astro/config";
-import { remarkDel } from "@saeris/remd-del";
+import { remarkDel } from "@mirrordown/remd-del";
 
 export default defineConfig({
   markdown: {
@@ -65,7 +63,7 @@ export default defineConfig({
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { remarkDel } from "@saeris/remd-del";
+import { remarkDel } from "@mirrordown/remd-del";
 
 export default defineConfig({
   markdown: {
@@ -76,7 +74,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/del](https://saeris.github.io/markdown/guide/plugins/del)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

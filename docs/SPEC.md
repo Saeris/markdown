@@ -1,4 +1,4 @@
-# @saeris/markdown — Docs Site Specification
+# @mirrordown/markdown — Docs Site Specification
 
 > Reference document for the `docs/` Astro site.
 > Covers architecture, content model, layout, and implementation phases.
@@ -258,7 +258,7 @@ The page renders `<Content />` inside `Markdown.astro`, passing `headings` to th
 
 ```ts
 import { defineConfig } from "astro/config";
-import { remarkDel } from "@saeris/remd-del";
+import { remarkDel } from "@mirrordown/remd-del";
 // ... all remd-* plugins
 
 export default defineConfig({
@@ -294,7 +294,7 @@ Follows the guide-to-japanese pattern:
 
 Goal: a working skeleton with correct layout, theming, and navigation. No real content yet.
 
-1. Update `docs/package.json` — add `@saeris/remd-*` workspace deps, adjust engines to node 24+
+1. Update `docs/package.json` — add `@mirrordown/remd-*` workspace deps, adjust engines to node 24+
 2. Update `astro.config.ts` — wire up remd plugins, set `site`
 3. Author `src/content.config.ts` — define `plugins` collection with `glob` loader pointing at `public/plugins/`
 4. Author `src/styles/` — `reset.css`, `theme.css` (tokens), `global.css`, `markdown.css` (stub)

@@ -1,6 +1,6 @@
-# @saeris/mdit-attrs
+# @mirrordown/mdit-attrs
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A markdown-it plugin for the `attrs` syntax extension.
 
@@ -55,19 +55,17 @@ This is **important**{.warning} text.
   {.checklist}
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/mdit-attrs
+npm install @mirrordown/mdit-attrs
 ```
 
 ### Standalone
 
 ```ts
 import MarkdownIt from "markdown-it";
-import { attrs } from "@saeris/mdit-attrs";
+import { attrs } from "@mirrordown/mdit-attrs";
 
 const md = new MarkdownIt().use(attrs);
 ```
@@ -77,7 +75,7 @@ const md = new MarkdownIt().use(attrs);
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { attrs } from "@saeris/mdit-attrs";
+import { attrs } from "@mirrordown/mdit-attrs";
 
 export default defineConfig({
   markdown: {
@@ -88,7 +86,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/attrs](https://saeris.github.io/markdown/guide/plugins/attrs)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

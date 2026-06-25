@@ -1,6 +1,6 @@
-# @saeris/mdit-steps
+# @mirrordown/mdit-steps
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A markdown-it plugin for the `steps` syntax extension.
 
@@ -74,20 +74,18 @@ Use `@@` to nest steps inside a parent step:
 > ```
 ````
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/mdit-steps
+npm install @mirrordown/mdit-steps
 ```
 
 ### Standalone
 
 ```ts
 import MarkdownIt from "markdown-it";
-import { steps } from "@saeris/mdit-steps";
-import "@saeris/mdit-steps/steps.css";
+import { steps } from "@mirrordown/mdit-steps";
+import "@mirrordown/mdit-steps/steps.css";
 
 const md = new MarkdownIt().use(steps);
 ```
@@ -97,8 +95,8 @@ const md = new MarkdownIt().use(steps);
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { steps } from "@saeris/mdit-steps";
-import "@saeris/mdit-steps/steps.css";
+import { steps } from "@mirrordown/mdit-steps";
+import "@mirrordown/mdit-steps/steps.css";
 
 export default defineConfig({
   markdown: {
@@ -109,7 +107,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/steps](https://saeris.github.io/markdown/guide/plugins/steps)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

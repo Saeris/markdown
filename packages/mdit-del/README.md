@@ -1,6 +1,6 @@
-# @saeris/mdit-del
+# @mirrordown/mdit-del
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A markdown-it plugin for the `del` syntax extension.
 
@@ -22,19 +22,17 @@ Wrap text in double dashes to mark it as deleted:
 You can use it inline: the price was --$50-- $35.
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/mdit-del
+npm install @mirrordown/mdit-del
 ```
 
 ### Standalone
 
 ```ts
 import MarkdownIt from "markdown-it";
-import { del } from "@saeris/mdit-del";
+import { del } from "@mirrordown/mdit-del";
 
 const md = new MarkdownIt().use(del);
 ```
@@ -44,7 +42,7 @@ const md = new MarkdownIt().use(del);
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { del } from "@saeris/mdit-del";
+import { del } from "@mirrordown/mdit-del";
 
 export default defineConfig({
   markdown: {
@@ -55,7 +53,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/del](https://saeris.github.io/markdown/guide/plugins/del)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

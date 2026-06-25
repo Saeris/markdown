@@ -1,6 +1,6 @@
-# @saeris/remd-github-alerts
+# @mirrordown/remd-github-alerts
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A remark/rehype (unified) plugin for the `github-alerts` syntax extension.
 
@@ -73,8 +73,6 @@ Set `icons: false` to suppress the SVG icon from every alert title:
 > This warning has no icon.
 ```
 
-## Install
-
 ```ts
 remarkGithubAlerts({ icons: false });
 ```
@@ -84,13 +82,9 @@ remarkGithubAlerts({ icons: false });
 > This is a pro tip.
 ```
 
-## Install
-
 ```ts
 remarkGithubAlerts({ titles: { tip: "Pro tip" } });
 ```
-
-## Install
 
 ```ts
 remarkGithubAlerts({
@@ -107,10 +101,10 @@ remarkGithubAlerts({
 
 ## Install
 
-Install `@saeris/remd-github-alerts`. You must also pass `githubAlertsHastHandlers` to `remarkRehype` and import the stylesheet:
+Install `@mirrordown/remd-github-alerts`. You must also pass `githubAlertsHastHandlers` to `remarkRehype` and import the stylesheet:
 
 ```sh
-npm install @saeris/remd-github-alerts
+npm install @mirrordown/remd-github-alerts
 ```
 
 ### Unified
@@ -123,8 +117,8 @@ import rehypeStringify from "rehype-stringify";
 import {
   remarkGithubAlerts,
   githubAlertsHastHandlers
-} from "@saeris/remd-github-alerts";
-import "@saeris/remd-github-alerts/github-alerts.css";
+} from "@mirrordown/remd-github-alerts";
+import "@mirrordown/remd-github-alerts/github-alerts.css";
 
 const processor = unified()
   .use(remarkParse)
@@ -141,8 +135,8 @@ import { defineConfig } from "astro/config";
 import {
   remarkGithubAlerts,
   githubAlertsHastHandlers
-} from "@saeris/remd-github-alerts";
-import "@saeris/remd-github-alerts/github-alerts.css";
+} from "@mirrordown/remd-github-alerts";
+import "@mirrordown/remd-github-alerts/github-alerts.css";
 
 export default defineConfig({
   markdown: {
@@ -160,8 +154,8 @@ import { defineConfig } from "vitepress";
 import {
   remarkGithubAlerts,
   githubAlertsHastHandlers
-} from "@saeris/remd-github-alerts";
-import "@saeris/remd-github-alerts/github-alerts.css";
+} from "@mirrordown/remd-github-alerts";
+import "@mirrordown/remd-github-alerts/github-alerts.css";
 
 export default defineConfig({
   markdown: {
@@ -173,7 +167,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/github-alerts](https://saeris.github.io/markdown/guide/plugins/github-alerts)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

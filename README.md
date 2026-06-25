@@ -1,6 +1,6 @@
-# markdown
+# Mirrordown
 
-A collection of [markdown-it](https://github.com/markdown-it/markdown-it) plugins, [remark](https://github.com/remarkjs/remark) plugins, and VSCode Markdown Preview extensions that add extended syntax support for semantic HTML elements.
+A collection of [markdown-it](https://github.com/markdown-it/markdown-it) plugins, [remark](https://github.com/remarkjs/remark) plugins, and VSCode Markdown Preview extensions that add extended syntax support for semantic HTML elements — each syntax implemented as a matched set so server-side (markdown-it) and unified (remark) pipelines render identically.
 
 ---
 

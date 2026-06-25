@@ -34,7 +34,7 @@ Wrap text in double dashes to mark it as deleted:
 
 % Remark
 > ```sh
-> npm install @saeris/remd-del
+> npm install @mirrordown/remd-del
 > ```
 >
 %% Unified
@@ -43,7 +43,7 @@ Wrap text in double dashes to mark it as deleted:
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { remarkDel } from "@saeris/remd-del";
+> import { remarkDel } from "@mirrordown/remd-del";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -55,7 +55,7 @@ Wrap text in double dashes to mark it as deleted:
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { remarkDel } from "@saeris/remd-del";
+> import { remarkDel } from "@mirrordown/remd-del";
 >
 > export default defineConfig({
 >   markdown: {
@@ -67,7 +67,7 @@ Wrap text in double dashes to mark it as deleted:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { remarkDel } from "@saeris/remd-del";
+> import { remarkDel } from "@mirrordown/remd-del";
 >
 > export default defineConfig({
 >   markdown: {
@@ -77,13 +77,13 @@ Wrap text in double dashes to mark it as deleted:
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-del
+> npm install @mirrordown/mdit-del
 > ```
 >
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { del } from "@saeris/mdit-del";
+> import { del } from "@mirrordown/mdit-del";
 >
 > const md = new MarkdownIt().use(del);
 > ```
@@ -91,7 +91,7 @@ Wrap text in double dashes to mark it as deleted:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { del } from "@saeris/mdit-del";
+> import { del } from "@mirrordown/mdit-del";
 >
 > export default defineConfig({
 >   markdown: {

@@ -1,6 +1,6 @@
-# @saeris/remd-sup
+# @mirrordown/remd-sup
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A remark/rehype (unified) plugin for the `sup` syntax extension.
 
@@ -22,12 +22,10 @@ E = mc^2^
 The Pythagorean theorem: a^2^ + b^2^ = c^2^
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/remd-sup
+npm install @mirrordown/remd-sup
 ```
 
 ### Unified
@@ -37,7 +35,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { remarkSup } from "@saeris/remd-sup";
+import { remarkSup } from "@mirrordown/remd-sup";
 
 const processor = unified()
   .use(remarkParse)
@@ -51,7 +49,7 @@ const processor = unified()
 ```ts
 // astro.config.ts
 import { defineConfig } from "astro/config";
-import { remarkSup } from "@saeris/remd-sup";
+import { remarkSup } from "@mirrordown/remd-sup";
 
 export default defineConfig({
   markdown: {
@@ -65,7 +63,7 @@ export default defineConfig({
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { remarkSup } from "@saeris/remd-sup";
+import { remarkSup } from "@mirrordown/remd-sup";
 
 export default defineConfig({
   markdown: {
@@ -76,7 +74,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/sup](https://saeris.github.io/markdown/guide/plugins/sup)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

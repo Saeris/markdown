@@ -34,7 +34,7 @@ Wrap a key name in double square brackets:
 
 % Remark
 > ```sh
-> npm install @saeris/remd-kbd
+> npm install @mirrordown/remd-kbd
 > ```
 %% Unified
 > ```ts
@@ -42,7 +42,7 @@ Wrap a key name in double square brackets:
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { remarkKbd } from "@saeris/remd-kbd";
+> import { remarkKbd } from "@mirrordown/remd-kbd";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -54,7 +54,7 @@ Wrap a key name in double square brackets:
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { remarkKbd } from "@saeris/remd-kbd";
+> import { remarkKbd } from "@mirrordown/remd-kbd";
 >
 > export default defineConfig({
 >   markdown: {
@@ -66,7 +66,7 @@ Wrap a key name in double square brackets:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { remarkKbd } from "@saeris/remd-kbd";
+> import { remarkKbd } from "@mirrordown/remd-kbd";
 >
 > export default defineConfig({
 >   markdown: {
@@ -76,12 +76,12 @@ Wrap a key name in double square brackets:
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-kbd
+> npm install @mirrordown/mdit-kbd
 > ```
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { kbd } from "@saeris/mdit-kbd";
+> import { kbd } from "@mirrordown/mdit-kbd";
 >
 > const md = new MarkdownIt().use(kbd);
 > ```
@@ -89,7 +89,7 @@ Wrap a key name in double square brackets:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { kbd } from "@saeris/mdit-kbd";
+> import { kbd } from "@mirrordown/mdit-kbd";
 >
 > export default defineConfig({
 >   markdown: {

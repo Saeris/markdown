@@ -1,5 +1,5 @@
 import type MarkdownIt from "markdown-it";
-import { sup } from "@saeris/mdit-sup";
+import { sup } from "@mirrordown/mdit-sup";
 
 export const activate = (): {
   extendMarkdownIt: (md: MarkdownIt) => MarkdownIt;

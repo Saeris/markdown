@@ -9,7 +9,7 @@
   ],
   "license": "MIT",
   "author": "Drake Costa <drake@saeris.io> (https://saeris.gg)",
-  "repository": "git@github.com:saeris/markdown.git",
+  "repository": "git@github.com:mirrordown/mirrordown.git",
   "publisher": "saeris",
   "activationEvents": [],
   "extensionPack": [

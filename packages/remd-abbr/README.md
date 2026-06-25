@@ -1,6 +1,6 @@
-# @saeris/remd-abbr
+# @mirrordown/remd-abbr
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A remark/rehype (unified) plugin for the `abbr` syntax extension.
 
@@ -23,12 +23,10 @@ _[CSS]: Cascading Style Sheets
 Write HTML and CSS as normal — they are automatically expanded with tooltips.
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/remd-abbr
+npm install @mirrordown/remd-abbr
 ```
 
 ### Unified
@@ -38,7 +36,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { remarkAbbr } from "@saeris/remd-abbr";
+import { remarkAbbr } from "@mirrordown/remd-abbr";
 
 const processor = unified()
   .use(remarkParse)
@@ -52,7 +50,7 @@ const processor = unified()
 ```ts
 // astro.config.ts
 import { defineConfig } from "astro/config";
-import { remarkAbbr } from "@saeris/remd-abbr";
+import { remarkAbbr } from "@mirrordown/remd-abbr";
 
 export default defineConfig({
   markdown: {
@@ -66,7 +64,7 @@ export default defineConfig({
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { remarkAbbr } from "@saeris/remd-abbr";
+import { remarkAbbr } from "@mirrordown/remd-abbr";
 
 export default defineConfig({
   markdown: {
@@ -77,7 +75,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/abbr](https://saeris.github.io/markdown/guide/plugins/abbr)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

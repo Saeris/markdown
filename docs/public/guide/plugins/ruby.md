@@ -36,7 +36,7 @@ Optionally pass `rp` parentheses for fallback rendering in unsupported browsers:
 
 % Remark
 > ```sh
-> npm install @saeris/remd-ruby
+> npm install @mirrordown/remd-ruby
 > ```
 %% Unified
 > ```ts
@@ -44,7 +44,7 @@ Optionally pass `rp` parentheses for fallback rendering in unsupported browsers:
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { remarkRuby } from "@saeris/remd-ruby";
+> import { remarkRuby } from "@mirrordown/remd-ruby";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -63,7 +63,7 @@ Optionally pass `rp` parentheses for fallback rendering in unsupported browsers:
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { remarkRuby } from "@saeris/remd-ruby";
+> import { remarkRuby } from "@mirrordown/remd-ruby";
 >
 > export default defineConfig({
 >   markdown: {
@@ -75,7 +75,7 @@ Optionally pass `rp` parentheses for fallback rendering in unsupported browsers:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { remarkRuby } from "@saeris/remd-ruby";
+> import { remarkRuby } from "@mirrordown/remd-ruby";
 >
 > export default defineConfig({
 >   markdown: {
@@ -85,12 +85,12 @@ Optionally pass `rp` parentheses for fallback rendering in unsupported browsers:
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-ruby
+> npm install @mirrordown/mdit-ruby
 > ```
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { ruby } from "@saeris/mdit-ruby";
+> import { ruby } from "@mirrordown/mdit-ruby";
 >
 > const md = new MarkdownIt().use(ruby);
 > ```
@@ -98,7 +98,7 @@ Optionally pass `rp` parentheses for fallback rendering in unsupported browsers:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { ruby } from "@saeris/mdit-ruby";
+> import { ruby } from "@mirrordown/mdit-ruby";
 >
 > export default defineConfig({
 >   markdown: {

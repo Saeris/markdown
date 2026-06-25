@@ -1,4 +1,4 @@
-# @saeris/markdown — Implementation Specification
+# @mirrordown/markdown — Implementation Specification
 
 > Reference document for the monorepo consolidating all Saeris Markdown plugins.
 > Feed this to agents as context for any implementation task.
@@ -11,7 +11,7 @@ A Yarn Workspaces monorepo using Vite+ (`vp`) as the unified toolchain. All tool
 accessed through `vp` — do not invoke vitest, oxlint, oxfmt, tsdown, or yarn directly.
 
 ```
-@saeris/markdown/          # root (private)
+@mirrordown/markdown/          # root (private)
 ├── docs/                  # Astro documentation site
 ├── extensions/            # VSCode extensions (one per plugin + one pack)
 ├── packages/              # npm/JSR plugin packages (remd-* and mdit-*)
@@ -31,7 +31,7 @@ accessed through `vp` — do not invoke vitest, oxlint, oxfmt, tsdown, or yarn d
 Each feature is represented by up to three artifacts: a `remd-*` package (Remark/Rehype),
 an `mdit-*` package (Markdown-It), and a VSCode extension. Not every feature has all three.
 
-| Feature         | `@saeris/remd-*`       | `@saeris/mdit-*`       | Extension                  | Source          |
+| Feature         | `@mirrordown/remd-*`   | `@mirrordown/mdit-*`   | Extension                  | Source          |
 | --------------- | ---------------------- | ---------------------- | -------------------------- | --------------- |
 | del             | `remd-del`             | `mdit-del`             | `markdown-del` ¹           | Own — migrate   |
 | inline-svg      | `remd-inline-svg`      | `mdit-inline-svg`      | `markdown-inline-svg`      | Own — migrate   |
@@ -87,7 +87,7 @@ significantly. Do not use git subtree or submodules.
 
 ## 3. Naming conventions
 
-- **npm/JSR packages:** `@saeris/remd-<name>` and `@saeris/mdit-<name>`
+- **npm/JSR packages:** `@mirrordown/remd-<name>` and `@mirrordown/mdit-<name>`
 - **VSCode extensions:** Keep the existing Marketplace identifier (`markdown-<name>`) exactly.
   The `name` field in `package.json` is the extension ID and is immutable once published.
 - **`<name>` segment rules:**
@@ -131,12 +131,12 @@ mdit-<name>/
 
 ```json
 {
-  "name": "@saeris/mdit-<name>",
+  "name": "@mirrordown/mdit-<name>",
   "version": "0.0.0",
   "type": "module",
   "license": "MIT",
   "author": "Drake Costa <drake@saeris.io> (https://saeris.gg)",
-  "repository": "git@github.com:saeris/markdown.git",
+  "repository": "git@github.com:mirrordown/mirrordown.git",
   "engines": { "node": ">=24.0.0" },
   "exports": {
     ".": {
@@ -179,7 +179,7 @@ mdit-<name>/
 
 ```json
 {
-  "name": "@saeris/mdit-<name>",
+  "name": "@mirrordown/mdit-<name>",
   "version": "0.0.0",
   "exports": {
     ".": "./src/index.ts"
@@ -302,12 +302,12 @@ A single private workspace package at `tests/package.json`:
 
 ```json
 {
-  "name": "@saeris/tests",
+  "name": "@mirrordown/tests",
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@saeris/remd-del": "workspace:*",
-    "@saeris/mdit-del": "workspace:*"
+    "@mirrordown/remd-del": "workspace:*",
+    "@mirrordown/mdit-del": "workspace:*"
     // ... all plugin packages added as features are migrated
   }
 }
@@ -537,8 +537,8 @@ Bump files live in `.bumpy/`. Format:
 
 ```markdown
 ---
-"@saeris/mdit-del": minor
-"@saeris/remd-del": minor
+"@mirrordown/mdit-del": minor
+"@mirrordown/remd-del": minor
 ---
 
 Description of the change for the changelog.

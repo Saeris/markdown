@@ -107,10 +107,10 @@ Use `@@` to nest steps inside a parent step:
 ## Usage
 
 % Remark
-> Install `@saeris/remd-steps`. You must also pass `stepsHastHandlers` to `remarkRehype` and import the stylesheet:
+> Install `@mirrordown/remd-steps`. You must also pass `stepsHastHandlers` to `remarkRehype` and import the stylesheet:
 >
 > ```sh
-> npm install @saeris/remd-steps
+> npm install @mirrordown/remd-steps
 > ```
 %% Unified
 > ```ts
@@ -118,8 +118,8 @@ Use `@@` to nest steps inside a parent step:
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { remarkSteps, stepsHastHandlers } from "@saeris/remd-steps";
-> import "@saeris/remd-steps/steps.css";
+> import { remarkSteps, stepsHastHandlers } from "@mirrordown/remd-steps";
+> import "@mirrordown/remd-steps/steps.css";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -131,8 +131,8 @@ Use `@@` to nest steps inside a parent step:
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { remarkSteps, stepsHastHandlers } from "@saeris/remd-steps";
-> import "@saeris/remd-steps/steps.css";
+> import { remarkSteps, stepsHastHandlers } from "@mirrordown/remd-steps";
+> import "@mirrordown/remd-steps/steps.css";
 >
 > export default defineConfig({
 >   markdown: {
@@ -145,8 +145,8 @@ Use `@@` to nest steps inside a parent step:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { remarkSteps, stepsHastHandlers } from "@saeris/remd-steps";
-> import "@saeris/remd-steps/steps.css";
+> import { remarkSteps, stepsHastHandlers } from "@mirrordown/remd-steps";
+> import "@mirrordown/remd-steps/steps.css";
 >
 > export default defineConfig({
 >   markdown: {
@@ -157,13 +157,13 @@ Use `@@` to nest steps inside a parent step:
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-steps
+> npm install @mirrordown/mdit-steps
 > ```
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { steps } from "@saeris/mdit-steps";
-> import "@saeris/mdit-steps/steps.css";
+> import { steps } from "@mirrordown/mdit-steps";
+> import "@mirrordown/mdit-steps/steps.css";
 >
 > const md = new MarkdownIt().use(steps);
 > ```
@@ -171,8 +171,8 @@ Use `@@` to nest steps inside a parent step:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { steps } from "@saeris/mdit-steps";
-> import "@saeris/mdit-steps/steps.css";
+> import { steps } from "@mirrordown/mdit-steps";
+> import "@mirrordown/mdit-steps/steps.css";
 >
 > export default defineConfig({
 >   markdown: {

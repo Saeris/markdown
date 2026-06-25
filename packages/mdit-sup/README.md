@@ -1,6 +1,6 @@
-# @saeris/mdit-sup
+# @mirrordown/mdit-sup
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A markdown-it plugin for the `sup` syntax extension.
 
@@ -22,19 +22,17 @@ E = mc^2^
 The Pythagorean theorem: a^2^ + b^2^ = c^2^
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/mdit-sup
+npm install @mirrordown/mdit-sup
 ```
 
 ### Standalone
 
 ```ts
 import MarkdownIt from "markdown-it";
-import { sup } from "@saeris/mdit-sup";
+import { sup } from "@mirrordown/mdit-sup";
 
 const md = new MarkdownIt().use(sup);
 ```
@@ -44,7 +42,7 @@ const md = new MarkdownIt().use(sup);
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { sup } from "@saeris/mdit-sup";
+import { sup } from "@mirrordown/mdit-sup";
 
 export default defineConfig({
   markdown: {
@@ -55,7 +53,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/sup](https://saeris.github.io/markdown/guide/plugins/sup)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

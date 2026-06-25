@@ -1,6 +1,6 @@
-# @saeris/mdit-definition-list
+# @mirrordown/mdit-definition-list
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A markdown-it plugin for the `definition-list` syntax extension.
 
@@ -34,19 +34,17 @@ HTTPS
 : Protocols for transferring data on the web.
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/mdit-definition-list
+npm install @mirrordown/mdit-definition-list
 ```
 
 ### Standalone
 
 ```ts
 import MarkdownIt from "markdown-it";
-import { definitionList } from "@saeris/mdit-definition-list";
+import { definitionList } from "@mirrordown/mdit-definition-list";
 
 const md = new MarkdownIt().use(definitionList);
 ```
@@ -56,7 +54,7 @@ const md = new MarkdownIt().use(definitionList);
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { definitionList } from "@saeris/mdit-definition-list";
+import { definitionList } from "@mirrordown/mdit-definition-list";
 
 export default defineConfig({
   markdown: {
@@ -67,7 +65,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/definition-list](https://saeris.github.io/markdown/guide/plugins/definition-list)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

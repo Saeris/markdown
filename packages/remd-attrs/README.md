@@ -1,6 +1,6 @@
-# @saeris/remd-attrs
+# @mirrordown/remd-attrs
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A remark/rehype (unified) plugin for the `attrs` syntax extension.
 
@@ -55,12 +55,10 @@ This is **important**{.warning} text.
   {.checklist}
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/remd-attrs
+npm install @mirrordown/remd-attrs
 ```
 
 ### Unified
@@ -70,7 +68,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { remarkAttrs } from "@saeris/remd-attrs";
+import { remarkAttrs } from "@mirrordown/remd-attrs";
 
 const processor = unified()
   .use(remarkParse)
@@ -84,7 +82,7 @@ const processor = unified()
 ```ts
 // astro.config.ts
 import { defineConfig } from "astro/config";
-import { remarkAttrs } from "@saeris/remd-attrs";
+import { remarkAttrs } from "@mirrordown/remd-attrs";
 
 export default defineConfig({
   markdown: {
@@ -98,7 +96,7 @@ export default defineConfig({
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { remarkAttrs } from "@saeris/remd-attrs";
+import { remarkAttrs } from "@mirrordown/remd-attrs";
 
 export default defineConfig({
   markdown: {
@@ -109,7 +107,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/attrs](https://saeris.github.io/markdown/guide/plugins/attrs)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

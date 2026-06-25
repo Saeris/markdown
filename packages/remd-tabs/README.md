@@ -1,6 +1,6 @@
-# @saeris/remd-tabs
+# @mirrordown/remd-tabs
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A remark/rehype (unified) plugin for the `tabs` syntax extension.
 
@@ -78,14 +78,12 @@ Use `%%` for a second level of nesting inside a tab:
 > Node.js or any server runtime.
 ````
 
-## Usage
-
 ## Install
 
-Install `@saeris/remd-tabs`. You must also pass `tabsHastHandlers` to `remarkRehype` and import the stylesheet:
+Install `@mirrordown/remd-tabs`. You must also pass `tabsHastHandlers` to `remarkRehype` and import the stylesheet:
 
 ```sh
-npm install @saeris/remd-tabs
+npm install @mirrordown/remd-tabs
 ```
 
 ### Unified
@@ -95,8 +93,8 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { remarkTabs, tabsHastHandlers } from "@saeris/remd-tabs";
-import "@saeris/remd-tabs/tabs.css";
+import { remarkTabs, tabsHastHandlers } from "@mirrordown/remd-tabs";
+import "@mirrordown/remd-tabs/tabs.css";
 
 const processor = unified()
   .use(remarkParse)
@@ -110,8 +108,8 @@ const processor = unified()
 ```ts
 // astro.config.ts
 import { defineConfig } from "astro/config";
-import { remarkTabs, tabsHastHandlers } from "@saeris/remd-tabs";
-import "@saeris/remd-tabs/tabs.css";
+import { remarkTabs, tabsHastHandlers } from "@mirrordown/remd-tabs";
+import "@mirrordown/remd-tabs/tabs.css";
 
 export default defineConfig({
   markdown: {
@@ -126,8 +124,8 @@ export default defineConfig({
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { remarkTabs, tabsHastHandlers } from "@saeris/remd-tabs";
-import "@saeris/remd-tabs/tabs.css";
+import { remarkTabs, tabsHastHandlers } from "@mirrordown/remd-tabs";
+import "@mirrordown/remd-tabs/tabs.css";
 
 export default defineConfig({
   markdown: {
@@ -139,7 +137,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/tabs](https://saeris.github.io/markdown/guide/plugins/tabs)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

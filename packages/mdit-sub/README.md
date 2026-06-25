@@ -1,6 +1,6 @@
-# @saeris/mdit-sub
+# @mirrordown/mdit-sub
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A markdown-it plugin for the `sub` syntax extension.
 
@@ -22,19 +22,17 @@ The chemical formula for water is H~2~O.
 Carbon dioxide is CO~2~.
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/mdit-sub
+npm install @mirrordown/mdit-sub
 ```
 
 ### Standalone
 
 ```ts
 import MarkdownIt from "markdown-it";
-import { sub } from "@saeris/mdit-sub";
+import { sub } from "@mirrordown/mdit-sub";
 
 const md = new MarkdownIt().use(sub);
 ```
@@ -44,7 +42,7 @@ const md = new MarkdownIt().use(sub);
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { sub } from "@saeris/mdit-sub";
+import { sub } from "@mirrordown/mdit-sub";
 
 export default defineConfig({
   markdown: {
@@ -55,7 +53,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/sub](https://saeris.github.io/markdown/guide/plugins/sub)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

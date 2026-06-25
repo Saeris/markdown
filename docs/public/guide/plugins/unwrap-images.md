@@ -47,7 +47,7 @@ Any image that stands alone on a paragraph — with no other text or inline cont
 
 % Rehype
 > ```sh
-> npm install @saeris/remd-unwrap-images
+> npm install @mirrordown/remd-unwrap-images
 > ```
 %% Unified
 > ```ts
@@ -55,7 +55,7 @@ Any image that stands alone on a paragraph — with no other text or inline cont
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { rehypeUnwrapImages } from "@saeris/remd-unwrap-images";
+> import { rehypeUnwrapImages } from "@mirrordown/remd-unwrap-images";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -67,7 +67,7 @@ Any image that stands alone on a paragraph — with no other text or inline cont
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { rehypeUnwrapImages } from "@saeris/remd-unwrap-images";
+> import { rehypeUnwrapImages } from "@mirrordown/remd-unwrap-images";
 >
 > export default defineConfig({
 >   markdown: {
@@ -79,7 +79,7 @@ Any image that stands alone on a paragraph — with no other text or inline cont
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { rehypeUnwrapImages } from "@saeris/remd-unwrap-images";
+> import { rehypeUnwrapImages } from "@mirrordown/remd-unwrap-images";
 >
 > export default defineConfig({
 >   markdown: {
@@ -89,12 +89,12 @@ Any image that stands alone on a paragraph — with no other text or inline cont
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-unwrap-images
+> npm install @mirrordown/mdit-unwrap-images
 > ```
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { unwrapImages } from "@saeris/mdit-unwrap-images";
+> import { unwrapImages } from "@mirrordown/mdit-unwrap-images";
 >
 > const md = new MarkdownIt().use(unwrapImages);
 > ```
@@ -102,7 +102,7 @@ Any image that stands alone on a paragraph — with no other text or inline cont
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { unwrapImages } from "@saeris/mdit-unwrap-images";
+> import { unwrapImages } from "@mirrordown/mdit-unwrap-images";
 >
 > export default defineConfig({
 >   markdown: {

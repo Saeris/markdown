@@ -34,7 +34,7 @@ Wrap text in single carets to render it as superscript:
 
 % Remark
 > ```sh
-> npm install @saeris/remd-sup
+> npm install @mirrordown/remd-sup
 > ```
 %% Unified
 > ```ts
@@ -42,7 +42,7 @@ Wrap text in single carets to render it as superscript:
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { remarkSup } from "@saeris/remd-sup";
+> import { remarkSup } from "@mirrordown/remd-sup";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -54,7 +54,7 @@ Wrap text in single carets to render it as superscript:
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { remarkSup } from "@saeris/remd-sup";
+> import { remarkSup } from "@mirrordown/remd-sup";
 >
 > export default defineConfig({
 >   markdown: {
@@ -66,7 +66,7 @@ Wrap text in single carets to render it as superscript:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { remarkSup } from "@saeris/remd-sup";
+> import { remarkSup } from "@mirrordown/remd-sup";
 >
 > export default defineConfig({
 >   markdown: {
@@ -76,12 +76,12 @@ Wrap text in single carets to render it as superscript:
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-sup
+> npm install @mirrordown/mdit-sup
 > ```
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { sup } from "@saeris/mdit-sup";
+> import { sup } from "@mirrordown/mdit-sup";
 >
 > const md = new MarkdownIt().use(sup);
 > ```
@@ -89,7 +89,7 @@ Wrap text in single carets to render it as superscript:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { sup } from "@saeris/mdit-sup";
+> import { sup } from "@mirrordown/mdit-sup";
 >
 > export default defineConfig({
 >   markdown: {

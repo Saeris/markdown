@@ -14,8 +14,8 @@ const lastModifiedDisplay = lastModifiedDate
   : null;
 
 const filePath = `docs/public${currentPath}.md`;
-const editUrl = `https://github.com/saeris/markdown/edit/main/${filePath}`;
-const devUrl = `https://github.dev/saeris/markdown/blob/main/${filePath}`;
+const editUrl = `https://github.com/mirrordown/mirrordown/edit/main/${filePath}`;
+const devUrl = `https://github.dev/mirrordown/mirrordown/blob/main/${filePath}`;
 
 const pages = (await getCollection("docs"))
   .sort((a, b) => a.id.localeCompare(b.id))

@@ -1,5 +1,5 @@
 {
-  "name": "@saeris/mdit-abbr",
+  "name": "@mirrordown/mdit-abbr",
   "version": "0.0.0",
   "exports": {
     ".": "./src/index.ts"

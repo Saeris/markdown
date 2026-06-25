@@ -1052,6 +1052,452 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mirrordown/markdown-docs@workspace:docs":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/markdown-docs@workspace:docs"
+  dependencies:
+    "@astrojs/check": "npm:^0.9.9"
+    "@fontsource-variable/mona-sans": "npm:^5.2.8"
+    "@fontsource/monaspace-argon": "npm:^5.2.5"
+    "@fontsource/monaspace-krypton": "npm:^5.2.5"
+    "@fontsource/monaspace-neon": "npm:^5.2.5"
+    "@fontsource/monaspace-radon": "npm:^5.2.5"
+    "@fontsource/monaspace-xenon": "npm:^5.2.5"
+    "@mirrordown/remd-attrs": "workspace:*"
+    "@mirrordown/remd-definition-list": "workspace:*"
+    "@mirrordown/remd-del": "workspace:*"
+    "@mirrordown/remd-github-alerts": "workspace:*"
+    "@mirrordown/remd-inline-svg": "workspace:*"
+    "@mirrordown/remd-ins": "workspace:*"
+    "@mirrordown/remd-kbd": "workspace:*"
+    "@mirrordown/remd-mark": "workspace:*"
+    "@mirrordown/remd-ruby": "workspace:*"
+    "@mirrordown/remd-steps": "workspace:*"
+    "@mirrordown/remd-sub": "workspace:*"
+    "@mirrordown/remd-sup": "workspace:*"
+    "@mirrordown/remd-tabs": "workspace:*"
+    "@mirrordown/remd-unwrap-images": "workspace:*"
+    astro: "npm:^7.0.0-beta.5"
+    typescript: "catalog:"
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/markdown@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/markdown@workspace:."
+  dependencies:
+    "@saeris/configs": "npm:^1.6.1"
+    "@types/markdown-it": "npm:^14.1.2"
+    "@types/node": "npm:^26.0.0"
+    "@varlock/bumpy": "npm:^1.15.0"
+    "@vscode/vsce": "npm:^3.9.2"
+    markdown-it: "npm:^14.2.0"
+    postcss: "npm:^8.5.15"
+    postcss-cli: "npm:^11.0.1"
+    postcss-import: "npm:^16.1.1"
+    rehype-stringify: "npm:^10.0.1"
+    remark-gfm: "npm:^4.0.1"
+    remark-parse: "npm:^11.0.0"
+    remark-rehype: "npm:^11.1.2"
+    typescript: "npm:^6.0.3"
+    unified: "npm:^11.0.5"
+    vite-plus: "npm:latest"
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-abbr@workspace:*, @mirrordown/mdit-abbr@workspace:packages/mdit-abbr":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-abbr@workspace:packages/mdit-abbr"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-attrs@workspace:*, @mirrordown/mdit-attrs@workspace:packages/mdit-attrs":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-attrs@workspace:packages/mdit-attrs"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-definition-list@workspace:*, @mirrordown/mdit-definition-list@workspace:packages/mdit-definition-list":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-definition-list@workspace:packages/mdit-definition-list"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-del@workspace:*, @mirrordown/mdit-del@workspace:packages/mdit-del":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-del@workspace:packages/mdit-del"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-github-alerts@workspace:*, @mirrordown/mdit-github-alerts@workspace:packages/mdit-github-alerts":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-github-alerts@workspace:packages/mdit-github-alerts"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-inline-svg@workspace:packages/mdit-inline-svg":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-inline-svg@workspace:packages/mdit-inline-svg"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+    svgo: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-ins@workspace:*, @mirrordown/mdit-ins@workspace:packages/mdit-ins":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-ins@workspace:packages/mdit-ins"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-kbd@workspace:*, @mirrordown/mdit-kbd@workspace:packages/mdit-kbd":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-kbd@workspace:packages/mdit-kbd"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-mark@workspace:*, @mirrordown/mdit-mark@workspace:packages/mdit-mark":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-mark@workspace:packages/mdit-mark"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-ruby@workspace:*, @mirrordown/mdit-ruby@workspace:packages/mdit-ruby":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-ruby@workspace:packages/mdit-ruby"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-steps@workspace:*, @mirrordown/mdit-steps@workspace:packages/mdit-steps":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-steps@workspace:packages/mdit-steps"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-sub@workspace:*, @mirrordown/mdit-sub@workspace:packages/mdit-sub":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-sub@workspace:packages/mdit-sub"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-sup@workspace:*, @mirrordown/mdit-sup@workspace:packages/mdit-sup":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-sup@workspace:packages/mdit-sup"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-tabs@workspace:*, @mirrordown/mdit-tabs@workspace:packages/mdit-tabs":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-tabs@workspace:packages/mdit-tabs"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/mdit-unwrap-images@workspace:*, @mirrordown/mdit-unwrap-images@workspace:packages/mdit-unwrap-images":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/mdit-unwrap-images@workspace:packages/mdit-unwrap-images"
+  dependencies:
+    "@types/markdown-it": "catalog:"
+    markdown-it: "catalog:"
+  peerDependencies:
+    markdown-it: ^14.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-abbr@workspace:packages/remd-abbr":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-abbr@workspace:packages/remd-abbr"
+  dependencies:
+    "@types/mdast": "catalog:"
+    unified: "catalog:"
+    unist-util-visit: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-attrs@workspace:*, @mirrordown/remd-attrs@workspace:packages/remd-attrs":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-attrs@workspace:packages/remd-attrs"
+  dependencies:
+    "@types/hast": "catalog:"
+    "@types/mdast": "catalog:"
+    unified: "catalog:"
+    unist-util-visit: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-definition-list@workspace:*, @mirrordown/remd-definition-list@workspace:packages/remd-definition-list":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-definition-list@workspace:packages/remd-definition-list"
+  dependencies:
+    "@types/hast": "catalog:"
+    mdast-util-from-markdown: "catalog:"
+    mdast-util-to-hast: "npm:^13.0.0"
+    micromark-core-commonmark: "npm:^2.0.0"
+    micromark-factory-space: "npm:^2.0.0"
+    micromark-util-character: "catalog:"
+    micromark-util-chunked: "npm:^2.0.0"
+    micromark-util-types: "catalog:"
+    unified: "catalog:"
+    unist-builder: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-del@workspace:*, @mirrordown/remd-del@workspace:packages/remd-del":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-del@workspace:packages/remd-del"
+  dependencies:
+    "@types/mdast": "catalog:"
+    unified: "catalog:"
+    unist-builder: "catalog:"
+    unist-util-find-after: "catalog:"
+    unist-util-find-all-after: "catalog:"
+    unist-util-find-all-before: "catalog:"
+    unist-util-find-between-all: "catalog:"
+    unist-util-visit: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-github-alerts@workspace:*, @mirrordown/remd-github-alerts@workspace:packages/remd-github-alerts":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-github-alerts@workspace:packages/remd-github-alerts"
+  dependencies:
+    "@types/hast": "catalog:"
+    "@types/mdast": "catalog:"
+    unified: "catalog:"
+    unist-util-visit: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-inline-svg@workspace:*, @mirrordown/remd-inline-svg@workspace:packages/remd-inline-svg":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-inline-svg@workspace:packages/remd-inline-svg"
+  dependencies:
+    rehype-parse: "npm:^9.0.1"
+    svgo: "catalog:"
+    unified: "catalog:"
+    vfile: "npm:^6.0.3"
+  peerDependencies:
+    unified: ^11.0.0
+    vfile: ^6.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-ins@workspace:*, @mirrordown/remd-ins@workspace:packages/remd-ins":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-ins@workspace:packages/remd-ins"
+  dependencies:
+    "@types/mdast": "catalog:"
+    unified: "catalog:"
+    unist-builder: "catalog:"
+    unist-util-find-after: "catalog:"
+    unist-util-find-all-after: "catalog:"
+    unist-util-find-all-before: "catalog:"
+    unist-util-find-between-all: "catalog:"
+    unist-util-visit: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-kbd@workspace:*, @mirrordown/remd-kbd@workspace:packages/remd-kbd":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-kbd@workspace:packages/remd-kbd"
+  dependencies:
+    "@types/mdast": "catalog:"
+    unified: "catalog:"
+    unist-builder: "catalog:"
+    unist-util-find-after: "catalog:"
+    unist-util-find-all-after: "catalog:"
+    unist-util-find-all-before: "catalog:"
+    unist-util-find-between-all: "catalog:"
+    unist-util-visit: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-mark@workspace:*, @mirrordown/remd-mark@workspace:packages/remd-mark":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-mark@workspace:packages/remd-mark"
+  dependencies:
+    "@types/mdast": "catalog:"
+    unified: "catalog:"
+    unist-builder: "catalog:"
+    unist-util-find-after: "catalog:"
+    unist-util-find-all-after: "catalog:"
+    unist-util-find-all-before: "catalog:"
+    unist-util-find-between-all: "catalog:"
+    unist-util-visit: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-ruby@workspace:*, @mirrordown/remd-ruby@workspace:packages/remd-ruby":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-ruby@workspace:packages/remd-ruby"
+  dependencies:
+    "@types/mdast": "catalog:"
+    mdast-util-from-markdown: "catalog:"
+    micromark-util-character: "catalog:"
+    micromark-util-types: "catalog:"
+    unified: "catalog:"
+    unist-util-visit: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-steps@workspace:*, @mirrordown/remd-steps@workspace:packages/remd-steps":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-steps@workspace:packages/remd-steps"
+  dependencies:
+    "@types/hast": "catalog:"
+    "@types/mdast": "catalog:"
+    unified: "catalog:"
+    unist-util-visit: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-sub@workspace:*, @mirrordown/remd-sub@workspace:packages/remd-sub":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-sub@workspace:packages/remd-sub"
+  dependencies:
+    "@types/mdast": "catalog:"
+    unified: "catalog:"
+    unist-builder: "catalog:"
+    unist-util-find-after: "catalog:"
+    unist-util-find-all-after: "catalog:"
+    unist-util-find-all-before: "catalog:"
+    unist-util-find-between-all: "catalog:"
+    unist-util-visit: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-sup@workspace:*, @mirrordown/remd-sup@workspace:packages/remd-sup":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-sup@workspace:packages/remd-sup"
+  dependencies:
+    "@types/mdast": "catalog:"
+    unified: "catalog:"
+    unist-builder: "catalog:"
+    unist-util-find-after: "catalog:"
+    unist-util-find-all-after: "catalog:"
+    unist-util-find-all-before: "catalog:"
+    unist-util-find-between-all: "catalog:"
+    unist-util-visit: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-tabs@workspace:*, @mirrordown/remd-tabs@workspace:packages/remd-tabs":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-tabs@workspace:packages/remd-tabs"
+  dependencies:
+    "@types/hast": "catalog:"
+    "@types/mdast": "catalog:"
+    unified: "catalog:"
+    unist-util-visit: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
+"@mirrordown/remd-unwrap-images@workspace:*, @mirrordown/remd-unwrap-images@workspace:packages/remd-unwrap-images":
+  version: 0.0.0-use.local
+  resolution: "@mirrordown/remd-unwrap-images@workspace:packages/remd-unwrap-images"
+  dependencies:
+    "@types/hast": "catalog:"
+    hast-util-whitespace: "npm:^3.0.0"
+    unified: "catalog:"
+    unist-util-visit: "catalog:"
+  peerDependencies:
+    unified: ^11.0.0
+  languageName: unknown
+  linkType: soft
+
 "@napi-rs/wasm-runtime@npm:^1.1.4":
   version: 1.1.4
   resolution: "@napi-rs/wasm-runtime@npm:1.1.4"
@@ -1463,452 +1909,6 @@ __metadata:
   checksum: 10/dc9b792bf8fda515c6c035e16657d21096cf45409b010eb37147c44b25fa9366348f1701362ecc518e3919cf24b401aea37fd50d599462d5c497a19746f39ea9
   languageName: node
   linkType: hard
-
-"@saeris/markdown-docs@workspace:docs":
-  version: 0.0.0-use.local
-  resolution: "@saeris/markdown-docs@workspace:docs"
-  dependencies:
-    "@astrojs/check": "npm:^0.9.9"
-    "@fontsource-variable/mona-sans": "npm:^5.2.8"
-    "@fontsource/monaspace-argon": "npm:^5.2.5"
-    "@fontsource/monaspace-krypton": "npm:^5.2.5"
-    "@fontsource/monaspace-neon": "npm:^5.2.5"
-    "@fontsource/monaspace-radon": "npm:^5.2.5"
-    "@fontsource/monaspace-xenon": "npm:^5.2.5"
-    "@saeris/remd-attrs": "workspace:*"
-    "@saeris/remd-definition-list": "workspace:*"
-    "@saeris/remd-del": "workspace:*"
-    "@saeris/remd-github-alerts": "workspace:*"
-    "@saeris/remd-inline-svg": "workspace:*"
-    "@saeris/remd-ins": "workspace:*"
-    "@saeris/remd-kbd": "workspace:*"
-    "@saeris/remd-mark": "workspace:*"
-    "@saeris/remd-ruby": "workspace:*"
-    "@saeris/remd-steps": "workspace:*"
-    "@saeris/remd-sub": "workspace:*"
-    "@saeris/remd-sup": "workspace:*"
-    "@saeris/remd-tabs": "workspace:*"
-    "@saeris/remd-unwrap-images": "workspace:*"
-    astro: "npm:^7.0.0-beta.5"
-    typescript: "catalog:"
-  languageName: unknown
-  linkType: soft
-
-"@saeris/markdown@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@saeris/markdown@workspace:."
-  dependencies:
-    "@saeris/configs": "npm:^1.6.1"
-    "@types/markdown-it": "npm:^14.1.2"
-    "@types/node": "npm:^26.0.0"
-    "@varlock/bumpy": "npm:^1.15.0"
-    "@vscode/vsce": "npm:^3.9.2"
-    markdown-it: "npm:^14.2.0"
-    postcss: "npm:^8.5.15"
-    postcss-cli: "npm:^11.0.1"
-    postcss-import: "npm:^16.1.1"
-    rehype-stringify: "npm:^10.0.1"
-    remark-gfm: "npm:^4.0.1"
-    remark-parse: "npm:^11.0.0"
-    remark-rehype: "npm:^11.1.2"
-    typescript: "npm:^6.0.3"
-    unified: "npm:^11.0.5"
-    vite-plus: "npm:latest"
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-abbr@workspace:*, @saeris/mdit-abbr@workspace:packages/mdit-abbr":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-abbr@workspace:packages/mdit-abbr"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-attrs@workspace:*, @saeris/mdit-attrs@workspace:packages/mdit-attrs":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-attrs@workspace:packages/mdit-attrs"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-definition-list@workspace:*, @saeris/mdit-definition-list@workspace:packages/mdit-definition-list":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-definition-list@workspace:packages/mdit-definition-list"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-del@workspace:*, @saeris/mdit-del@workspace:packages/mdit-del":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-del@workspace:packages/mdit-del"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-github-alerts@workspace:*, @saeris/mdit-github-alerts@workspace:packages/mdit-github-alerts":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-github-alerts@workspace:packages/mdit-github-alerts"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-inline-svg@workspace:packages/mdit-inline-svg":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-inline-svg@workspace:packages/mdit-inline-svg"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-    svgo: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-ins@workspace:*, @saeris/mdit-ins@workspace:packages/mdit-ins":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-ins@workspace:packages/mdit-ins"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-kbd@workspace:*, @saeris/mdit-kbd@workspace:packages/mdit-kbd":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-kbd@workspace:packages/mdit-kbd"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-mark@workspace:*, @saeris/mdit-mark@workspace:packages/mdit-mark":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-mark@workspace:packages/mdit-mark"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-ruby@workspace:*, @saeris/mdit-ruby@workspace:packages/mdit-ruby":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-ruby@workspace:packages/mdit-ruby"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-steps@workspace:*, @saeris/mdit-steps@workspace:packages/mdit-steps":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-steps@workspace:packages/mdit-steps"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-sub@workspace:*, @saeris/mdit-sub@workspace:packages/mdit-sub":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-sub@workspace:packages/mdit-sub"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-sup@workspace:*, @saeris/mdit-sup@workspace:packages/mdit-sup":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-sup@workspace:packages/mdit-sup"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-tabs@workspace:*, @saeris/mdit-tabs@workspace:packages/mdit-tabs":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-tabs@workspace:packages/mdit-tabs"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/mdit-unwrap-images@workspace:*, @saeris/mdit-unwrap-images@workspace:packages/mdit-unwrap-images":
-  version: 0.0.0-use.local
-  resolution: "@saeris/mdit-unwrap-images@workspace:packages/mdit-unwrap-images"
-  dependencies:
-    "@types/markdown-it": "catalog:"
-    markdown-it: "catalog:"
-  peerDependencies:
-    markdown-it: ^14.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-abbr@workspace:packages/remd-abbr":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-abbr@workspace:packages/remd-abbr"
-  dependencies:
-    "@types/mdast": "catalog:"
-    unified: "catalog:"
-    unist-util-visit: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-attrs@workspace:*, @saeris/remd-attrs@workspace:packages/remd-attrs":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-attrs@workspace:packages/remd-attrs"
-  dependencies:
-    "@types/hast": "catalog:"
-    "@types/mdast": "catalog:"
-    unified: "catalog:"
-    unist-util-visit: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-definition-list@workspace:*, @saeris/remd-definition-list@workspace:packages/remd-definition-list":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-definition-list@workspace:packages/remd-definition-list"
-  dependencies:
-    "@types/hast": "catalog:"
-    mdast-util-from-markdown: "catalog:"
-    mdast-util-to-hast: "npm:^13.0.0"
-    micromark-core-commonmark: "npm:^2.0.0"
-    micromark-factory-space: "npm:^2.0.0"
-    micromark-util-character: "catalog:"
-    micromark-util-chunked: "npm:^2.0.0"
-    micromark-util-types: "catalog:"
-    unified: "catalog:"
-    unist-builder: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-del@workspace:*, @saeris/remd-del@workspace:packages/remd-del":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-del@workspace:packages/remd-del"
-  dependencies:
-    "@types/mdast": "catalog:"
-    unified: "catalog:"
-    unist-builder: "catalog:"
-    unist-util-find-after: "catalog:"
-    unist-util-find-all-after: "catalog:"
-    unist-util-find-all-before: "catalog:"
-    unist-util-find-between-all: "catalog:"
-    unist-util-visit: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-github-alerts@workspace:*, @saeris/remd-github-alerts@workspace:packages/remd-github-alerts":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-github-alerts@workspace:packages/remd-github-alerts"
-  dependencies:
-    "@types/hast": "catalog:"
-    "@types/mdast": "catalog:"
-    unified: "catalog:"
-    unist-util-visit: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-inline-svg@workspace:*, @saeris/remd-inline-svg@workspace:packages/remd-inline-svg":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-inline-svg@workspace:packages/remd-inline-svg"
-  dependencies:
-    rehype-parse: "npm:^9.0.1"
-    svgo: "catalog:"
-    unified: "catalog:"
-    vfile: "npm:^6.0.3"
-  peerDependencies:
-    unified: ^11.0.0
-    vfile: ^6.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-ins@workspace:*, @saeris/remd-ins@workspace:packages/remd-ins":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-ins@workspace:packages/remd-ins"
-  dependencies:
-    "@types/mdast": "catalog:"
-    unified: "catalog:"
-    unist-builder: "catalog:"
-    unist-util-find-after: "catalog:"
-    unist-util-find-all-after: "catalog:"
-    unist-util-find-all-before: "catalog:"
-    unist-util-find-between-all: "catalog:"
-    unist-util-visit: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-kbd@workspace:*, @saeris/remd-kbd@workspace:packages/remd-kbd":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-kbd@workspace:packages/remd-kbd"
-  dependencies:
-    "@types/mdast": "catalog:"
-    unified: "catalog:"
-    unist-builder: "catalog:"
-    unist-util-find-after: "catalog:"
-    unist-util-find-all-after: "catalog:"
-    unist-util-find-all-before: "catalog:"
-    unist-util-find-between-all: "catalog:"
-    unist-util-visit: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-mark@workspace:*, @saeris/remd-mark@workspace:packages/remd-mark":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-mark@workspace:packages/remd-mark"
-  dependencies:
-    "@types/mdast": "catalog:"
-    unified: "catalog:"
-    unist-builder: "catalog:"
-    unist-util-find-after: "catalog:"
-    unist-util-find-all-after: "catalog:"
-    unist-util-find-all-before: "catalog:"
-    unist-util-find-between-all: "catalog:"
-    unist-util-visit: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-ruby@workspace:*, @saeris/remd-ruby@workspace:packages/remd-ruby":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-ruby@workspace:packages/remd-ruby"
-  dependencies:
-    "@types/mdast": "catalog:"
-    mdast-util-from-markdown: "catalog:"
-    micromark-util-character: "catalog:"
-    micromark-util-types: "catalog:"
-    unified: "catalog:"
-    unist-util-visit: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-steps@workspace:*, @saeris/remd-steps@workspace:packages/remd-steps":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-steps@workspace:packages/remd-steps"
-  dependencies:
-    "@types/hast": "catalog:"
-    "@types/mdast": "catalog:"
-    unified: "catalog:"
-    unist-util-visit: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-sub@workspace:*, @saeris/remd-sub@workspace:packages/remd-sub":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-sub@workspace:packages/remd-sub"
-  dependencies:
-    "@types/mdast": "catalog:"
-    unified: "catalog:"
-    unist-builder: "catalog:"
-    unist-util-find-after: "catalog:"
-    unist-util-find-all-after: "catalog:"
-    unist-util-find-all-before: "catalog:"
-    unist-util-find-between-all: "catalog:"
-    unist-util-visit: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-sup@workspace:*, @saeris/remd-sup@workspace:packages/remd-sup":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-sup@workspace:packages/remd-sup"
-  dependencies:
-    "@types/mdast": "catalog:"
-    unified: "catalog:"
-    unist-builder: "catalog:"
-    unist-util-find-after: "catalog:"
-    unist-util-find-all-after: "catalog:"
-    unist-util-find-all-before: "catalog:"
-    unist-util-find-between-all: "catalog:"
-    unist-util-visit: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-tabs@workspace:*, @saeris/remd-tabs@workspace:packages/remd-tabs":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-tabs@workspace:packages/remd-tabs"
-  dependencies:
-    "@types/hast": "catalog:"
-    "@types/mdast": "catalog:"
-    unified: "catalog:"
-    unist-util-visit: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
-
-"@saeris/remd-unwrap-images@workspace:*, @saeris/remd-unwrap-images@workspace:packages/remd-unwrap-images":
-  version: 0.0.0-use.local
-  resolution: "@saeris/remd-unwrap-images@workspace:packages/remd-unwrap-images"
-  dependencies:
-    "@types/hast": "catalog:"
-    hast-util-whitespace: "npm:^3.0.0"
-    unified: "catalog:"
-    unist-util-visit: "catalog:"
-  peerDependencies:
-    unified: ^11.0.0
-  languageName: unknown
-  linkType: soft
 
 "@secretlint/config-creator@npm:^10.2.2":
   version: 10.2.2
@@ -4918,7 +4918,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-abbr@workspace:extensions/markdown-abbr"
   dependencies:
-    "@saeris/mdit-abbr": "workspace:*"
+    "@mirrordown/mdit-abbr": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown
@@ -4928,7 +4928,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-attrs@workspace:extensions/markdown-attrs"
   dependencies:
-    "@saeris/mdit-attrs": "workspace:*"
+    "@mirrordown/mdit-attrs": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown
@@ -4938,7 +4938,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-definition-list@workspace:extensions/markdown-definition-list"
   dependencies:
-    "@saeris/mdit-definition-list": "workspace:*"
+    "@mirrordown/mdit-definition-list": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown
@@ -4948,7 +4948,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-del@workspace:extensions/markdown-del"
   dependencies:
-    "@saeris/mdit-del": "workspace:*"
+    "@mirrordown/mdit-del": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown
@@ -4958,7 +4958,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-denden-furigana@workspace:extensions/markdown-denden-furigana"
   dependencies:
-    "@saeris/mdit-ruby": "workspace:*"
+    "@mirrordown/mdit-ruby": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown
@@ -4968,7 +4968,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-github-alerts@workspace:extensions/markdown-github-alerts"
   dependencies:
-    "@saeris/mdit-github-alerts": "workspace:*"
+    "@mirrordown/mdit-github-alerts": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown
@@ -4986,7 +4986,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-ins@workspace:extensions/markdown-ins"
   dependencies:
-    "@saeris/mdit-ins": "workspace:*"
+    "@mirrordown/mdit-ins": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown
@@ -5028,7 +5028,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-kbd@workspace:extensions/markdown-kbd"
   dependencies:
-    "@saeris/mdit-kbd": "workspace:*"
+    "@mirrordown/mdit-kbd": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown
@@ -5038,7 +5038,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-mark@workspace:extensions/markdown-mark"
   dependencies:
-    "@saeris/mdit-mark": "workspace:*"
+    "@mirrordown/mdit-mark": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown
@@ -5054,7 +5054,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-steps@workspace:extensions/markdown-steps"
   dependencies:
-    "@saeris/mdit-steps": "workspace:*"
+    "@mirrordown/mdit-steps": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown
@@ -5064,7 +5064,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-sub@workspace:extensions/markdown-sub"
   dependencies:
-    "@saeris/mdit-sub": "workspace:*"
+    "@mirrordown/mdit-sub": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown
@@ -5074,7 +5074,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-sup@workspace:extensions/markdown-sup"
   dependencies:
-    "@saeris/mdit-sup": "workspace:*"
+    "@mirrordown/mdit-sup": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown
@@ -5091,7 +5091,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-tabs@workspace:extensions/markdown-tabs"
   dependencies:
-    "@saeris/mdit-tabs": "workspace:*"
+    "@mirrordown/mdit-tabs": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown
@@ -5101,7 +5101,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-unwrap-images@workspace:extensions/markdown-unwrap-images"
   dependencies:
-    "@saeris/mdit-unwrap-images": "workspace:*"
+    "@mirrordown/mdit-unwrap-images": "workspace:*"
     "@types/markdown-it": "catalog:"
     "@types/vscode": "npm:^1.125.0"
   languageName: unknown

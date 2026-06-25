@@ -1,5 +1,5 @@
 import type MarkdownIt from "markdown-it";
-import { abbr } from "@saeris/mdit-abbr";
+import { abbr } from "@mirrordown/mdit-abbr";
 
 export const activate = (): {
   extendMarkdownIt: (md: MarkdownIt) => MarkdownIt;

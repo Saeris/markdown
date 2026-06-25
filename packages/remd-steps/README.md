@@ -1,6 +1,6 @@
-# @saeris/remd-steps
+# @mirrordown/remd-steps
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A remark/rehype (unified) plugin for the `steps` syntax extension.
 
@@ -74,14 +74,12 @@ Use `@@` to nest steps inside a parent step:
 > ```
 ````
 
-## Usage
-
 ## Install
 
-Install `@saeris/remd-steps`. You must also pass `stepsHastHandlers` to `remarkRehype` and import the stylesheet:
+Install `@mirrordown/remd-steps`. You must also pass `stepsHastHandlers` to `remarkRehype` and import the stylesheet:
 
 ```sh
-npm install @saeris/remd-steps
+npm install @mirrordown/remd-steps
 ```
 
 ### Unified
@@ -91,8 +89,8 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { remarkSteps, stepsHastHandlers } from "@saeris/remd-steps";
-import "@saeris/remd-steps/steps.css";
+import { remarkSteps, stepsHastHandlers } from "@mirrordown/remd-steps";
+import "@mirrordown/remd-steps/steps.css";
 
 const processor = unified()
   .use(remarkParse)
@@ -106,8 +104,8 @@ const processor = unified()
 ```ts
 // astro.config.ts
 import { defineConfig } from "astro/config";
-import { remarkSteps, stepsHastHandlers } from "@saeris/remd-steps";
-import "@saeris/remd-steps/steps.css";
+import { remarkSteps, stepsHastHandlers } from "@mirrordown/remd-steps";
+import "@mirrordown/remd-steps/steps.css";
 
 export default defineConfig({
   markdown: {
@@ -122,8 +120,8 @@ export default defineConfig({
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { remarkSteps, stepsHastHandlers } from "@saeris/remd-steps";
-import "@saeris/remd-steps/steps.css";
+import { remarkSteps, stepsHastHandlers } from "@mirrordown/remd-steps";
+import "@mirrordown/remd-steps/steps.css";
 
 export default defineConfig({
   markdown: {
@@ -135,7 +133,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/steps](https://saeris.github.io/markdown/guide/plugins/steps)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

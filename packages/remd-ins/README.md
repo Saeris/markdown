@@ -1,6 +1,6 @@
-# @saeris/remd-ins
+# @mirrordown/remd-ins
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A remark/rehype (unified) plugin for the `ins` syntax extension.
 
@@ -22,12 +22,10 @@ Wrap text in double plus signs to mark it as inserted:
 You can use it inline: the price is now ++$35++ (was $50).
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/remd-ins
+npm install @mirrordown/remd-ins
 ```
 
 ### Unified
@@ -37,7 +35,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { remarkIns } from "@saeris/remd-ins";
+import { remarkIns } from "@mirrordown/remd-ins";
 
 const processor = unified()
   .use(remarkParse)
@@ -51,7 +49,7 @@ const processor = unified()
 ```ts
 // astro.config.ts
 import { defineConfig } from "astro/config";
-import { remarkIns } from "@saeris/remd-ins";
+import { remarkIns } from "@mirrordown/remd-ins";
 
 export default defineConfig({
   markdown: {
@@ -65,7 +63,7 @@ export default defineConfig({
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { remarkIns } from "@saeris/remd-ins";
+import { remarkIns } from "@mirrordown/remd-ins";
 
 export default defineConfig({
   markdown: {
@@ -76,7 +74,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/ins](https://saeris.github.io/markdown/guide/plugins/ins)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

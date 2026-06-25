@@ -1,9 +1,9 @@
 {
-  "name": "@saeris/markdown",
+  "name": "@mirrordown/markdown",
   "private": true,
   "license": "MIT",
   "author": "Drake Costa <drake@saeris.io> (https://saeris.gg)",
-  "repository": "git@github.com:saeris/markdown.git",
+  "repository": "git@github.com:mirrordown/mirrordown.git",
   "workspaces": [
     "docs",
     "extensions/*",
@@ -12,6 +12,11 @@
   "type": "module",
   "scripts": {
     "prepare": "vp config"
+  },
+  "fledgling": {
+    "provider": "github",
+    "workflow": "release.yml",
+    "permissions": "publish"
   },
   "devDependencies": {
     "@saeris/configs": "^1.6.1",

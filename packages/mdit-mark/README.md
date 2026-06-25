@@ -1,6 +1,6 @@
-# @saeris/mdit-mark
+# @mirrordown/mdit-mark
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A markdown-it plugin for the `mark` syntax extension.
 
@@ -22,19 +22,17 @@ Wrap text in double equals signs to highlight it:
 You can use it inline: remember to ==save your work== before closing.
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/mdit-mark
+npm install @mirrordown/mdit-mark
 ```
 
 ### Standalone
 
 ```ts
 import MarkdownIt from "markdown-it";
-import { mark } from "@saeris/mdit-mark";
+import { mark } from "@mirrordown/mdit-mark";
 
 const md = new MarkdownIt().use(mark);
 ```
@@ -44,7 +42,7 @@ const md = new MarkdownIt().use(mark);
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { mark } from "@saeris/mdit-mark";
+import { mark } from "@mirrordown/mdit-mark";
 
 export default defineConfig({
   markdown: {
@@ -55,7 +53,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/mark](https://saeris.github.io/markdown/guide/plugins/mark)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

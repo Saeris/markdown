@@ -1,6 +1,6 @@
-# @saeris/remd-definition-list
+# @mirrordown/remd-definition-list
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A remark/rehype (unified) plugin for the `definition-list` syntax extension.
 
@@ -34,14 +34,12 @@ HTTPS
 : Protocols for transferring data on the web.
 ```
 
-## Usage
-
 ## Install
 
-Install `@saeris/remd-definition-list`. You must also pass `defListHastHandlers` to `remarkRehype` so the custom AST nodes are converted to HTML correctly:
+Install `@mirrordown/remd-definition-list`. You must also pass `defListHastHandlers` to `remarkRehype` so the custom AST nodes are converted to HTML correctly:
 
 ```sh
-npm install @saeris/remd-definition-list
+npm install @mirrordown/remd-definition-list
 ```
 
 ### Unified
@@ -54,7 +52,7 @@ import rehypeStringify from "rehype-stringify";
 import {
   remarkDefinitionList,
   defListHastHandlers
-} from "@saeris/remd-definition-list";
+} from "@mirrordown/remd-definition-list";
 
 const processor = unified()
   .use(remarkParse)
@@ -71,7 +69,7 @@ import { defineConfig } from "astro/config";
 import {
   remarkDefinitionList,
   defListHastHandlers
-} from "@saeris/remd-definition-list";
+} from "@mirrordown/remd-definition-list";
 
 export default defineConfig({
   markdown: {
@@ -89,7 +87,7 @@ import { defineConfig } from "vitepress";
 import {
   remarkDefinitionList,
   defListHastHandlers
-} from "@saeris/remd-definition-list";
+} from "@mirrordown/remd-definition-list";
 
 export default defineConfig({
   markdown: {
@@ -101,7 +99,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/definition-list](https://saeris.github.io/markdown/guide/plugins/definition-list)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

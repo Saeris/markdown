@@ -1,5 +1,5 @@
 import type MarkdownIt from "markdown-it";
-import { del } from "@saeris/mdit-del";
+import { del } from "@mirrordown/mdit-del";
 
 export const activate = (): {
   extendMarkdownIt: (md: MarkdownIt) => MarkdownIt;

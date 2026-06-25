@@ -1,25 +1,25 @@
 import { defineConfig, fontProviders } from "astro/config";
-import { remarkAbbr } from "@saeris/remd-abbr";
-import { remarkAttrs } from "@saeris/remd-attrs";
+import { remarkAbbr } from "@mirrordown/remd-abbr";
+import { remarkAttrs } from "@mirrordown/remd-attrs";
 import {
   remarkDefinitionList,
   defListHastHandlers
-} from "@saeris/remd-definition-list";
-import { remarkDel } from "@saeris/remd-del";
+} from "@mirrordown/remd-definition-list";
+import { remarkDel } from "@mirrordown/remd-del";
 import {
   remarkGithubAlerts,
   githubAlertsHastHandlers
-} from "@saeris/remd-github-alerts";
-import { remarkIns } from "@saeris/remd-ins";
-import { remarkKbd } from "@saeris/remd-kbd";
-import { remarkMark } from "@saeris/remd-mark";
-import { remarkRuby } from "@saeris/remd-ruby";
-import { remarkSteps, stepsHastHandlers } from "@saeris/remd-steps";
-import { remarkSub } from "@saeris/remd-sub";
-import { remarkSup } from "@saeris/remd-sup";
-import { remarkTabs, tabsHastHandlers } from "@saeris/remd-tabs";
-import { rehypeInlineSvg } from "@saeris/remd-inline-svg";
-import { rehypeUnwrapImages } from "@saeris/remd-unwrap-images";
+} from "@mirrordown/remd-github-alerts";
+import { remarkIns } from "@mirrordown/remd-ins";
+import { remarkKbd } from "@mirrordown/remd-kbd";
+import { remarkMark } from "@mirrordown/remd-mark";
+import { remarkRuby } from "@mirrordown/remd-ruby";
+import { remarkSteps, stepsHastHandlers } from "@mirrordown/remd-steps";
+import { remarkSub } from "@mirrordown/remd-sub";
+import { remarkSup } from "@mirrordown/remd-sup";
+import { remarkTabs, tabsHastHandlers } from "@mirrordown/remd-tabs";
+import { rehypeInlineSvg } from "@mirrordown/remd-inline-svg";
+import { rehypeUnwrapImages } from "@mirrordown/remd-unwrap-images";
 
 export default defineConfig({
   fonts: [

@@ -1,6 +1,6 @@
-# @saeris/remd-ruby
+# @mirrordown/remd-ruby
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A remark/rehype (unified) plugin for the `ruby` syntax extension.
 
@@ -24,12 +24,10 @@ Use `{base text|reading}` inline to annotate characters with their pronunciation
 
 Optionally pass `rp` parentheses for fallback rendering in unsupported browsers:
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/remd-ruby
+npm install @mirrordown/remd-ruby
 ```
 
 ### Unified
@@ -39,7 +37,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { remarkRuby } from "@saeris/remd-ruby";
+import { remarkRuby } from "@mirrordown/remd-ruby";
 
 const processor = unified()
   .use(remarkParse)
@@ -60,7 +58,7 @@ const processorWithRp = unified()
 ```ts
 // astro.config.ts
 import { defineConfig } from "astro/config";
-import { remarkRuby } from "@saeris/remd-ruby";
+import { remarkRuby } from "@mirrordown/remd-ruby";
 
 export default defineConfig({
   markdown: {
@@ -74,7 +72,7 @@ export default defineConfig({
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { remarkRuby } from "@saeris/remd-ruby";
+import { remarkRuby } from "@mirrordown/remd-ruby";
 
 export default defineConfig({
   markdown: {
@@ -85,7 +83,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/ruby](https://saeris.github.io/markdown/guide/plugins/ruby)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

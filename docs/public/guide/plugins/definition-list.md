@@ -54,10 +54,10 @@ Write a term on one line, then follow it with one or more definitions prefixed b
 ## Usage
 
 % Remark
-> Install `@saeris/remd-definition-list`. You must also pass `defListHastHandlers` to `remarkRehype` so the custom AST nodes are converted to HTML correctly:
+> Install `@mirrordown/remd-definition-list`. You must also pass `defListHastHandlers` to `remarkRehype` so the custom AST nodes are converted to HTML correctly:
 >
 > ```sh
-> npm install @saeris/remd-definition-list
+> npm install @mirrordown/remd-definition-list
 > ```
 %% Unified
 > ```ts
@@ -65,7 +65,7 @@ Write a term on one line, then follow it with one or more definitions prefixed b
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { remarkDefinitionList, defListHastHandlers } from "@saeris/remd-definition-list";
+> import { remarkDefinitionList, defListHastHandlers } from "@mirrordown/remd-definition-list";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -77,7 +77,7 @@ Write a term on one line, then follow it with one or more definitions prefixed b
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { remarkDefinitionList, defListHastHandlers } from "@saeris/remd-definition-list";
+> import { remarkDefinitionList, defListHastHandlers } from "@mirrordown/remd-definition-list";
 >
 > export default defineConfig({
 >   markdown: {
@@ -90,7 +90,7 @@ Write a term on one line, then follow it with one or more definitions prefixed b
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { remarkDefinitionList, defListHastHandlers } from "@saeris/remd-definition-list";
+> import { remarkDefinitionList, defListHastHandlers } from "@mirrordown/remd-definition-list";
 >
 > export default defineConfig({
 >   markdown: {
@@ -101,12 +101,12 @@ Write a term on one line, then follow it with one or more definitions prefixed b
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-definition-list
+> npm install @mirrordown/mdit-definition-list
 > ```
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { definitionList } from "@saeris/mdit-definition-list";
+> import { definitionList } from "@mirrordown/mdit-definition-list";
 >
 > const md = new MarkdownIt().use(definitionList);
 > ```
@@ -114,7 +114,7 @@ Write a term on one line, then follow it with one or more definitions prefixed b
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { definitionList } from "@saeris/mdit-definition-list";
+> import { definitionList } from "@mirrordown/mdit-definition-list";
 >
 > export default defineConfig({
 >   markdown: {

@@ -112,10 +112,10 @@ Use `%%` for a second level of nesting inside a tab:
 ## Usage
 
 % Remark
-> Install `@saeris/remd-tabs`. You must also pass `tabsHastHandlers` to `remarkRehype` and import the stylesheet:
+> Install `@mirrordown/remd-tabs`. You must also pass `tabsHastHandlers` to `remarkRehype` and import the stylesheet:
 >
 > ```sh
-> npm install @saeris/remd-tabs
+> npm install @mirrordown/remd-tabs
 > ```
 %% Unified
 > ```ts
@@ -123,8 +123,8 @@ Use `%%` for a second level of nesting inside a tab:
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { remarkTabs, tabsHastHandlers } from "@saeris/remd-tabs";
-> import "@saeris/remd-tabs/tabs.css";
+> import { remarkTabs, tabsHastHandlers } from "@mirrordown/remd-tabs";
+> import "@mirrordown/remd-tabs/tabs.css";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -136,8 +136,8 @@ Use `%%` for a second level of nesting inside a tab:
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { remarkTabs, tabsHastHandlers } from "@saeris/remd-tabs";
-> import "@saeris/remd-tabs/tabs.css";
+> import { remarkTabs, tabsHastHandlers } from "@mirrordown/remd-tabs";
+> import "@mirrordown/remd-tabs/tabs.css";
 >
 > export default defineConfig({
 >   markdown: {
@@ -150,8 +150,8 @@ Use `%%` for a second level of nesting inside a tab:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { remarkTabs, tabsHastHandlers } from "@saeris/remd-tabs";
-> import "@saeris/remd-tabs/tabs.css";
+> import { remarkTabs, tabsHastHandlers } from "@mirrordown/remd-tabs";
+> import "@mirrordown/remd-tabs/tabs.css";
 >
 > export default defineConfig({
 >   markdown: {
@@ -162,13 +162,13 @@ Use `%%` for a second level of nesting inside a tab:
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-tabs
+> npm install @mirrordown/mdit-tabs
 > ```
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { tabs } from "@saeris/mdit-tabs";
-> import "@saeris/mdit-tabs/tabs.css";
+> import { tabs } from "@mirrordown/mdit-tabs";
+> import "@mirrordown/mdit-tabs/tabs.css";
 >
 > const md = new MarkdownIt().use(tabs);
 > ```
@@ -176,8 +176,8 @@ Use `%%` for a second level of nesting inside a tab:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { tabs } from "@saeris/mdit-tabs";
-> import "@saeris/mdit-tabs/tabs.css";
+> import { tabs } from "@mirrordown/mdit-tabs";
+> import "@mirrordown/mdit-tabs/tabs.css";
 >
 > export default defineConfig({
 >   markdown: {

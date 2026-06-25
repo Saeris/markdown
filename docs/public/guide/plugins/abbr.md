@@ -36,7 +36,7 @@ Define abbreviations anywhere in the document using the `*[ABBR]: Full text` syn
 
 % Remark
 > ```sh
-> npm install @saeris/remd-abbr
+> npm install @mirrordown/remd-abbr
 > ```
 %% Unified
 > ```ts
@@ -44,7 +44,7 @@ Define abbreviations anywhere in the document using the `*[ABBR]: Full text` syn
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { remarkAbbr } from "@saeris/remd-abbr";
+> import { remarkAbbr } from "@mirrordown/remd-abbr";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -56,7 +56,7 @@ Define abbreviations anywhere in the document using the `*[ABBR]: Full text` syn
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { remarkAbbr } from "@saeris/remd-abbr";
+> import { remarkAbbr } from "@mirrordown/remd-abbr";
 >
 > export default defineConfig({
 >   markdown: {
@@ -68,7 +68,7 @@ Define abbreviations anywhere in the document using the `*[ABBR]: Full text` syn
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { remarkAbbr } from "@saeris/remd-abbr";
+> import { remarkAbbr } from "@mirrordown/remd-abbr";
 >
 > export default defineConfig({
 >   markdown: {
@@ -78,12 +78,12 @@ Define abbreviations anywhere in the document using the `*[ABBR]: Full text` syn
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-abbr
+> npm install @mirrordown/mdit-abbr
 > ```
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { abbr } from "@saeris/mdit-abbr";
+> import { abbr } from "@mirrordown/mdit-abbr";
 >
 > const md = new MarkdownIt().use(abbr);
 > ```
@@ -91,7 +91,7 @@ Define abbreviations anywhere in the document using the `*[ABBR]: Full text` syn
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { abbr } from "@saeris/mdit-abbr";
+> import { abbr } from "@mirrordown/mdit-abbr";
 >
 > export default defineConfig({
 >   markdown: {

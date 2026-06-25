@@ -1,6 +1,6 @@
-# @saeris/mdit-github-alerts
+# @mirrordown/mdit-github-alerts
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A markdown-it plugin for the `github-alerts` syntax extension.
 
@@ -73,8 +73,6 @@ Set `icons: false` to suppress the SVG icon from every alert title:
 > This warning has no icon.
 ```
 
-## Install
-
 ```ts
 md.use(githubAlerts, { icons: false });
 ```
@@ -88,8 +86,6 @@ Supply a `titles` map to replace the default heading text for any built-in type:
 > This is a pro tip.
 ```
 
-## Install
-
 ```ts
 md.use(githubAlerts, { titles: { tip: "Pro tip" } });
 ```
@@ -97,8 +93,6 @@ md.use(githubAlerts, { titles: { tip: "Pro tip" } });
 ### Add custom alert types
 
 Register new keywords with `types`. The value is the canonical type name that appears in the `data-alert` attribute and determines which CSS variable set applies. Style the new type with your own CSS:
-
-## Install
 
 ```ts
 md.use(githubAlerts, {
@@ -113,20 +107,18 @@ md.use(githubAlerts, {
 }
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/mdit-github-alerts
+npm install @mirrordown/mdit-github-alerts
 ```
 
 ### Standalone
 
 ```ts
 import MarkdownIt from "markdown-it";
-import { githubAlerts } from "@saeris/mdit-github-alerts";
-import "@saeris/mdit-github-alerts/github-alerts.css";
+import { githubAlerts } from "@mirrordown/mdit-github-alerts";
+import "@mirrordown/mdit-github-alerts/github-alerts.css";
 
 const md = new MarkdownIt().use(githubAlerts);
 ```
@@ -136,8 +128,8 @@ const md = new MarkdownIt().use(githubAlerts);
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { githubAlerts } from "@saeris/mdit-github-alerts";
-import "@saeris/mdit-github-alerts/github-alerts.css";
+import { githubAlerts } from "@mirrordown/mdit-github-alerts";
+import "@mirrordown/mdit-github-alerts/github-alerts.css";
 
 export default defineConfig({
   markdown: {
@@ -148,7 +140,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/github-alerts](https://saeris.github.io/markdown/guide/plugins/github-alerts)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

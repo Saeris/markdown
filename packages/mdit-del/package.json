@@ -1,9 +1,12 @@
 {
-  "name": "@saeris/mdit-del",
+  "name": "@mirrordown/mdit-del",
   "version": "0.1.0",
   "license": "MIT",
   "author": "Drake Costa <drake@saeris.io> (https://saeris.gg)",
-  "repository": "git@github.com:saeris/markdown.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mirrordown/mirrordown.git"
+  },
   "files": [
     "dist"
   ],
@@ -29,8 +32,7 @@
     "buildCommand": "vp pack",
     "publishCommand": [
       "node ../../scripts/sync-jsr-version.mjs",
-      "npm publish --access public",
-      "npx jsr publish"
+      "npm publish --access public"
     ]
   }
 }

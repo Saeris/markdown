@@ -178,10 +178,10 @@ Register new keywords with `types`. The value is the canonical type name that ap
 ## Usage
 
 % Remark
-> Install `@saeris/remd-github-alerts`. You must also pass `githubAlertsHastHandlers` to `remarkRehype` and import the stylesheet:
+> Install `@mirrordown/remd-github-alerts`. You must also pass `githubAlertsHastHandlers` to `remarkRehype` and import the stylesheet:
 >
 > ```sh
-> npm install @saeris/remd-github-alerts
+> npm install @mirrordown/remd-github-alerts
 > ```
 %% Unified
 > ```ts
@@ -189,8 +189,8 @@ Register new keywords with `types`. The value is the canonical type name that ap
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { remarkGithubAlerts, githubAlertsHastHandlers } from "@saeris/remd-github-alerts";
-> import "@saeris/remd-github-alerts/github-alerts.css";
+> import { remarkGithubAlerts, githubAlertsHastHandlers } from "@mirrordown/remd-github-alerts";
+> import "@mirrordown/remd-github-alerts/github-alerts.css";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -202,8 +202,8 @@ Register new keywords with `types`. The value is the canonical type name that ap
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { remarkGithubAlerts, githubAlertsHastHandlers } from "@saeris/remd-github-alerts";
-> import "@saeris/remd-github-alerts/github-alerts.css";
+> import { remarkGithubAlerts, githubAlertsHastHandlers } from "@mirrordown/remd-github-alerts";
+> import "@mirrordown/remd-github-alerts/github-alerts.css";
 >
 > export default defineConfig({
 >   markdown: {
@@ -216,8 +216,8 @@ Register new keywords with `types`. The value is the canonical type name that ap
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { remarkGithubAlerts, githubAlertsHastHandlers } from "@saeris/remd-github-alerts";
-> import "@saeris/remd-github-alerts/github-alerts.css";
+> import { remarkGithubAlerts, githubAlertsHastHandlers } from "@mirrordown/remd-github-alerts";
+> import "@mirrordown/remd-github-alerts/github-alerts.css";
 >
 > export default defineConfig({
 >   markdown: {
@@ -228,13 +228,13 @@ Register new keywords with `types`. The value is the canonical type name that ap
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-github-alerts
+> npm install @mirrordown/mdit-github-alerts
 > ```
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { githubAlerts } from "@saeris/mdit-github-alerts";
-> import "@saeris/mdit-github-alerts/github-alerts.css";
+> import { githubAlerts } from "@mirrordown/mdit-github-alerts";
+> import "@mirrordown/mdit-github-alerts/github-alerts.css";
 >
 > const md = new MarkdownIt().use(githubAlerts);
 > ```
@@ -242,8 +242,8 @@ Register new keywords with `types`. The value is the canonical type name that ap
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { githubAlerts } from "@saeris/mdit-github-alerts";
-> import "@saeris/mdit-github-alerts/github-alerts.css";
+> import { githubAlerts } from "@mirrordown/mdit-github-alerts";
+> import "@mirrordown/mdit-github-alerts/github-alerts.css";
 >
 > export default defineConfig({
 >   markdown: {

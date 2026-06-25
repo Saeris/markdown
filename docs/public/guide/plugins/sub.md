@@ -34,7 +34,7 @@ Wrap text in single tildes to render it as subscript:
 
 % Remark
 > ```sh
-> npm install @saeris/remd-sub
+> npm install @mirrordown/remd-sub
 > ```
 %% Unified
 > ```ts
@@ -42,7 +42,7 @@ Wrap text in single tildes to render it as subscript:
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { remarkSub } from "@saeris/remd-sub";
+> import { remarkSub } from "@mirrordown/remd-sub";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -54,7 +54,7 @@ Wrap text in single tildes to render it as subscript:
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { remarkSub } from "@saeris/remd-sub";
+> import { remarkSub } from "@mirrordown/remd-sub";
 >
 > export default defineConfig({
 >   markdown: {
@@ -66,7 +66,7 @@ Wrap text in single tildes to render it as subscript:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { remarkSub } from "@saeris/remd-sub";
+> import { remarkSub } from "@mirrordown/remd-sub";
 >
 > export default defineConfig({
 >   markdown: {
@@ -76,12 +76,12 @@ Wrap text in single tildes to render it as subscript:
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-sub
+> npm install @mirrordown/mdit-sub
 > ```
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { sub } from "@saeris/mdit-sub";
+> import { sub } from "@mirrordown/mdit-sub";
 >
 > const md = new MarkdownIt().use(sub);
 > ```
@@ -89,7 +89,7 @@ Wrap text in single tildes to render it as subscript:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { sub } from "@saeris/mdit-sub";
+> import { sub } from "@mirrordown/mdit-sub";
 >
 > export default defineConfig({
 >   markdown: {

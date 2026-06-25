@@ -1,6 +1,6 @@
-# @saeris/remd-unwrap-images
+# @mirrordown/remd-unwrap-images
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A remark/rehype (unified) plugin for the `unwrap-images` syntax extension.
 
@@ -32,14 +32,62 @@ Images mixed with text are **not** unwrapped:
 Here is an inline image: ![icon](https://picsum.photos/16/16) within a sentence.
 ```
 
-## Usage
-
 [!NOTE]
 This is a rehype plugin (`rehype-*`), not a remark plugin. Add it **after** `remarkRehype` in your pipeline.
 
+## Install
+
+```sh
+npm install @mirrordown/remd-unwrap-images
+```
+
+### Unified
+
+```ts
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import rehypeStringify from "rehype-stringify";
+import { rehypeUnwrapImages } from "@mirrordown/remd-unwrap-images";
+
+const processor = unified()
+  .use(remarkParse)
+  .use(remarkRehype)
+  .use(rehypeUnwrapImages)
+  .use(rehypeStringify);
+```
+
+### Astro
+
+```ts
+// astro.config.ts
+import { defineConfig } from "astro/config";
+import { rehypeUnwrapImages } from "@mirrordown/remd-unwrap-images";
+
+export default defineConfig({
+  markdown: {
+    rehypePlugins: [rehypeUnwrapImages]
+  }
+});
+```
+
+### VitePress
+
+```ts
+// .vitepress/config.ts
+import { defineConfig } from "vitepress";
+import { rehypeUnwrapImages } from "@mirrordown/remd-unwrap-images";
+
+export default defineConfig({
+  markdown: {
+    rehypePlugins: [rehypeUnwrapImages]
+  }
+});
+```
+
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/unwrap-images](https://saeris.github.io/markdown/guide/plugins/unwrap-images)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

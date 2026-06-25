@@ -13,7 +13,7 @@ export async function getLastEditTime(path: string): Promise<Date | null> {
   if (token) headers.set("Authorization", `Bearer ${token}`);
 
   const res = await fetch(
-    `https://api.github.com/repos/saeris/markdown/commits?${params}`,
+    `https://api.github.com/repos/mirrordown/mirrordown/commits?${params}`,
     {
       headers
     }

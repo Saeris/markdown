@@ -1,6 +1,6 @@
-# @saeris/mdit-ruby
+# @mirrordown/mdit-ruby
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A markdown-it plugin for the `ruby` syntax extension.
 
@@ -24,19 +24,17 @@ Use `{base text|reading}` inline to annotate characters with their pronunciation
 
 Optionally pass `rp` parentheses for fallback rendering in unsupported browsers:
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/mdit-ruby
+npm install @mirrordown/mdit-ruby
 ```
 
 ### Standalone
 
 ```ts
 import MarkdownIt from "markdown-it";
-import { ruby } from "@saeris/mdit-ruby";
+import { ruby } from "@mirrordown/mdit-ruby";
 
 const md = new MarkdownIt().use(ruby);
 ```
@@ -46,7 +44,7 @@ const md = new MarkdownIt().use(ruby);
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { ruby } from "@saeris/mdit-ruby";
+import { ruby } from "@mirrordown/mdit-ruby";
 
 export default defineConfig({
   markdown: {
@@ -57,7 +55,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/ruby](https://saeris.github.io/markdown/guide/plugins/ruby)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

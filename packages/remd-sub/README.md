@@ -1,6 +1,6 @@
-# @saeris/remd-sub
+# @mirrordown/remd-sub
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A remark/rehype (unified) plugin for the `sub` syntax extension.
 
@@ -22,12 +22,10 @@ The chemical formula for water is H~2~O.
 Carbon dioxide is CO~2~.
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/remd-sub
+npm install @mirrordown/remd-sub
 ```
 
 ### Unified
@@ -37,7 +35,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { remarkSub } from "@saeris/remd-sub";
+import { remarkSub } from "@mirrordown/remd-sub";
 
 const processor = unified()
   .use(remarkParse)
@@ -51,7 +49,7 @@ const processor = unified()
 ```ts
 // astro.config.ts
 import { defineConfig } from "astro/config";
-import { remarkSub } from "@saeris/remd-sub";
+import { remarkSub } from "@mirrordown/remd-sub";
 
 export default defineConfig({
   markdown: {
@@ -65,7 +63,7 @@ export default defineConfig({
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { remarkSub } from "@saeris/remd-sub";
+import { remarkSub } from "@mirrordown/remd-sub";
 
 export default defineConfig({
   markdown: {
@@ -76,7 +74,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/sub](https://saeris.github.io/markdown/guide/plugins/sub)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

@@ -34,7 +34,7 @@ Wrap text in double equals signs to highlight it:
 
 % Remark
 > ```sh
-> npm install @saeris/remd-mark
+> npm install @mirrordown/remd-mark
 > ```
 %% Unified
 > ```ts
@@ -42,7 +42,7 @@ Wrap text in double equals signs to highlight it:
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { remarkMark } from "@saeris/remd-mark";
+> import { remarkMark } from "@mirrordown/remd-mark";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -54,7 +54,7 @@ Wrap text in double equals signs to highlight it:
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { remarkMark } from "@saeris/remd-mark";
+> import { remarkMark } from "@mirrordown/remd-mark";
 >
 > export default defineConfig({
 >   markdown: {
@@ -66,7 +66,7 @@ Wrap text in double equals signs to highlight it:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { remarkMark } from "@saeris/remd-mark";
+> import { remarkMark } from "@mirrordown/remd-mark";
 >
 > export default defineConfig({
 >   markdown: {
@@ -76,12 +76,12 @@ Wrap text in double equals signs to highlight it:
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-mark
+> npm install @mirrordown/mdit-mark
 > ```
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { mark } from "@saeris/mdit-mark";
+> import { mark } from "@mirrordown/mdit-mark";
 >
 > const md = new MarkdownIt().use(mark);
 > ```
@@ -89,7 +89,7 @@ Wrap text in double equals signs to highlight it:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { mark } from "@saeris/mdit-mark";
+> import { mark } from "@mirrordown/mdit-mark";
 >
 > export default defineConfig({
 >   markdown: {

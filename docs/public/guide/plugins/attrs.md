@@ -82,7 +82,7 @@ Attributes are written in curly braces using CSS-like shorthand:
 
 % Remark
 > ```sh
-> npm install @saeris/remd-attrs
+> npm install @mirrordown/remd-attrs
 > ```
 %% Unified
 > ```ts
@@ -90,7 +90,7 @@ Attributes are written in curly braces using CSS-like shorthand:
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { remarkAttrs } from "@saeris/remd-attrs";
+> import { remarkAttrs } from "@mirrordown/remd-attrs";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -102,7 +102,7 @@ Attributes are written in curly braces using CSS-like shorthand:
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { remarkAttrs } from "@saeris/remd-attrs";
+> import { remarkAttrs } from "@mirrordown/remd-attrs";
 >
 > export default defineConfig({
 >   markdown: {
@@ -114,7 +114,7 @@ Attributes are written in curly braces using CSS-like shorthand:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { remarkAttrs } from "@saeris/remd-attrs";
+> import { remarkAttrs } from "@mirrordown/remd-attrs";
 >
 > export default defineConfig({
 >   markdown: {
@@ -124,12 +124,12 @@ Attributes are written in curly braces using CSS-like shorthand:
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-attrs
+> npm install @mirrordown/mdit-attrs
 > ```
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { attrs } from "@saeris/mdit-attrs";
+> import { attrs } from "@mirrordown/mdit-attrs";
 >
 > const md = new MarkdownIt().use(attrs);
 > ```
@@ -137,7 +137,7 @@ Attributes are written in curly braces using CSS-like shorthand:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { attrs } from "@saeris/mdit-attrs";
+> import { attrs } from "@mirrordown/mdit-attrs";
 >
 > export default defineConfig({
 >   markdown: {

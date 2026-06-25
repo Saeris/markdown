@@ -1,5 +1,5 @@
 {
-  "name": "@saeris/remd-mark",
+  "name": "@mirrordown/remd-mark",
   "version": "0.0.0",
   "exports": {
     ".": "./src/index.ts"

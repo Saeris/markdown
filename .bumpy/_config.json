@@ -4,7 +4,7 @@
   "changelog": "default",
   "allowCustomCommands": true,
   "ignore": [
-    "@saeris/markdown-docs",
+    "@mirrordown/markdown-docs",
     "markdown-abbr",
     "markdown-attrs",
     "markdown-definition-list",

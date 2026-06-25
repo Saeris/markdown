@@ -1,5 +1,5 @@
 {
-  "name": "@saeris/remd-definition-list",
+  "name": "@mirrordown/remd-definition-list",
   "version": "0.0.0",
   "exports": {
     ".": "./src/index.ts"

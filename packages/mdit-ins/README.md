@@ -1,6 +1,6 @@
-# @saeris/mdit-ins
+# @mirrordown/mdit-ins
 
-> Part of [`@saeris/markdown`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A markdown-it plugin for the `ins` syntax extension.
 
@@ -22,19 +22,17 @@ Wrap text in double plus signs to mark it as inserted:
 You can use it inline: the price is now ++$35++ (was $50).
 ```
 
-## Usage
-
 ## Install
 
 ```sh
-npm install @saeris/mdit-ins
+npm install @mirrordown/mdit-ins
 ```
 
 ### Standalone
 
 ```ts
 import MarkdownIt from "markdown-it";
-import { ins } from "@saeris/mdit-ins";
+import { ins } from "@mirrordown/mdit-ins";
 
 const md = new MarkdownIt().use(ins);
 ```
@@ -44,7 +42,7 @@ const md = new MarkdownIt().use(ins);
 ```ts
 // .vitepress/config.ts
 import { defineConfig } from "vitepress";
-import { ins } from "@saeris/mdit-ins";
+import { ins } from "@mirrordown/mdit-ins";
 
 export default defineConfig({
   markdown: {
@@ -55,7 +53,7 @@ export default defineConfig({
 
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/ins](https://saeris.github.io/markdown/guide/plugins/ins)
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

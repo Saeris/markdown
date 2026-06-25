@@ -8,12 +8,12 @@
   ],
   "license": "MIT",
   "author": "Drake Costa <drake@saeris.io> (https://saeris.gg)",
-  "repository": "git@github.com:saeris/markdown.git",
+  "repository": "git@github.com:mirrordown/mirrordown.git",
   "publisher": "saeris",
   "main": "./dist/index.cjs",
   "browser": "./dist/index.cjs",
   "devDependencies": {
-    "@saeris/mdit-steps": "workspace:*",
+    "@mirrordown/mdit-steps": "workspace:*",
     "@types/markdown-it": "catalog:",
     "@types/vscode": "^1.125.0"
   },

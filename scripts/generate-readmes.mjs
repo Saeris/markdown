@@ -5,7 +5,7 @@
 // Generates README.md for each remd-* and mdit-* package by transforming
 // the corresponding docs/public/guide/plugins/<slug>.md guide.
 //
-// The guide uses the @saeris/remd-tabs syntax:
+// The guide uses the @mirrordown/remd-tabs syntax:
 //   % Tab Label       — top-level tab
 //   %% Subtab Label   — nested tab inside the preceding top-level tab
 //   > <body content>  — blockquote body for the current tab
@@ -87,6 +87,15 @@ const parseBlocks = (md) => {
 // and keep only Code.
 const isDemoCodeLabel = (label) => /^(demo|code)$/i.test(label);
 
+// The guides place a "## Usage" divider just before the family tabs. Because
+// it has no "%"/"%%" marker, it gets absorbed into whatever block precedes the
+// family tabs (the prelude, a Demo/Code tab, or a subtab) — and any intro prose
+// after it (e.g. a [!NOTE] callout) means it isn't always trailing. Each guide
+// has exactly one "## Usage" heading, and we always replace it with a
+// family-specific "## Install" heading, so drop the heading line wherever it
+// lands in an emitted block body while keeping any prose that follows it.
+const stripUsageHeading = (text) => text.replace(/^## Usage[ \t]*\n?/gm, "");
+
 // Render blocks back into flat markdown. Top-level family tabs
 // ("Remark" / "Markdown-It") are filtered to the requested family
 // (and their label becomes the H2). Demo/Code pairs collapse to Code only.
@@ -96,24 +105,35 @@ const renderForFamily = (blocks, wantedFamily) => {
   const out = [];
   let activeFamilyMatches = null; // null = outside family section
   let pendingDemoCode = null; // { codeBody?: string[] }
+  // Family tabs appear both as config examples (before "## Usage") and as the
+  // install/integration section (after it). We only treat the latter as
+  // "## Install". `seenUsage` flips once the block holding the divider has been
+  // fully emitted, so the config block itself stays in the "before" state.
+  let seenUsage = false;
+  let pendingUsage = false;
 
   const flushPendingDemoCode = () => {
     if (pendingDemoCode && pendingDemoCode.codeBody) {
-      out.push(pendingDemoCode.codeBody.join("\n").trimEnd());
+      out.push(
+        stripUsageHeading(pendingDemoCode.codeBody.join("\n")).trimEnd()
+      );
       out.push("");
     }
     pendingDemoCode = null;
   };
 
   for (const block of blocks) {
+    if (pendingUsage) {
+      seenUsage = true;
+      pendingUsage = false;
+    }
+    if (block.bodyLines.some((line) => /^## Usage[ \t]*$/.test(line))) {
+      pendingUsage = true;
+    }
+
     if (block.kind === "prelude") {
       flushPendingDemoCode();
-      // Strip a trailing "## Usage" heading — we replace it with "## Install"
-      // when emitting the family-specific install section below.
-      const text = block.bodyLines
-        .join("\n")
-        .replace(/\n*## Usage\s*$/, "")
-        .trimEnd();
+      const text = stripUsageHeading(block.bodyLines.join("\n")).trimEnd();
       if (text) {
         out.push(text);
         out.push("");
@@ -133,18 +153,25 @@ const renderForFamily = (blocks, wantedFamily) => {
         activeFamilyMatches = null;
         continue;
       }
-      // Family tab
+      // Family tab. The remd-* family is labelled "Remark" in most guides, but
+      // "Rehype" where the plugin operates on the hast tree (e.g. unwrap-images).
       const labelLower = label.toLowerCase();
-      const family = labelLower.startsWith("remark")
-        ? "remark"
-        : labelLower.startsWith("markdown-it")
-          ? "markdown-it"
-          : null;
+      const family =
+        labelLower.startsWith("remark") || labelLower.startsWith("rehype")
+          ? "remark"
+          : labelLower.startsWith("markdown-it")
+            ? "markdown-it"
+            : null;
       activeFamilyMatches = family === wantedFamily;
       if (activeFamilyMatches) {
-        out.push("## Install");
-        out.push("");
-        out.push(block.bodyLines.join("\n").trim());
+        // After "## Usage" this is the install section; before it the family
+        // tab is a per-family config snippet that belongs under the preceding
+        // "### " heading, so it gets no "## Install".
+        if (seenUsage) {
+          out.push("## Install");
+          out.push("");
+        }
+        out.push(stripUsageHeading(block.bodyLines.join("\n")).trim());
         out.push("");
       }
       continue;
@@ -155,7 +182,7 @@ const renderForFamily = (blocks, wantedFamily) => {
         continue;
       out.push(`### ${block.label}`);
       out.push("");
-      out.push(block.bodyLines.join("\n").trim());
+      out.push(stripUsageHeading(block.bodyLines.join("\n")).trim());
       out.push("");
     }
   }
@@ -173,19 +200,21 @@ const buildReadme = (slug, family, guideMd) => {
   const body = renderForFamily(blocks, wantedFamily);
 
   const isRemd = family === "remd";
-  const pkgName = isRemd ? `@saeris/remd-${slug}` : `@saeris/mdit-${slug}`;
+  const pkgName = isRemd
+    ? `@mirrordown/remd-${slug}`
+    : `@mirrordown/mdit-${slug}`;
   const familyLabel = isRemd ? "remark/rehype (unified)" : "markdown-it";
 
   return `# ${pkgName}
 
-> Part of [\`@saeris/markdown\`](https://github.com/saeris/markdown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
+> Part of [Mirrordown](https://github.com/mirrordown/mirrordown) — a suite of markdown syntax extensions for the unified and markdown-it ecosystems.
 
 A ${familyLabel} plugin for the \`${slug}\` syntax extension.
 
 ${body}
 ## Documentation
 
-Full documentation, more examples, and configuration options: [saeris.github.io/markdown/guide/plugins/${slug}](https://saeris.github.io/markdown/guide/plugins/${slug})
+Full documentation, more examples, and configuration options: [github.com/mirrordown/mirrordown](https://github.com/mirrordown/mirrordown) (dedicated docs site coming soon).
 
 ## License
 

@@ -34,7 +34,7 @@ Wrap text in double plus signs to mark it as inserted:
 
 % Remark
 > ```sh
-> npm install @saeris/remd-ins
+> npm install @mirrordown/remd-ins
 > ```
 %% Unified
 > ```ts
@@ -42,7 +42,7 @@ Wrap text in double plus signs to mark it as inserted:
 > import remarkParse from "remark-parse";
 > import remarkRehype from "remark-rehype";
 > import rehypeStringify from "rehype-stringify";
-> import { remarkIns } from "@saeris/remd-ins";
+> import { remarkIns } from "@mirrordown/remd-ins";
 >
 > const processor = unified()
 >   .use(remarkParse)
@@ -54,7 +54,7 @@ Wrap text in double plus signs to mark it as inserted:
 > ```ts
 > // astro.config.ts
 > import { defineConfig } from "astro/config";
-> import { remarkIns } from "@saeris/remd-ins";
+> import { remarkIns } from "@mirrordown/remd-ins";
 >
 > export default defineConfig({
 >   markdown: {
@@ -66,7 +66,7 @@ Wrap text in double plus signs to mark it as inserted:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { remarkIns } from "@saeris/remd-ins";
+> import { remarkIns } from "@mirrordown/remd-ins";
 >
 > export default defineConfig({
 >   markdown: {
@@ -76,12 +76,12 @@ Wrap text in double plus signs to mark it as inserted:
 > ```
 % Markdown-It
 > ```sh
-> npm install @saeris/mdit-ins
+> npm install @mirrordown/mdit-ins
 > ```
 %% Standalone
 > ```ts
 > import MarkdownIt from "markdown-it";
-> import { ins } from "@saeris/mdit-ins";
+> import { ins } from "@mirrordown/mdit-ins";
 >
 > const md = new MarkdownIt().use(ins);
 > ```
@@ -89,7 +89,7 @@ Wrap text in double plus signs to mark it as inserted:
 > ```ts
 > // .vitepress/config.ts
 > import { defineConfig } from "vitepress";
-> import { ins } from "@saeris/mdit-ins";
+> import { ins } from "@mirrordown/mdit-ins";
 >
 > export default defineConfig({
 >   markdown: {
