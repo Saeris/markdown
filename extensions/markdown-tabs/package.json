@@ -29,7 +29,7 @@
   },
   "bumpy": {
     "buildCommand": "vp pack && vp exec postcss src/tabs.css --output dist/tabs.css && vp exec vsce package --no-dependencies",
-    "publishCommand": "vp exec vsce publish",
+    "publishCommand": "vp exec vsce publish --no-dependencies",
     "skipNpmPublish": true
   }
 }

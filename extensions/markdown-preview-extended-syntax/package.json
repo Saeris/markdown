@@ -35,7 +35,7 @@
   },
   "bumpy": {
     "buildCommand": "vp exec vsce package --no-dependencies",
-    "publishCommand": "vp exec vsce publish",
+    "publishCommand": "vp exec vsce publish --no-dependencies",
     "skipNpmPublish": true
   }
 }
