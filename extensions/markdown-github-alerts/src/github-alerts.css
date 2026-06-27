@@ -1,1 +1,19 @@
 @import "../../../packages/mdit-github-alerts/src/github-alerts.css";
+
+/*
+  VSCode-specific overrides
+  -------------------------
+  VSCode 1.85+ renders `> [!NOTE]` alerts natively and styles `.markdown-alert`
+  with UNLAYERED rules. The plugin keeps its defaults in `@layer markdown-alerts`
+  (correct on the web, so consumers can override without !important) — but a
+  cascade layer always loses to the host's unlayered CSS, so VSCode neutralizes
+  our accent border and background.
+
+  Re-assert them here, unlayered, since this is a host-integration concern rather
+  than a plugin one. The colors come from the plugin's computed custom properties
+  so per-type accents (and any consumer override) are preserved.
+*/
+.markdown-alert {
+  border-inline-start: 0.25rem solid var(--_alert-border);
+  background-color: var(--_alert-bg);
+}
