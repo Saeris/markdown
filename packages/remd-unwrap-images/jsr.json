@@ -1,5 +1,5 @@
 {
-  "name": "@saeris/remd-unwrap-images",
+  "name": "@mirrordown/remd-unwrap-images",
   "version": "0.0.0",
   "exports": {
     ".": "./src/index.ts"

@@ -1,5 +1,5 @@
 {
-  "name": "@saeris/remd-attrs",
+  "name": "@mirrordown/remd-attrs",
   "version": "0.0.0",
   "exports": {
     ".": "./src/index.ts"

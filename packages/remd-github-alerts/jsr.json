@@ -1,5 +1,5 @@
 {
-  "name": "@saeris/remd-github-alerts",
+  "name": "@mirrordown/remd-github-alerts",
   "version": "0.0.0",
   "exports": {
     ".": "./src/index.ts"

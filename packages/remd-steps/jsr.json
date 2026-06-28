@@ -1,5 +1,5 @@
 {
-  "name": "@saeris/remd-steps",
+  "name": "@mirrordown/remd-steps",
   "version": "0.0.0",
   "exports": {
     ".": "./src/index.ts"
