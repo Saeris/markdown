@@ -19,7 +19,7 @@ import type {
 } from "mdast";
 import type { Element, ElementContent, Properties } from "hast";
 import type { Parent } from "unist";
-import type { State } from "mdast-util-to-hast";
+import type { State, Handler } from "mdast-util-to-hast";
 import type { TabsOptions, TabsListNode, TabsItemNode } from "./types.js";
 import { parseTabHeader, stripAttrs, groupId, blockId } from "./utils.js";
 
@@ -746,9 +746,9 @@ const buildTabsHast = (
   return result;
 };
 
-export const tabsHastHandlers = {
+export const tabsHastHandlers: Record<string, Handler> = {
   tabsList(state: State, node: TabsListNode): ElementContent {
     const containerClass = node.containerClass ?? "markdown-tabs";
     return buildTabsHast(node, containerClass, state);
   }
-} as const;
+};

@@ -16,7 +16,7 @@ import type {
   DefinitionContent
 } from "mdast";
 import type { Element, ElementContent, Properties } from "hast";
-import type { State } from "mdast-util-to-hast";
+import type { State, Handler } from "mdast-util-to-hast";
 import type { StepsOptions } from "./types.js";
 
 export type { StepsOptions };
@@ -461,11 +461,11 @@ const buildListHast = (
   };
 };
 
-export const stepsHastHandlers = {
+export const stepsHastHandlers: Record<string, Handler> = {
   stepsList(state: State, node: StepsListNode): ElementContent {
     const containerClass = node.containerClass ?? "markdown-steps";
     const result = buildListHast(node, containerClass, state);
     state.patch(node as unknown as Parameters<typeof state.patch>[0], result);
     return result;
   }
-} as const;
+};

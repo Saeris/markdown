@@ -8,7 +8,7 @@ import { visit } from "unist-util-visit";
 import type { Plugin } from "unified";
 import type { Root, Blockquote } from "mdast";
 import type { Element, ElementContent, Properties } from "hast";
-import type { State } from "mdast-util-to-hast";
+import type { State, Handler } from "mdast-util-to-hast";
 import { ALERT_ALIASES, DEFAULT_TITLE } from "./types.js";
 import { ICONS } from "./icons.js";
 import type { AlertOptions, AlertType } from "./types.js";
@@ -137,7 +137,7 @@ const buildTitleElement = (
 
 const nl: ElementContent = { type: "text", value: "\n" };
 
-export const githubAlertsHastHandlers = {
+export const githubAlertsHastHandlers: Record<string, Handler> = {
   blockquote(state: State, node: Blockquote): ElementContent {
     const data = (node as Partial<AlertNode>).data;
 
@@ -180,4 +180,4 @@ export const githubAlertsHastHandlers = {
     state.patch(node, result);
     return result;
   }
-} as const;
+};
