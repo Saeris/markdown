@@ -34,6 +34,7 @@ interface AlertData {
 
 type AlertNode = Blockquote & { data: AlertData };
 
+/** remark plugin for GitHub-style alerts/admonitions (`> [!NOTE]`, `> [!WARNING]`, …). */
 export const remarkGithubAlerts: Plugin<[AlertOptions?], Root> = (
   options = {}
 ) => {
@@ -137,6 +138,7 @@ const buildTitleElement = (
 
 const nl: ElementContent = { type: "text", value: "\n" };
 
+/** mdast-to-hast handler that renders alert blockquotes, for use with `remark-rehype`. */
 export const githubAlertsHastHandlers: Record<string, Handler> = {
   blockquote(state: State, node: Blockquote): ElementContent {
     const data = (node as Partial<AlertNode>).data;

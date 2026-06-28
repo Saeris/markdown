@@ -36,6 +36,7 @@ const applicable = (node: Element, inLink: boolean): ApplicableResult => {
   return result;
 };
 
+/** rehype plugin that unwraps block-level images out of their paragraph. */
 export const rehypeUnwrapImages: Plugin<[], Root> = () => (tree) => {
   visit(tree, "element", (node, index, parent) => {
     if (

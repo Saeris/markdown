@@ -21,34 +21,42 @@ import type { Extension as FromMarkdownExtension } from "mdast-util-from-markdow
 
 // ---- mdast node types ----
 
+/** Options for the {@link remarkRuby} plugin. */
 export interface RubyOptions {
+  /** Fallback parenthesis characters emitted as `<rp>` for browsers without ruby support. */
   rp?: [string, string];
 }
 
+/** Data attached to a {@link Ruby} node (renders as `<ruby>`). */
 export interface RubyData extends Data {
   hName: "ruby";
 }
 
+/** Data attached to an {@link Rt} node (renders as `<rt>`). */
 export interface RtData extends Data {
   hName: "rt";
 }
 
+/** Data attached to an {@link Rp} node (renders as `<rp>`). */
 export interface RpData extends Data {
   hName: "rp";
 }
 
+/** An mdast node for ruby fallback parentheses, rendered as `<rp>`. */
 export interface Rp {
   type: "rp";
   children: [{ type: "text"; value: string }];
   data: RpData;
 }
 
+/** An mdast node for ruby reading text, rendered as `<rt>`. */
 export interface Rt {
   type: "rt";
   children: PhrasingContent[];
   data: RtData;
 }
 
+/** An mdast node for a ruby annotation, rendered as `<ruby>`. */
 export interface Ruby {
   type: "ruby";
   children: Array<PhrasingContent | Rt | Rp>;
@@ -175,6 +183,7 @@ const rubyFromMarkdownExtension: FromMarkdownExtension = {
 
 // ---- Plugin ----
 
+/** remark plugin for ruby annotation syntax (`{base|reading}`), rendering `<ruby>` elements. */
 export const remarkRuby: Plugin<[RubyOptions?], Root> = function (
   options = {}
 ) {

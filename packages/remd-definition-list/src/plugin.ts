@@ -15,6 +15,7 @@ import type {
 
 export type { DefinitionList, DefinitionTerm, DefinitionDescription };
 
+/** remark plugin for definition lists, producing `<dl>`/`<dt>`/`<dd>` via {@link defListHastHandlers}. */
 export const remarkDefinitionList: Plugin<[], Root> = function () {
   const data = this.data() as {
     micromarkExtensions?: unknown[];
@@ -115,6 +116,7 @@ const defListDescription2hast = (
   return result;
 };
 
+/** mdast-to-hast handlers for the definition-list nodes, for use with `remark-rehype`. */
 export const defListHastHandlers = {
   defList: defList2hast,
   defListTerm: defListTerm2hast,

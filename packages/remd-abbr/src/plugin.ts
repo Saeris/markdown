@@ -10,6 +10,7 @@ const DEFINITION_RE = /^\*\[([^[\]]+)\]:\s*(.+)$/;
 
 const ESCAPE_RE = /[.*+?^${}()|[\]\\]/g;
 
+/** remark plugin for abbreviations (`*[term]: definition`), rendering `<abbr>` elements. */
 export const remarkAbbr: Plugin<[], Root> = () => {
   const transformer: Transformer<Root> = (tree) => {
     const abbreviations: Record<string, string> = {};

@@ -13,12 +13,14 @@ export const tokenTypes = {
 
 export type TokenType = (typeof tokenTypes)[keyof typeof tokenTypes];
 
+/** An mdast node for a definition list, rendered as a `<dl>` element. */
 export interface DefinitionList extends Parent {
   type: "defList";
   children: Array<DefinitionTerm | DefinitionDescription>;
   data?: { attrsRole?: string; hProperties?: Properties };
 }
 
+/** An mdast node for a definition term, rendered as a `<dt>` element. */
 export interface DefinitionTerm extends Parent {
   type: "defListTerm";
   data?: {
@@ -28,6 +30,7 @@ export interface DefinitionTerm extends Parent {
   };
 }
 
+/** An mdast node for a definition description, rendered as a `<dd>` element. */
 export interface DefinitionDescription extends Parent {
   type: "defListDescription";
   spread: boolean;

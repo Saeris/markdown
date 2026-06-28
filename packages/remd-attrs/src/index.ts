@@ -65,6 +65,7 @@ const makeSiblingAttrVisitor =
     return [SKIP, index];
   };
 
+/** remark plugin for attribute lists (`{.class #id key=value}`) on elements. */
 export const remarkAttrs: Plugin<[AttrsOptions?], Root> = (options = {}) => {
   const { left = "{", right = "}", allowed = [], rule } = options;
   const rules = resolveRules(rule);

@@ -78,6 +78,7 @@ const filterSvgNodes = (
   return filteredNodes;
 };
 
+/** rehype plugin that inlines referenced `.svg` images as `<svg>` elements. */
 export const rehypeInlineSvg = (
   config?: Partial<Options>
 ): Transformer<Root, Root> => {

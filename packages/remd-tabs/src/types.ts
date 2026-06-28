@@ -1,7 +1,9 @@
 import type { PhrasingContent, BlockContent, DefinitionContent } from "mdast";
 import type { Properties } from "hast";
 
+/** Options for the {@link remarkTabs} plugin. */
 export interface TabsOptions {
+  /** Class applied to the tabs container element (default `markdown-tabs`). */
   containerClass?: string;
 }
 

@@ -593,6 +593,7 @@ const processTabsInChildren = (
   children.splice(0, children.length, ...newChildren);
 };
 
+/** remark plugin for tabbed content blocks, rendered via {@link tabsHastHandlers}. */
 export const remarkTabs: Plugin<[TabsOptions?], Root> = function (
   options = {}
 ) {
@@ -746,6 +747,7 @@ const buildTabsHast = (
   return result;
 };
 
+/** mdast-to-hast handler for tabs nodes, for use with `remark-rehype`. */
 export const tabsHastHandlers: Record<string, Handler> = {
   tabsList(state: State, node: TabsListNode): ElementContent {
     const containerClass = node.containerClass ?? "markdown-tabs";

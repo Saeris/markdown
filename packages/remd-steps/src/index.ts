@@ -355,6 +355,7 @@ const processStepsInChildren = (
   children.splice(0, children.length, ...newChildren);
 };
 
+/** remark plugin for numbered step sequences, rendering ordered step lists via {@link stepsHastHandlers}. */
 export const remarkSteps: Plugin<[StepsOptions?], Root> = function (
   options = {}
 ) {
@@ -461,6 +462,7 @@ const buildListHast = (
   };
 };
 
+/** mdast-to-hast handler for steps nodes, for use with `remark-rehype`. */
 export const stepsHastHandlers: Record<string, Handler> = {
   stepsList(state: State, node: StepsListNode): ElementContent {
     const containerClass = node.containerClass ?? "markdown-steps";
