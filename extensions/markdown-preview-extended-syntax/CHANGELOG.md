@@ -1,6 +1,13 @@
 # Changelog
 
 
+
+## 0.1.2
+<sub>2026-06-29</sub>
+
+- *(patch)*
+  Add Markdown Image Lightbox to the bundled extensions, so installing the pack now also installs the `!!` click-to-zoom `<dialog>` lightbox.
+
 ## 0.1.1
 <sub>2026-06-27</sub>
 
