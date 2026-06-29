@@ -23,6 +23,7 @@ below at once — no need to add each one individually.
 | Markdown Steps           | `@1. Step`                  | numbered step lists              |
 | Markdown Inline SVG      | `![](icon.svg)`             | inlined `<svg>`                  |
 | Markdown Unwrap Images   | a standalone `![](img.png)` | image without the wrapping `<p>` |
+| Markdown Image Lightbox  | `!![](photo.jpg)`           | click-to-zoom `<dialog>`         |
 
 Each extension is also available on its own if you only want a subset — see the
 individual listings, or the source repository for full syntax docs.
